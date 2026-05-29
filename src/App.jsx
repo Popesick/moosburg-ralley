@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-// 1. AKTUALISIERTE STATIONSDATEN (Inkl. Barbaras Bücherstube)
+// 1. NEUE STRUKTUR: Jede Station enthält den Hinweis (Text + Bild), wie man SIE findet!
 const STATIONS = [
   {
     id: 1,
@@ -8,7 +8,8 @@ const STATIONS = [
     code: "baracke123",
     description: "Hier trifft eine der größten Mittelschulen in Bayern auf die Überreste des größten Kriegsgefangenenlager innerhalb des Deutschen Reiches im zweiten Weltkrieg.",
     riddle: "Sucht den ersten Code bei den Überresten der Geschichte.",
-    imageHintUrl: "/hint_griesserie.png",
+    findText: "Hier begann die Geschichte des Stalag VIIa. Suche die Infotafel. Welche Jahreszahl sticht ins Auge? Subtrahiere 1900, um den Hinweis für das Suchbild zu entschlüsseln.",
+    findImage: "/hint_waechterbaracke.png", // Bild für den Start
   },
   {
     id: 2,
@@ -16,23 +17,26 @@ const STATIONS = [
     code: "grieserie456",
     description: "Das älteste erhaltene Haus der Stadt, heute ein Treffpunkt als soziale Begegnungsstätte mit offenem Betrieb, 2025 mit dem Oberbayerischen Denkmalpreis ausgezeichnet.",
     riddle: "Zählt die Sprossen am großen Fenster für den nächsten Hinweis.",
-    imageHintUrl: "/hint_mariensaeule.png", // Link bleibt gleich, führt jetzt zu Barbaras Bücherstube
+    findText: "Ein uriges Gebäude im Gries mit einem markanten Schild...",
+    findImage: "/hint_griesserie.png",
   },
   {
     id: 3,
     name: "Barbaras Bücherstube",
-    code: "mariensaeule789", // Code bleibt zur Sicherheit identisch
+    code: "mariensaeule789",
     description: "Seit über 45 Jahren ein fester Bestandteil von Moosburg – ein Ort der Geschichten, Begegnungen und Inspiration. Hier findet Ihr nicht nur Bücher – hier findet Ihr einen Ort, der Menschen verbindet.",
     riddle: "Taucht ein in die Welt der Bücher und findet den nächsten Code.",
-    imageHintUrl: "/hint_cornerhouse.png",
+    findText: "Eine goldene Dame, die in den Himmel ragt...",
+    findImage: "/hint_mariensaeule.png",
   },
   {
     id: 4,
     name: "The Cornerhouse (Ziel)",
     code: "cornerhouse999",
     description: "Hier gibt es Burger, Guiness und irische Gemütlichkeit mitten im oberbayrischen Moosburg. Daneben gibt es dort das beste regelmäßig stattfindende Pub Quiz Moosburgs. Ideal um zum Ende der Rallye noch ein erfrischendes Kaltgetränk zu sich zu nehmen.",
-    riddle: "Geschafft! Meldet euch an der Theke.",
-    imageHintUrl: null,
+    riddle: "Geschafft! Meldet euch an der Theke für euer wohlverdientes Kaltgetränk.",
+    findText: "Das spirituelle Herz der Stadt mit mächtigem Turm...",
+    findImage: "/hint_cornerhouse.png",
   }
 ];
 
@@ -127,7 +131,7 @@ export default function App() {
 
   // --- UI RENDERING ---
 
-  // SCREEN A: REGISTRIERUNG (Powered by Logo & Rechtstext)
+  // SCREEN A: REGISTRIERUNG
   if (!isRegistered) {
     return (
       <div style={styles.container}>
@@ -162,7 +166,7 @@ export default function App() {
                 required
               />
               <label htmlFor="consent" style={{fontSize: '12px', color: '#666', lineHeight: '1.4'}}>
-                Ich stimme zu, dass meine hochgeladenen Bilder vom Veranstalter und dessen Partnern für Werbe- und Promotionszwecke im Zusammenhang mit der Stadtrallye verwendet und veröffentlicht werden dürfen. Weitere Informationen finden sich in der Datenschutzerklärung.
+                Ich stimme zu, dass meine hochgeladenen Bilder vom Veranstalter und dessen Partnern für Werbe- und Promotionszwecke im Zusammenhang mit der Stadtrallye verwendet und veröffentlicht werden dürfen. Weitere Informationen finden sich in der <a href="/privacy.html" target="_blank" rel="noopener noreferrer" style={{color: '#0070f3', textDecoration: 'underline'}}>Datenschutzerklärung</a>.
               </label>
             </div>
 
@@ -180,10 +184,10 @@ export default function App() {
   }
 
   const isRalleyFinished = currentStationIndex >= STATIONS.length;
-  const currentStation = STATIONS[currentStationIndex];
-  const previousStation = STATIONS[currentStationIndex - 1];
+  const nextStationToFind = STATIONS[currentStationIndex]; // Die Station, die aktuell GESUCHT wird
+  const lastFoundStation = STATIONS[currentStationIndex - 1]; // Die Station, an der man GERADE STEHT
 
-  // SCREEN B: FINALE
+  // SCREEN B: FINALE ERREICHT (Am Cornerhouse gescannt)
   if (isRalleyFinished) {
     return (
       <div style={styles.container}>
@@ -191,13 +195,16 @@ export default function App() {
         <div style={styles.card}>
           <h2 style={{textAlign: 'center', marginTop: '0'}}>🎉 FINALE! 🎉</h2>
           <p style={styles.text}>{STATIONS[3].description}</p>
-          <p style={styles.text}>Bravo, Team <strong>{teamName}</strong>! Ihr habt alle Stationen gemeistert.</p>
+          <hr style={{border: 'none', borderTop: '1px solid #eee', margin: '20px 0'}} />
+          <p style={{...styles.text, textAlign: 'center', fontWeight: 'bold', fontSize: '16px', color: '#0070f3'}}>
+            Bravo, Team <strong>{teamName}</strong>!<br />Ihr habt alle Stationen gemeistert und das Ziel erreicht.
+          </p>
         </div>
       </div>
     );
   }
 
-  // SCREEN C: LAUFENDE RALLYE
+  // SCREEN C: DAS RUNTERLAUFENDE SPIEL
   return (
     <div style={styles.container}>
       <h1 style={styles.title}>Moosburger Stadtrallye</h1>
@@ -212,35 +219,41 @@ export default function App() {
         <h2 style={{marginTop: '0'}}>📍 Eure aktuelle Mission</h2>
         
         {currentStationIndex === 0 ? (
+          /* ZUSTAND 1: Frisch registriert, sucht Station 1 */
           <div>
-            <p style={styles.text}>{STATIONS[0].description}</p>
-            <div style={{marginTop: '20px', backgroundColor: '#eef6ff', padding: '15px', borderRadius: '5px'}}>
-              <h4 style={{marginTop: '0'}}>🔍 Hinweis auf den Startpunkt:</h4>
-              <img src="/hint_waechterbaracke.png" alt="Startpunkt" style={styles.hintImage} />
-              <p style={{fontSize: '12px', color: '#555', fontStyle: 'italic', marginBottom: '0'}}>Sucht dort nach dem ersten Sticker!</p>
+            <div style={{backgroundColor: '#eef6ff', padding: '15px', borderRadius: '5px'}}>
+              <h4 style={{marginTop: '0', color: '#0070f3'}}>🔍 Wegbeschreibung zum Startpunkt:</h4>
+              <p style={styles.text}>{nextStationToFind.findText}</p>
+              {nextStationToFind.findImage && <img src={nextStationToFind.findImage} alt="Wegweiser" style={styles.hintImage} />}
+              <p style={{fontSize: '12px', color: '#555', fontStyle: 'italic', marginBottom: '0', marginTop: '10px'}}>Sucht dort nach dem ersten Code, um das Spiel zu aktivieren!</p>
             </div>
           </div>
         ) : (
+          /* ZUSTAND 2: Hat mindestens eine Station gescannt */
           <div>
-            <p style={styles.text}><strong>Erreicht: {previousStation.name}</strong></p>
-            <p style={styles.text} dangerouslySetInnerHTML={{ __html: previousStation.description }}></p>
+            <p style={{fontSize: '16px', color: '#222', marginBottom: '5px'}}><strong>Aktueller Standort:</strong> {lastFoundStation.name}</p>
+            <p style={styles.text}>{lastFoundStation.description}</p>
             
             <div style={styles.riddleBox}>
-              <h4 style={{marginTop: '0'}}>Eure Aufgabe vor Ort:</h4>
-              <p style={{marginBottom: '0'}}>{previousStation.riddle}</p>
+              <h4 style={{marginTop: '0'}}>🧩 Eure Aufgabe vor Ort:</h4>
+              <p style={{marginBottom: '0', fontSize: '14px'}}>{lastFoundStation.riddle}</p>
             </div>
 
+            {/* Fotobeweis für den aktuellen Ort */}
             <div style={{marginTop: '20px', borderTop: '1px solid #eee', paddingTop: '15px'}}>
               <h4 style={{marginTop: '0'}}>📸 Fotobeweis hochladen</h4>
-              <input type="file" accept="image/*" capture="environment" onChange={(e) => handlePhotoUpload(e, previousStation.id)} disabled={isUploading} />
-              {isUploading && <p style={{color: '#0070f3', fontSize: '14px', fontWeight: 'bold'}}>Bild wird hochgeladen...</p>}
-              {uploadedPhotos[previousStation.id] && !isUploading && <img src={uploadedPhotos[previousStation.id]} alt="Beweis" style={styles.previewImage} />}
+              <p style={{fontSize: '12px', color: '#666', marginTop: '-10px'}}>Macht ein Foto von eurem Team vor Ort, um die Station zu verifizieren.</p>
+              <input type="file" accept="image/*" capture="environment" onChange={(e) => handlePhotoUpload(e, lastFoundStation.id)} disabled={isUploading} />
+              {isUploading && <p style={{color: '#0070f3', fontSize: '14px', fontWeight: 'bold'}}>Bild wird hochgeladen... ⏳</p>}
+              {uploadedPhotos[lastFoundStation.id] && !isUploading && <img src={uploadedPhotos[lastFoundStation.id]} alt="Beweis" style={styles.previewImage} />}
             </div>
 
-            <div style={{marginTop: '20px', backgroundColor: '#eef6ff', padding: '15px', borderRadius: '5px'}}>
-              <h4 style={{marginTop: '0'}}>🔍 Der Weg zur NÄCHSTEN Station:</h4>
-              {previousStation.imageHintUrl && <img src={previousStation.imageHintUrl} alt="Hinweis" style={styles.hintImage} />}
-              <p style={{fontSize: '12px', color: '#555', fontStyle: 'italic', marginBottom: '0'}}>Sucht dort nach dem nächsten Code!</p>
+            {/* Der Hinweis auf die NÄCHSTE Station (liegt logischerweise in den find-Daten der gesuchten Station) */}
+            <div style={{marginTop: '25px', backgroundColor: '#eef6ff', padding: '15px', borderRadius: '5px', borderTop: '3px solid #0070f3'}}>
+              <h4 style={{marginTop: '0', color: '#0070f3'}}>🔍 Wegbeschreibung zur NÄCHSTEN Station:</h4>
+              <p style={styles.text}>{nextStationToFind.findText}</p>
+              {nextStationToFind.findImage && <img src={nextStationToFind.findImage} alt="Hinweis nächster Ort" style={styles.hintImage} />}
+              <p style={{fontSize: '12px', color: '#555', fontStyle: 'italic', marginBottom: '0', marginTop: '10px'}}>Sucht dort nach dem nächsten Sticker!</p>
             </div>
           </div>
         )}
@@ -260,5 +273,5 @@ const styles = {
   error: { backgroundColor: '#ffe0e0', color: '#cc0000', padding: '10px', borderRadius: '5px', marginBottom: '15px', fontWeight: 'bold', textAlign: 'center' },
   riddleBox: { backgroundColor: '#f0f0f0', padding: '15px', borderRadius: '5px', marginTop: '15px' },
   previewImage: { width: '100%', maxHeight: '200px', objectFit: 'cover', borderRadius: '5px', marginTop: '10px' },
-  hintImage: { width: '100%', borderRadius: '8px', marginTop: '10px', marginBottom: '10px', border: '1px solid #ccc' } 
+  hintImage: { width: '100%', borderRadius: '8px', marginTop: '10px', marginBottom: '5px', border: '1px solid #ccc' } 
 };
