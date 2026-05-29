@@ -194,7 +194,20 @@ export default function App() {
         {currentStationIndex === 0 ? (
           <div>
             <p style={styles.text}>Sucht den ersten Aufkleber, um das Spiel zu aktivieren! Er befindet sich am Startpunkt.</p>
-            <p style={styles.hint}><strong>Hinweis auf Startpunkt:</strong> {currentStation.riddle}</p>
+            
+            {/* NEU: Die Info-Box mit dem Suchbild für den ersten Ort */}
+            <div style={{marginTop: '20px', backgroundColor: '#eef6ff', padding: '15px', borderRadius: '5px'}}>
+              <h4 style={{marginTop: '0'}}>🔍 Hinweis auf den Startpunkt:</h4>
+              <p>{currentStation.riddle}</p>
+              
+              <img 
+                src="/hint_waechterbaracke.png" 
+                alt="Suchbild für den Startpunkt" 
+                style={styles.hintImage} 
+              />
+
+              <p style={{fontSize: '12px', color: '#555', fontStyle: 'italic', marginBottom: '0'}}>Sucht dort nach dem ersten NFC/QR-Code Sticker!</p>
+            </div>
           </div>
         ) : (
           <div>
@@ -246,7 +259,7 @@ export default function App() {
   );
 }
 
-// Styling (Titel-Formatierung gefixt & Suchbild-Style hinzugefügt)
+// Styling 
 const styles = {
   container: { padding: '20px', maxWidth: '500px', margin: '0 auto', fontFamily: 'Arial, sans-serif', backgroundColor: '#f9f9f9', minHeight: '100vh' },
   title: { textAlign: 'center', color: '#333', fontSize: '26px', marginTop: '0', marginBottom: '20px', lineHeight: '1.2' },
@@ -259,5 +272,5 @@ const styles = {
   riddleBox: { backgroundColor: '#f0f0f0', padding: '15px', borderRadius: '5px', marginTop: '15px' },
   hint: { color: '#0070f3', fontWeight: 'bold' },
   previewImage: { width: '100%', maxHeight: '200px', objectFit: 'cover', borderRadius: '5px', marginTop: '10px' },
-  hintImage: { width: '100%', borderRadius: '8px', marginTop: '10px', marginBottom: '10px', border: '1px solid #ccc' } // Styling für das neue Suchbild
+  hintImage: { width: '100%', borderRadius: '8px', marginTop: '10px', marginBottom: '10px', border: '1px solid #ccc' } 
 };
