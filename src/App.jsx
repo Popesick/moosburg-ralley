@@ -1,38 +1,37 @@
 import React, { useState, useEffect } from 'react';
 
-// 1. STRUKTURGEFICKST: Die Vorschau nutzt jetzt immer direkt die Beschreibung der Zielstation
 const STATIONS = [
   {
     id: 1,
     name: "Wärterbaracken (Mittelschule)",
-    code: "baracke123",
+    code: "baracke123", // Dieser Code klebt PHYSISCH an den Wärterbaracken!
     description: "Hier trifft eine der größten Mittelschulen in Bayern auf die Überreste des größten Kriegsgefangenenlager innerhalb des Deutschen Reiches im zweiten Weltkrieg.",
     riddle: "Macht ein Gruppenfoto und ladet es als Nachweis, dass ihr den Ort erreicht habt auf den Server hoch",
-    findImage: "/hint_waechterbaracke.png", // Wird auf der Startseite angezeigt
+    findImage: "/hint_waechterbaracke.png",
   },
   {
     id: 2,
     name: "Die Grieserie",
-    code: "grieserie456",
+    code: "grieserie456", // Dieser Code klebt PHYSISCH an der Grieserie!
     description: "Das älteste erhaltene Haus der Stadt, heute ein Treffpunkt als soziale Begegnungsstätte mit offenem Betrieb, 2025 mit dem Oberbayerischen Denkmalpreis ausgezeichnet.",
     riddle: "Macht ein Gruppenfoto und ladet es als Nachweis, dass ihr den Ort erreicht habt auf den Server hoch",
-    findImage: "/hint_griesserie.png", // Wird an Station 1 angezeigt
+    findImage: "/hint_griesserie.png",
   },
   {
     id: 3,
     name: "Barbaras Bücherstube",
-    code: "mariensaeule789",
+    code: "mariensaeule789", // Dieser Code klebt PHYSISCH bei Barbaras Bücherstube!
     description: "Seit über 45 Jahren ein fester Bestandteil von Moosburg – ein Ort der Geschichten, Begegnungen und Inspiration. Hier findet Ihr nicht nur Bücher – hier findet Ihr einen Ort, der Menschen verbindet.",
     riddle: "Macht ein Gruppenfoto und ladet es als Nachweis, dass ihr den Ort erreicht habt auf den Server hoch",
-    findImage: "/hint_mariensaeule.png", // Wird an Station 2 angezeigt
+    findImage: "/hint_mariensaeule.png",
   },
   {
     id: 4,
     name: "The Cornerhouse (Ziel)",
-    code: "cornerhouse999",
+    code: "cornerhouse999", // Dieser Code klebt PHYSISCH im/am Cornerhouse!
     description: "Hier gibt es Burger, Guiness und irische Gemütlichkeit mitten im oberbayrischen Moosburg. Daneben gibt es dort das beste regelmäßig stattfindende Pub Quiz Moosburgs. Ideal um zum Ende der Rallye noch ein erfrischendes Kaltgetränk zu sich zu nehmen.",
     riddle: "Macht ein Gruppenfoto und ladet es als Nachweis, dass ihr den Ort erreicht habt auf den Server hoch",
-    findImage: "/hint_cornerhouse.png", // Wird an Station 3 angezeigt
+    findImage: "/hint_cornerhouse.png",
   }
 ];
 
@@ -45,7 +44,7 @@ export default function App() {
   const [errorMessage, setErrorMessage] = useState('');
   const [isUploading, setIsUploading] = useState(false);
 
-  // 2. LOGIK: LADEN & GEHEIMER RESET (?reset=boss)
+  // LOGIK: LADEN & RESET
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('reset') === 'boss') {
@@ -62,26 +61,34 @@ export default function App() {
       setTeamName(savedTeam);
       setIsRegistered(true);
     }
+    
+    let currentIndex = 0;
     if (savedProgress) {
-      setCurrentStationIndex(parseInt(savedProgress, 10));
+      currentIndex = parseInt(savedProgress, 10);
+      setCurrentStationIndex(currentIndex);
     }
 
+    // Wenn ein Code in der URL übergeben wird
     const scannedCode = urlParams.get('code');
     if (scannedCode && savedTeam) {
-      handleScannedCode(scannedCode, parseInt(savedProgress, 10) || 0);
+      handleScannedCode(scannedCode, currentIndex);
     }
   }, []);
 
   const handleScannedCode = (code, currentIndex) => {
+    // Wenn wir schon fertig sind, nichts mehr tun
+    if (currentIndex >= STATIONS.length) return;
+
+    // Erwartet wird der Code der Station, an der die Spieler GERADE STEHEN!
     const expectedStation = STATIONS[currentIndex];
+    
     if (expectedStation && code === expectedStation.code) {
       const nextIndex = currentIndex + 1;
-      if (nextIndex <= STATIONS.length) {
-        setCurrentStationIndex(nextIndex);
-        localStorage.setItem('quiz_team_progress', nextIndex);
-        setErrorMessage('');
-        window.history.replaceState({}, document.title, window.location.pathname);
-      }
+      setCurrentStationIndex(nextIndex);
+      localStorage.setItem('quiz_team_progress', nextIndex);
+      setErrorMessage('');
+      // URL sauber bereinigen, damit ein Page-Refresh nicht den Code neu triggert
+      window.history.replaceState({}, document.title, window.location.pathname);
     } else {
       setErrorMessage('Falscher Code oder falsche Reihenfolge! Schummelt nicht! 😉');
     }
@@ -127,7 +134,6 @@ export default function App() {
 
   // --- UI RENDERING ---
 
-  // SCREEN A: REGISTRIERUNG
   if (!isRegistered) {
     return (
       <div style={styles.container}>
@@ -137,9 +143,9 @@ export default function App() {
         <h1 style={styles.title}>Moosburger Stadtrallye</h1>
         <div style={styles.card}>
           <p style={styles.text}>
-            Willkommen bei der ersten Moosburger Stadtrallye. Um mitzumachen registriert euch mit eurem Teamnamen (keine E-Mail-Adresse und kein Login erforderlich) und legt los. 
-            Entschlüsselt die Hinweise, findet die versteckten QR-Codes oder NFC-Tags und erreicht das Ziel. 
-            Um eueren Fortschritt zu dokumentieren, ladet an jedem Ort ein Gruppenbild von euch hoch.
+            Willkommen bei der ersten Moosburger Stadtrallye. Um mitzumachen registriert euch mit eurem Teamnamen und legt los. 
+            Entschlüsselt die Hinweise, findet die versteckten QR-Codes und erreicht das Ziel. 
+            Um euren Fortschritt zu dokumentieren, ladet an jedem Ort ein Gruppenbild von euch hoch.
           </p>
           
           <form onSubmit={handleRegister}>
@@ -162,7 +168,7 @@ export default function App() {
                 required
               />
               <label htmlFor="consent" style={{fontSize: '12px', color: '#666', lineHeight: '1.4'}}>
-                Ich stimme zu, dass meine hochgeladenen Bilder vom Veranstalter und dessen Partnern für Werbe- und Promotionszwecke im Zusammenhang mit der Stadtrallye verwendet und veröffentlicht werden dürfen. Weitere Informationen finden sich in der <a href="/privacy.html" target="_blank" rel="noopener noreferrer" style={{color: '#0070f3', textDecoration: 'underline'}}>Datenschutzerklärung</a>.
+                Ich stimme zu, dass meine hochgeladenen Bilder vom Veranstalter für Werbe- und Promotionszwecke im Zusammenhang mit der Stadtrallye verwendet werden dürfen. Weitere Informationen in der <a href="/privacy.html" target="_blank" rel="noopener noreferrer" style={{color: '#0070f3', textDecoration: 'underline'}}>Datenschutzerklärung</a>.
               </label>
             </div>
 
@@ -183,14 +189,14 @@ export default function App() {
   const nextStationToFind = STATIONS[currentStationIndex]; 
   const lastFoundStation = STATIONS[currentStationIndex - 1]; 
 
-  // SCREEN B: FINALE ERREICHT
+  // FINALE SCREEN
   if (isRalleyFinished) {
     return (
       <div style={styles.container}>
         <h1 style={styles.title}>Moosburger Stadtrallye</h1>
         <div style={styles.card}>
           <h2 style={{textAlign: 'center', marginTop: '0'}}>🎉 FINALE! 🎉</h2>
-          <p style={styles.text}>{STATIONS[3].description}</p>
+          <p style={styles.text}>{STATIONS[STATIONS.length - 1].description}</p>
           <hr style={{border: 'none', borderTop: '1px solid #eee', margin: '20px 0'}} />
           <p style={{...styles.text, textAlign: 'center', fontWeight: 'bold', fontSize: '16px', color: '#0070f3'}}>
             Bravo, Team <strong>{teamName}</strong>!<br />Ihr habt alle Stationen gemeistert und das Ziel erreicht.
@@ -200,7 +206,6 @@ export default function App() {
     );
   }
 
-  // SCREEN C: DAS RUNTERLAUFENDE SPIEL
   return (
     <div style={styles.container}>
       <h1 style={styles.title}>Moosburger Stadtrallye</h1>
@@ -215,17 +220,17 @@ export default function App() {
         <h2 style={{marginTop: '0'}}>📍 Eure aktuelle Mission</h2>
         
         {currentStationIndex === 0 ? (
-          /* ZUSTAND 1: Frisch registriert, sucht Station 1 */
+          /* ZUSTAND 1: Frisch registriert, sucht Station 1 (Wärterbaracken) */
           <div>
             <div style={{backgroundColor: '#eef6ff', padding: '15px', borderRadius: '5px'}}>
               <h4 style={{marginTop: '0', color: '#0070f3'}}>🔍 Wegbeschreibung zum Startpunkt:</h4>
               <p style={styles.text}>{nextStationToFind.description}</p>
               {nextStationToFind.findImage && <img src={nextStationToFind.findImage} alt="Wegweiser" style={styles.hintImage} />}
-              <p style={{fontSize: '12px', color: '#555', fontStyle: 'italic', marginBottom: '0', marginTop: '10px'}}>Sucht dort nach dem ersten Code, um das Spiel zu aktivieren!</p>
+              <p style={{fontSize: '12px', color: '#555', fontStyle: 'italic', marginBottom: '0', marginTop: '10px'}}>Sucht dort nach dem Code, um die Station freizuschalten!</p>
             </div>
           </div>
         ) : (
-          /* ZUSTAND 2: Hat mindestens eine Station gescannt */
+          /* ZUSTAND 2: Steht an einer Station (z.B. Wärterbaracken) und sieht Hinweis auf die nächste (z.B. Grieserie) */
           <div>
             <p style={{fontSize: '16px', color: '#222', marginBottom: '5px'}}><strong>Aktueller Standort:</strong> {lastFoundStation.name}</p>
             <p style={styles.text}>{lastFoundStation.description}</p>
@@ -235,7 +240,7 @@ export default function App() {
               <p style={{marginBottom: '0', fontSize: '14px'}}>{lastFoundStation.riddle}</p>
             </div>
 
-            {/* Fotobeweis für den aktuellen Ort */}
+            {/* Fotobeweis für den AKTUELLEN Standort */}
             <div style={{marginTop: '20px', borderTop: '1px solid #eee', paddingTop: '15px'}}>
               <h4 style={{marginTop: '0'}}>📸 Fotobeweis hochladen</h4>
               <p style={{fontSize: '12px', color: '#666', marginTop: '-10px'}}>Macht ein Foto von eurem Team vor Ort, um die Station zu verifizieren.</p>
@@ -244,12 +249,12 @@ export default function App() {
               {uploadedPhotos[lastFoundStation.id] && !isUploading && <img src={uploadedPhotos[lastFoundStation.id]} alt="Beweis" style={styles.previewImage} />}
             </div>
 
-            {/* Der Hinweis auf die NÄCHSTE Station (Zieht sich jetzt die Description der kommenden Station) */}
+            {/* Wegbeschreibung zur NÄCHSTEN Station */}
             <div style={{marginTop: '25px', backgroundColor: '#eef6ff', padding: '15px', borderRadius: '5px', borderTop: '3px solid #0070f3'}}>
               <h4 style={{marginTop: '0', color: '#0070f3'}}>🔍 Wegbeschreibung zur NÄCHSTEN Station:</h4>
               <p style={styles.text}>{nextStationToFind.description}</p>
               {nextStationToFind.findImage && <img src={nextStationToFind.findImage} alt="Hinweis nächster Ort" style={styles.hintImage} />}
-              <p style={{fontSize: '12px', color: '#555', fontStyle: 'italic', marginBottom: '0', marginTop: '10px'}}>Sucht dort nach dem nächsten Sticker!</p>
+              <p style={{fontSize: '12px', color: '#555', fontStyle: 'italic', marginBottom: '0', marginTop: '10px'}}>Sucht dort nach dem nächsten Code-Sticker!</p>
             </div>
           </div>
         )}
@@ -264,7 +269,7 @@ const styles = {
   header: { display: 'flex', justifyContent: 'space-between', padding: '12px', backgroundColor: '#333', color: '#fff', borderRadius: '5px', marginBottom: '20px', fontSize: '14px' },
   card: { backgroundColor: '#fff', padding: '20px', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)', marginBottom: '20px' },
   text: { lineHeight: '1.5', color: '#444', fontSize: '14px' },
-  input: { width: '100%', padding: '12px', marginBottom: '15px', borderRadius: '4px', border: '1px solid #ccc', boxSizing: 'border-box' },
+  input: { width: '100%', padding: '12px', marginBottom: '15px', borderRadius: '4px', border: '1px solid #ccc', boxSizing: 'box-sizing' },
   button: { width: '100%', padding: '12px', backgroundColor: '#0070f3', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' },
   error: { backgroundColor: '#ffe0e0', color: '#cc0000', padding: '10px', borderRadius: '5px', marginBottom: '15px', fontWeight: 'bold', textAlign: 'center' },
   riddleBox: { backgroundColor: '#f0f0f0', padding: '15px', borderRadius: '5px', marginTop: '15px' },
