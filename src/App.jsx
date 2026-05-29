@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-// 1. FAKEDATEN FÜR DIE MOOSBURG-ROUTE (MVP-Status)
+// 1. FAKEDATEN FÜR DIE MOOSBURG-ROUTE (Mit Suchbildern)
 const STATIONS = [
   {
     id: 1,
@@ -8,6 +8,7 @@ const STATIONS = [
     code: "baracke123",
     riddle: "Hier begann die Geschichte des Stalag VIIa. Suche die Infotafel. Welche Jahreszahl sticht ins Auge? Subtrahiere 1900, um den Hinweis für das Suchbild zu entschlüsseln.",
     imageHint: "Ein uriges Gebäude im Gries mit einem markanten Schild...",
+    imageHintUrl: "/hint_griesserie.png", // Bild, das den Weg zu Station 2 zeigt
   },
   {
     id: 2,
@@ -15,6 +16,7 @@ const STATIONS = [
     code: "grieserie456",
     riddle: "Urig, Moosburg pur. Zähle die Sprossen des großen Fensters an der Front. Multipliziere mit 3. Das bringt dich zum belebtesten Platz der Stadt.",
     imageHint: "Eine goldene Dame, die in den Himmel ragt...",
+    imageHintUrl: "/hint_mariensaeule.png", // Bild, das den Weg zu Station 3 zeigt
   },
   {
     id: 3,
@@ -22,6 +24,7 @@ const STATIONS = [
     code: "mariensaeule789",
     riddle: "Vier Plagen bedrohen die Stadt zu Füßen der Patronin. Welche Kreatur steht für die Pest? Ihr Name weist den Weg zum höchsten Turm.",
     imageHint: "Das spirituelle Herz der Stadt mit mächtigem Turm...",
+    imageHintUrl: "/hint_cornerhouse.png", // Bild, das den Weg zum Finale zeigt
   },
   {
     id: 4,
@@ -29,6 +32,7 @@ const STATIONS = [
     code: "cornerhouse999",
     riddle: "Geschafft! Der Heimathafen ist erreicht. Meldet euch beim Quizmaster für euer wohlverdientes Kaltgetränk!",
     imageHint: "Kein Bild mehr nötig, ihr seid da!",
+    imageHintUrl: null,
   }
 ];
 
@@ -36,11 +40,11 @@ export default function App() {
   const [teamName, setTeamName] = useState('');
   const [currentStationIndex, setCurrentStationIndex] = useState(0);
   const [isRegistered, setIsRegistered] = useState(false);
-  const [uploadedPhotos, setUploadedPhotos] = useState({}); // { stationId: base64ImageData }
+  const [uploadedPhotos, setUploadedPhotos] = useState({});
   const [errorMessage, setErrorMessage] = useState('');
   const [isUploading, setIsUploading] = useState(false);
 
-  // 2. SCAN-LOGIK BEIM LADEN DER APP (URL-Parameter prüfen)
+  // 2. SCAN-LOGIK BEIM LADEN DER APP
   useEffect(() => {
     const savedTeam = localStorage.getItem('quiz_team_name');
     const savedProgress = localStorage.getItem('quiz_team_progress');
@@ -71,7 +75,7 @@ export default function App() {
         setCurrentStationIndex(nextIndex);
         localStorage.setItem('quiz_team_progress', nextIndex);
         setErrorMessage('');
-        window.history.replaceState({}, document., window.location.pathname);
+        window.history.replaceState({}, document.title, window.location.pathname);
       }
     } else {
       setErrorMessage('Falscher Code oder falsche Reihenfolge! Schummelt nicht! 😉');
@@ -99,13 +103,11 @@ export default function App() {
 
     const reader = new FileReader();
     reader.onloadend = async () => {
-      // Bild für die sofortige lokale Vorschau in der App setzen
       const updatedPhotos = { ...uploadedPhotos, [stationId]: reader.result };
       setUploadedPhotos(updatedPhotos);
 
       setIsUploading(true);
       try {
-        // Hier schießen wir das Bild live zu deinem Cloudflare Worker
         const response = await fetch("https://moosburg-ralley-api.andreas-stetter73.workers.dev", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -118,13 +120,11 @@ export default function App() {
         
         if (!response.ok) {
           setErrorMessage('Upload-Fehler! Bild konnte nicht im R2-Speicher gesichert werden.');
-          console.error("Upload ans Backend fehlgeschlagen!");
         } else {
-          console.log("Boom! Foto erfolgreich im Cloudflare R2 Bucket gespeichert!");
+          console.log("Foto erfolgreich in R2 gespeichert!");
         }
       } catch (error) {
         setErrorMessage('Netzwerkfehler! Überprüfe deine Internetverbindung.');
-        console.error("Netzwerkfehler beim Senden:", error);
       } finally {
         setIsUploading(false);
       }
@@ -138,9 +138,9 @@ export default function App() {
   if (!isRegistered) {
     return (
       <div style={styles.container}>
-        <h1 style={styles.}>Moosburg Pub-Quiz Ralley 🧭</h1>
+        <h1 style={styles.title}>Moosburg Pub-Quiz Ralley 🧭</h1>
         <div style={styles.card}>
-          <h3>Registrierung</h3>
+          <h3 style={{marginTop: '0'}}>Registrierung</h3>
           <p style={styles.text}>Gebt euren offiziellen Teamnamen ein, um die Ralley zu starten. Der Name kann danach nicht mehr geändert werden!</p>
           <form onSubmit={handleRegister}>
             <input 
@@ -166,8 +166,9 @@ export default function App() {
   if (isRalleyFinished) {
     return (
       <div style={styles.container}>
+        <h1 style={styles.title}>Moosburg Pub-Quiz Ralley 🧭</h1>
         <div style={styles.card}>
-          <h1 style={{textAlign: 'center'}}>🎉 FINALE! 🎉</h1>
+          <h2 style={{textAlign: 'center', marginTop: '0'}}>🎉 FINALE! 🎉</h2>
           <p style={styles.text}>Bravo, Team <strong>{teamName}</strong>! Ihr habt alle Stationen in Moosburg gefunden und die Rätsel gelöst.</p>
           <p style={styles.text}>Meldet euch jetzt an der Theke im <strong>Cornerhouse</strong> für eure Auswertung.</p>
         </div>
@@ -178,6 +179,8 @@ export default function App() {
   // SCREEN C: DAS LAUFENDE SPIEL (STATIONEN)
   return (
     <div style={styles.container}>
+      <h1 style={styles.title}>Moosburg Pub-Quiz Ralley 🧭</h1>
+      
       <div style={styles.header}>
         <span>Team: <strong>{teamName}</strong></span>
         <span>Fortschritt: {currentStationIndex} / {STATIONS.length}</span>
@@ -186,7 +189,7 @@ export default function App() {
       {errorMessage && <div style={styles.error}>{errorMessage}</div>}
 
       <div style={styles.card}>
-        <h2>📍 Eure aktuelle Mission</h2>
+        <h2 style={{marginTop: '0'}}>📍 Eure aktuelle Mission</h2>
         
         {currentStationIndex === 0 ? (
           <div>
@@ -198,14 +201,14 @@ export default function App() {
             <p style={styles.text}>Ihr habt den Code gescannt und steht erfolgreich bei: <strong>{previousStation.name}</strong></p>
             
             <div style={styles.riddleBox}>
-              <h4>Das Rätsel vor Ort:</h4>
-              <p>{previousStation.riddle}</p>
+              <h4 style={{marginTop: '0'}}>Das Rätsel vor Ort:</h4>
+              <p style={{marginBottom: '0'}}>{previousStation.riddle}</p>
             </div>
 
             {/* Fotobeweis */}
             <div style={{marginTop: '20px', borderTop: '1px solid #eee', paddingTop: '15px'}}>
-              <h4>📸 Fotobeweis hochladen</h4>
-              <p style={{fontSize: '12px', color: '#666'}}>Macht ein Foto von eurem Team vor Ort, um die Station zu verifizieren.</p>
+              <h4 style={{marginTop: '0'}}>📸 Fotobeweis hochladen</h4>
+              <p style={{fontSize: '12px', color: '#666', marginTop: '-10px'}}>Macht ein Foto von eurem Team vor Ort, um die Station zu verifizieren.</p>
               <input 
                 type="file" 
                 accept="image/*" 
@@ -220,11 +223,21 @@ export default function App() {
               )}
             </div>
 
-            {/* Hinweis auf den NÄCHSTEN Ort */}
-            <div style={{marginTop: '20px', backgroundColor: '#eef6ff', padding: '10px', borderRadius: '5px'}}>
-              <h4>🔍 Suchbild/Hinweis auf die NÄCHSTE Station:</h4>
+            {/* Hinweis auf den NÄCHSTEN Ort inkl. Suchbild */}
+            <div style={{marginTop: '20px', backgroundColor: '#eef6ff', padding: '15px', borderRadius: '5px'}}>
+              <h4 style={{marginTop: '0'}}>🔍 Hinweis auf die NÄCHSTE Station:</h4>
               <p>{previousStation.imageHint}</p>
-              <p style={{fontSize: '12px', color: '#555', fontStyle: 'italic'}}>Sucht dort nach dem nächsten NFC/QR-Code Sticker!</p>
+              
+              {/* Hier wird das Suchbild für den nächsten Ort gerendert */}
+              {previousStation.imageHintUrl && (
+                <img 
+                  src={previousStation.imageHintUrl} 
+                  alt="Suchbild Hinweis" 
+                  style={styles.hintImage} 
+                />
+              )}
+
+              <p style={{fontSize: '12px', color: '#555', fontStyle: 'italic', marginBottom: '0'}}>Sucht dort nach dem nächsten NFC/QR-Code Sticker!</p>
             </div>
           </div>
         )}
@@ -233,10 +246,11 @@ export default function App() {
   );
 }
 
+// Styling (Titel-Formatierung gefixt & Suchbild-Style hinzugefügt)
 const styles = {
   container: { padding: '20px', maxWidth: '500px', margin: '0 auto', fontFamily: 'Arial, sans-serif', backgroundColor: '#f9f9f9', minHeight: '100vh' },
- title: { textAlign: 'center', color: '#333', fontSize: '28px', marginTop: '0', marginBottom: '20px', lineHeight: '1.2' },
-  header: { display: 'flex', justifyContent: 'space-between', padding: '10px', backgroundColor: '#333', color: '#fff', borderRadius: '5px', marginBottom: '20px', fontSize: '14px' },
+  title: { textAlign: 'center', color: '#333', fontSize: '26px', marginTop: '0', marginBottom: '20px', lineHeight: '1.2' },
+  header: { display: 'flex', justifyContent: 'space-between', padding: '12px', backgroundColor: '#333', color: '#fff', borderRadius: '5px', marginBottom: '20px', fontSize: '14px' },
   card: { backgroundColor: '#fff', padding: '20px', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)', marginBottom: '20px' },
   text: { lineHeight: '1.5', color: '#444' },
   input: { width: '100%', padding: '12px', marginBottom: '15px', borderRadius: '4px', border: '1px solid #ccc', boxSizing: 'border-box' },
@@ -244,5 +258,6 @@ const styles = {
   error: { backgroundColor: '#ffe0e0', color: '#cc0000', padding: '10px', borderRadius: '5px', marginBottom: '15px', fontWeight: 'bold', textAlign: 'center' },
   riddleBox: { backgroundColor: '#f0f0f0', padding: '15px', borderRadius: '5px', marginTop: '15px' },
   hint: { color: '#0070f3', fontWeight: 'bold' },
-  previewImage: { width: '100%', maxHeight: '200px', objectFit: 'cover', borderRadius: '5px', marginTop: '10px' }
+  previewImage: { width: '100%', maxHeight: '200px', objectFit: 'cover', borderRadius: '5px', marginTop: '10px' },
+  hintImage: { width: '100%', borderRadius: '8px', marginTop: '10px', marginBottom: '10px', border: '1px solid #ccc' } // Styling für das neue Suchbild
 };
