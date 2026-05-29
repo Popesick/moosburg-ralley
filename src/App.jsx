@@ -1,42 +1,38 @@
 import React, { useState, useEffect } from 'react';
 
-// 1. NEUE STRUKTUR: Jede Station enthält den Hinweis (Text + Bild), wie man SIE findet!
+// 1. STRUKTURGEFICKST: Die Vorschau nutzt jetzt immer direkt die Beschreibung der Zielstation
 const STATIONS = [
   {
     id: 1,
     name: "Wärterbaracken (Mittelschule)",
     code: "baracke123",
     description: "Hier trifft eine der größten Mittelschulen in Bayern auf die Überreste des größten Kriegsgefangenenlager innerhalb des Deutschen Reiches im zweiten Weltkrieg.",
-    riddle: "Sucht den ersten Code bei den Überresten der Geschichte.",
-    findText: "Hier begann die Geschichte des Stalag VIIa. Suche die Infotafel. Welche Jahreszahl sticht ins Auge? Subtrahiere 1900, um den Hinweis für das Suchbild zu entschlüsseln.",
-    findImage: "/hint_waechterbaracke.png", // Bild für den Start
+    riddle: "Macht ein Gruppenfoto und ladet es als Nachweis, dass ihr den Ort erreicht habt auf den Server hoch",
+    findImage: "/hint_waechterbaracke.png", // Wird auf der Startseite angezeigt
   },
   {
     id: 2,
     name: "Die Grieserie",
     code: "grieserie456",
     description: "Das älteste erhaltene Haus der Stadt, heute ein Treffpunkt als soziale Begegnungsstätte mit offenem Betrieb, 2025 mit dem Oberbayerischen Denkmalpreis ausgezeichnet.",
-    riddle: "Zählt die Sprossen am großen Fenster für den nächsten Hinweis.",
-    findText: "Ein uriges Gebäude im Gries mit einem markanten Schild...",
-    findImage: "/hint_griesserie.png",
+    riddle: "Macht ein Gruppenfoto und ladet es als Nachweis, dass ihr den Ort erreicht habt auf den Server hoch",
+    findImage: "/hint_griesserie.png", // Wird an Station 1 angezeigt
   },
   {
     id: 3,
     name: "Barbaras Bücherstube",
     code: "mariensaeule789",
     description: "Seit über 45 Jahren ein fester Bestandteil von Moosburg – ein Ort der Geschichten, Begegnungen und Inspiration. Hier findet Ihr nicht nur Bücher – hier findet Ihr einen Ort, der Menschen verbindet.",
-    riddle: "Taucht ein in die Welt der Bücher und findet den nächsten Code.",
-    findText: "Eine goldene Dame, die in den Himmel ragt...",
-    findImage: "/hint_mariensaeule.png",
+    riddle: "Macht ein Gruppenfoto und ladet es als Nachweis, dass ihr den Ort erreicht habt auf den Server hoch",
+    findImage: "/hint_mariensaeule.png", // Wird an Station 2 angezeigt
   },
   {
     id: 4,
     name: "The Cornerhouse (Ziel)",
     code: "cornerhouse999",
     description: "Hier gibt es Burger, Guiness und irische Gemütlichkeit mitten im oberbayrischen Moosburg. Daneben gibt es dort das beste regelmäßig stattfindende Pub Quiz Moosburgs. Ideal um zum Ende der Rallye noch ein erfrischendes Kaltgetränk zu sich zu nehmen.",
-    riddle: "Geschafft! Meldet euch an der Theke für euer wohlverdientes Kaltgetränk.",
-    findText: "Das spirituelle Herz der Stadt mit mächtigem Turm...",
-    findImage: "/hint_cornerhouse.png",
+    riddle: "Macht ein Gruppenfoto und ladet es als Nachweis, dass ihr den Ort erreicht habt auf den Server hoch",
+    findImage: "/hint_cornerhouse.png", // Wird an Station 3 angezeigt
   }
 ];
 
@@ -184,10 +180,10 @@ export default function App() {
   }
 
   const isRalleyFinished = currentStationIndex >= STATIONS.length;
-  const nextStationToFind = STATIONS[currentStationIndex]; // Die Station, die aktuell GESUCHT wird
-  const lastFoundStation = STATIONS[currentStationIndex - 1]; // Die Station, an der man GERADE STEHT
+  const nextStationToFind = STATIONS[currentStationIndex]; 
+  const lastFoundStation = STATIONS[currentStationIndex - 1]; 
 
-  // SCREEN B: FINALE ERREICHT (Am Cornerhouse gescannt)
+  // SCREEN B: FINALE ERREICHT
   if (isRalleyFinished) {
     return (
       <div style={styles.container}>
@@ -223,7 +219,7 @@ export default function App() {
           <div>
             <div style={{backgroundColor: '#eef6ff', padding: '15px', borderRadius: '5px'}}>
               <h4 style={{marginTop: '0', color: '#0070f3'}}>🔍 Wegbeschreibung zum Startpunkt:</h4>
-              <p style={styles.text}>{nextStationToFind.findText}</p>
+              <p style={styles.text}>{nextStationToFind.description}</p>
               {nextStationToFind.findImage && <img src={nextStationToFind.findImage} alt="Wegweiser" style={styles.hintImage} />}
               <p style={{fontSize: '12px', color: '#555', fontStyle: 'italic', marginBottom: '0', marginTop: '10px'}}>Sucht dort nach dem ersten Code, um das Spiel zu aktivieren!</p>
             </div>
@@ -248,10 +244,10 @@ export default function App() {
               {uploadedPhotos[lastFoundStation.id] && !isUploading && <img src={uploadedPhotos[lastFoundStation.id]} alt="Beweis" style={styles.previewImage} />}
             </div>
 
-            {/* Der Hinweis auf die NÄCHSTE Station (liegt logischerweise in den find-Daten der gesuchten Station) */}
+            {/* Der Hinweis auf die NÄCHSTE Station (Zieht sich jetzt die Description der kommenden Station) */}
             <div style={{marginTop: '25px', backgroundColor: '#eef6ff', padding: '15px', borderRadius: '5px', borderTop: '3px solid #0070f3'}}>
               <h4 style={{marginTop: '0', color: '#0070f3'}}>🔍 Wegbeschreibung zur NÄCHSTEN Station:</h4>
-              <p style={styles.text}>{nextStationToFind.findText}</p>
+              <p style={styles.text}>{nextStationToFind.description}</p>
               {nextStationToFind.findImage && <img src={nextStationToFind.findImage} alt="Hinweis nächster Ort" style={styles.hintImage} />}
               <p style={{fontSize: '12px', color: '#555', fontStyle: 'italic', marginBottom: '0', marginTop: '10px'}}>Sucht dort nach dem nächsten Sticker!</p>
             </div>
