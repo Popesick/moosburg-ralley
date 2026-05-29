@@ -136,9 +136,9 @@ export default function App() {
           </p>
           
           <div style={styles.dateBox}>
-            <p style={{margin: '5px 0'}}><strong>Start:</strong> xx.xx.xxxx</p>
-            <p style={{margin: '5px 0'}}><strong>Ende:</strong> xx.xx.xxxx</p>
-            <p style={{margin: '5px 0', color: '#0070f3'}}><strong>Siegerehrung:</strong> 21.07.2026</p>
+            <p style={{margin: '8px 0'}}><strong>Start:</strong> xx.xx.xxxx</p>
+            <p style={{margin: '8px 0'}}><strong>Ende:</strong> xx.xx.xxxx</p>
+            <p style={{margin: '8px 0', color: '#0070f3'}}><strong>Siegerehrung:</strong> 21.07.2026</p>
           </div>
 
           <form onSubmit={handleRegister}>
@@ -177,7 +177,7 @@ export default function App() {
           <h2 style={{textAlign: 'center', marginTop: '0'}}>🎉 FINALE! 🎉</h2>
           <p style={styles.text}>{STATIONS[3].description}</p>
           <hr style={{border: 'none', borderTop: '1px solid #eee', margin: '20px 0'}} />
-          <p style={{...styles.text, textAlign: 'center', fontWeight: 'bold', fontSize: '16px', color: '#0070f3'}}>
+          <p style={{...styles.text, textAlign: 'center', fontWeight: 'bold', fontSize: '18px', color: '#0070f3'}}>
             Bravo, Team <strong>{teamName}</strong>!<br />Ziel erreicht.
           </p>
         </div>
@@ -207,7 +207,8 @@ export default function App() {
                 </div>
                 <div style={styles.uploadSection}>
                   <h4 style={{marginTop: '0'}}>📸 Fotobeweis</h4>
-                  <input type="file" accept="image/*" capture="environment" onChange={(e) => handlePhotoUpload(e, STATIONS[currentStationIndex-1].id)} disabled={isUploading} />
+                  {/* HIER WURDE capture="environment" ENTFERNT! */}
+                  <input type="file" accept="image/*" onChange={(e) => handlePhotoUpload(e, STATIONS[currentStationIndex-1].id)} disabled={isUploading} />
                   {uploadedPhotos[STATIONS[currentStationIndex-1].id] && <img src={uploadedPhotos[STATIONS[currentStationIndex-1].id]} alt="Beweis" style={styles.previewImage} />}
                 </div>
                 <div style={styles.nextStepBox}>
@@ -221,9 +222,9 @@ export default function App() {
         </>
       )}
 
-      {/* PARTNER LOGO UNTEN RECHTS */}
+      {/* VERGRÖSSERTES PARTNER LOGO UNTEN RECHTS */}
       <div style={styles.partnerLogoWrapper}>
-        <span style={{fontSize: '10px', color: '#999', marginRight: '5px'}}>powered by</span>
+        <span style={styles.partnerLabel}>powered by fresh</span>
         <img src="/logo.png" alt="Partner" style={styles.partnerLogo} />
       </div>
     </div>
@@ -231,22 +232,23 @@ export default function App() {
 }
 
 const styles = {
-  container: { padding: '20px 20px 100px 20px', maxWidth: '500px', margin: '0 auto', fontFamily: 'Arial, sans-serif', backgroundColor: '#f9f9f9', minHeight: '100vh', position: 'relative' },
-  title: { textAlign: 'center', color: '#333', fontSize: '24px', marginTop: '0', marginBottom: '20px' },
+  container: { padding: '20px 20px 140px 20px', maxWidth: '500px', margin: '0 auto', fontFamily: 'Arial, sans-serif', backgroundColor: '#f9f9f9', minHeight: '100vh', position: 'relative' },
+  title: { textAlign: 'center', color: '#333', fontSize: '28px', marginTop: '0', marginBottom: '25px', fontWeight: 'bold' },
   card: { backgroundColor: '#fff', padding: '20px', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)', marginBottom: '20px' },
-  text: { lineHeight: '1.5', color: '#444', fontSize: '14px' },
-  dateBox: { backgroundColor: '#f0f0f0', padding: '10px', borderRadius: '5px', marginBottom: '20px', fontSize: '13px', textAlign: 'center' },
-  input: { width: '100%', padding: '12px', marginBottom: '15px', borderRadius: '4px', border: '1px solid #ccc' },
-  consentWrapper: { display: 'flex', gap: '10px', marginBottom: '20px', alignItems: 'flex-start' },
-  consentLabel: { fontSize: '11px', color: '#666', lineHeight: '1.3' },
-  button: { width: '100%', padding: '12px', backgroundColor: '#0070f3', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' },
-  header: { display: 'flex', justifyContent: 'space-between', padding: '10px', backgroundColor: '#333', color: '#fff', borderRadius: '5px', marginBottom: '15px', fontSize: '12px' },
-  error: { backgroundColor: '#ffe0e0', color: '#cc0000', padding: '10px', borderRadius: '5px', marginBottom: '15px', textAlign: 'center', fontSize: '13px' },
-  riddleBox: { backgroundColor: '#f0f0f0', padding: '12px', borderRadius: '5px', marginTop: '10px' },
+  text: { lineHeight: '1.6', color: '#444', fontSize: '15px' },
+  dateBox: { backgroundColor: '#f0f0f0', padding: '15px', borderRadius: '5px', marginBottom: '25px', fontSize: '15px', textAlign: 'center' },
+  input: { width: '100%', padding: '15px', marginBottom: '15px', borderRadius: '4px', border: '1px solid #ccc', fontSize: '16px' },
+  consentWrapper: { display: 'flex', gap: '12px', marginBottom: '25px', alignItems: 'flex-start' },
+  consentLabel: { fontSize: '12px', color: '#666', lineHeight: '1.4' },
+  button: { width: '100%', padding: '15px', backgroundColor: '#0070f3', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold', fontSize: '16px' },
+  header: { display: 'flex', justifyContent: 'space-between', padding: '12px', backgroundColor: '#333', color: '#fff', borderRadius: '5px', marginBottom: '15px', fontSize: '14px' },
+  error: { backgroundColor: '#ffe0e0', color: '#cc0000', padding: '10px', borderRadius: '5px', marginBottom: '15px', textAlign: 'center', fontSize: '14px' },
+  riddleBox: { backgroundColor: '#f0f0f0', padding: '15px', borderRadius: '5px', marginTop: '10px' },
   uploadSection: { marginTop: '20px', borderTop: '1px solid #eee', paddingTop: '15px' },
-  previewImage: { width: '100%', maxHeight: '150px', objectFit: 'cover', borderRadius: '5px', marginTop: '10px' },
-  nextStepBox: { marginTop: '20px', backgroundColor: '#eef6ff', padding: '15px', borderRadius: '5px', borderTop: '3px solid #0070f3' },
+  previewImage: { width: '100%', maxHeight: '180px', objectFit: 'cover', borderRadius: '5px', marginTop: '10px' },
+  nextStepBox: { marginTop: '25px', backgroundColor: '#eef6ff', padding: '15px', borderRadius: '5px', borderTop: '3px solid #0070f3' },
   hintImage: { width: '100%', borderRadius: '8px', marginTop: '10px', border: '1px solid #ccc' },
-  partnerLogoWrapper: { position: 'fixed', bottom: '20px', right: '20px', display: 'flex', alignItems: 'center', backgroundColor: 'rgba(255,255,255,0.8)', padding: '5px 10px', borderRadius: '20px', boxShadow: '0 2px 5px rgba(0,0,0,0.1)' },
-  partnerLogo: { maxHeight: '30px', maxWidth: '100px' }
+  partnerLogoWrapper: { position: 'fixed', bottom: '20px', right: '20px', display: 'flex', alignItems: 'center', backgroundColor: 'rgba(255,255,255,0.9)', padding: '10px 20px', borderRadius: '30px', boxShadow: '0 3px 10px rgba(0,0,0,0.15)', zIndex: 100 },
+  partnerLabel: { fontSize: '16px', color: '#333', marginRight: '12px', fontWeight: 'bold' },
+  partnerLogo: { maxHeight: '60px', maxWidth: '150px' }
 };
