@@ -46,6 +46,15 @@ export default function App() {
 
   // 2. SCAN-LOGIK BEIM LADEN DER APP
   useEffect(() => {
+// --- NEU: DER GEHEIME ADMIN-RESET ---
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('reset') === 'boss') {
+      localStorage.removeItem('quiz_team_name');
+      localStorage.removeItem('quiz_team_progress');
+      window.location.href = window.location.pathname; // Seite ohne Parameter neu laden
+      return; // Abbrechen, damit der Rest nicht ausgeführt wird
+    }
+    // ------------------------------------
     const savedTeam = localStorage.getItem('quiz_team_name');
     const savedProgress = localStorage.getItem('quiz_team_progress');
     
