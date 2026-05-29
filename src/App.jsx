@@ -71,7 +71,7 @@ export default function App() {
         setCurrentStationIndex(nextIndex);
         localStorage.setItem('quiz_team_progress', nextIndex);
         setErrorMessage('');
-        window.history.replaceState({}, document.title, window.location.pathname);
+        window.history.replaceState({}, document., window.location.pathname);
       }
     } else {
       setErrorMessage('Falscher Code oder falsche Reihenfolge! Schummelt nicht! 😉');
@@ -138,7 +138,7 @@ export default function App() {
   if (!isRegistered) {
     return (
       <div style={styles.container}>
-        <h1 style={styles.title}>Moosburg Pub-Quiz Ralley 🧭</h1>
+        <h1 style={styles.}>Moosburg Pub-Quiz Ralley 🧭</h1>
         <div style={styles.card}>
           <h3>Registrierung</h3>
           <p style={styles.text}>Gebt euren offiziellen Teamnamen ein, um die Ralley zu starten. Der Name kann danach nicht mehr geändert werden!</p>
@@ -235,7 +235,7 @@ export default function App() {
 
 const styles = {
   container: { padding: '20px', maxWidth: '500px', margin: '0 auto', fontFamily: 'Arial, sans-serif', backgroundColor: '#f9f9f9', minHeight: '100vh' },
-  title: { textAlign: 'center', color: '#333' },
+ title: { textAlign: 'center', color: '#333', fontSize: '28px', marginTop: '0', marginBottom: '20px', lineHeight: '1.2' },
   header: { display: 'flex', justifyContent: 'space-between', padding: '10px', backgroundColor: '#333', color: '#fff', borderRadius: '5px', marginBottom: '20px', fontSize: '14px' },
   card: { backgroundColor: '#fff', padding: '20px', borderRadius: '8px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)', marginBottom: '20px' },
   text: { lineHeight: '1.5', color: '#444' },
