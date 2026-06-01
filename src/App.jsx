@@ -207,7 +207,6 @@ export default function App() {
                 </div>
                 <div style={styles.uploadSection}>
                   <h4 style={{marginTop: '0'}}>📸 Fotobeweis</h4>
-                  {/* HIER WURDE capture="environment" ENTFERNT! */}
                   <input type="file" accept="image/*" onChange={(e) => handlePhotoUpload(e, STATIONS[currentStationIndex-1].id)} disabled={isUploading} />
                   {uploadedPhotos[STATIONS[currentStationIndex-1].id] && <img src={uploadedPhotos[STATIONS[currentStationIndex-1].id]} alt="Beweis" style={styles.previewImage} />}
                 </div>
@@ -224,8 +223,8 @@ export default function App() {
 
       {/* VERGRÖSSERTES PARTNER LOGO UNTEN RECHTS */}
       <div style={styles.partnerLogoWrapper}>
-        <span style={styles.partnerLabel}>powered by fresh</span>
-        <img src="/logo.png" alt="Partner" style={styles.partnerLogo} />
+        <span style={styles.partnerLabel}>powered by Cornerhouse</span>
+        <img src="/logo_ch.png" alt="Partner" style={styles.partnerLogo} />
       </div>
     </div>
   );
