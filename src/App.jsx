@@ -223,7 +223,7 @@ export default function App() {
 
       {/* VERGRÖSSERTES PARTNER LOGO UNTEN RECHTS */}
       <div style={styles.partnerLogoWrapper}>
-        <span style={styles.partnerLabel}>powered by Cornerhouse</span>
+        <span style={styles.partnerLabel}>Powered by The Corner House</span>
         <img src="/logo_ch.png" alt="Partner" style={styles.partnerLogo} />
       </div>
     </div>
