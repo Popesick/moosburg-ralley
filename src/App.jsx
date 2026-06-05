@@ -100,7 +100,6 @@ export default function App() {
     }
   }, []);
 
-  // ADMIN-DATEN ABRUFEN
   const fetchAdminData = async () => {
     setIsLoadingAdmin(true);
     setErrorMessage('');
@@ -120,7 +119,6 @@ export default function App() {
     }
   };
 
-  // ADMIN: TEAM LÖSCHEN ODER RESETTEN
   const handleAdminAction = async (targetTeamName, action) => {
     if (action === 'delete') {
       if (!window.confirm(`Soll das Team "${targetTeamName}" wirklich unwiderruflich gelöscht werden?`)) return;
@@ -137,14 +135,25 @@ export default function App() {
       });
       
       if (response.ok) {
-        // Daten neu laden, um die Tabelle zu aktualisieren
         fetchAdminData();
+        const localTeam = localStorage.getItem('quiz_team_name');
+        if (localTeam && localTeam.trim().toLowerCase() === targetTeamName.trim().toLowerCase()) {
+          if (action === 'delete') {
+            localStorage.removeItem('quiz_team_name');
+            localStorage.removeItem('quiz_participation_choice');
+            localStorage.removeItem('quiz_team_progress');
+            localStorage.removeItem('quiz_station_state');
+          } else if (action === 'reset') {
+            localStorage.setItem('quiz_team_progress', '0');
+            localStorage.setItem('quiz_station_state', 'SEEKING');
+          }
+        }
       } else {
         setErrorMessage("Fehler bei der Server-Aktion.");
-        setIsLoadingAdmin(false);
       }
     } catch (error) {
       setErrorMessage("Netzwerkfehler bei der Admin-Aktion.");
+    } finally {
       setIsLoadingAdmin(false);
     }
   };
@@ -230,6 +239,7 @@ export default function App() {
     localStorage.setItem('quiz_station_state', 'SEEKING');
   };
 
+  // NEU: Fehlerbehandlung, die auch Server-Antworten ausliest
   const handlePhotoUpload = async (e, stationId) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -244,8 +254,9 @@ export default function App() {
       setUploadedPhotos({ ...uploadedPhotos, [stationId]: reader.result });
       setIsUploading(true);
       setErrorMessage('');
+      
       try {
-        await fetch("https://moosburg-ralley-api.andreas-stetter73.workers.dev/api/upload", {
+        const response = await fetch("https://moosburg-ralley-api.andreas-stetter73.workers.dev/api/upload", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ 
@@ -255,8 +266,13 @@ export default function App() {
             progress: currentStationIndex + 1 
           })
         });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          setErrorMessage("Server-Fehler: " + (errorData.error || "Bild-Upload fehlgeschlagen."));
+        }
       } catch (error) {
-        setErrorMessage('Upload-Fehler! Bild konnte lokal gespeichert, aber nicht an den Server gesendet werden.');
+        setErrorMessage('Netzwerk-Fehler! Bild konnte nicht gesendet werden.');
       } finally {
         setIsUploading(false);
       }
@@ -264,10 +280,8 @@ export default function App() {
     reader.readAsDataURL(file);
   };
 
-
   // --- UI RENDERING ---
 
-  // ADMIN VIEW DASHBOARD
   if (isAdminView) {
     return (
       <div style={{...styles.container, maxWidth: '900px'}}>
@@ -347,7 +361,6 @@ export default function App() {
     );
   }
 
-  // QUEREINSTEIGER VIEW
   if (showQuereinsteigerIntro) {
     return (
       <div style={styles.container}>
@@ -365,7 +378,6 @@ export default function App() {
     );
   }
 
-  // REGISTRIERUNG VIEW
   if (!isRegistered) {
     return (
       <div style={styles.container}>
@@ -430,7 +442,6 @@ export default function App() {
   const isRalleyFinished = currentStationIndex >= STATIONS.length;
   const currentStation = STATIONS[currentStationIndex]; 
 
-  // FINALE VIEW
   if (isRalleyFinished) {
     return (
       <div style={styles.container}>
@@ -451,7 +462,6 @@ export default function App() {
   const photoUploaded = uploadedPhotos[currentStation.id];
   const canProceed = !uploadRequired || photoUploaded;
 
-  // SPIEL VIEW
   return (
     <div style={styles.container}>
       <h1 style={styles.title}>Moosburger Stadtrallye 2026</h1>
@@ -464,7 +474,6 @@ export default function App() {
 
       <div style={styles.card}>
         
-        {/* PHASE A: ORT WIRD GESUCHT */}
         {stationState === 'SEEKING' && (
           <div>
             <h2 style={{marginTop: '0', color: '#0070f3'}}>🔍 Finde Station {currentStationIndex + 1}</h2>
@@ -484,7 +493,6 @@ export default function App() {
           </div>
         )}
 
-        {/* PHASE B: ORT WURDE GEFUNDEN (QR gescannt) */}
         {stationState === 'FOUND' && (
           <div>
             <h2 style={{marginTop: '0', color: '#28a745'}}>✅ Station gefunden!</h2>
@@ -544,8 +552,6 @@ const styles = {
   partnerLogoWrapper: { position: 'fixed', bottom: '20px', right: '20px', display: 'flex', alignItems: 'center', backgroundColor: 'rgba(255,255,255,0.9)', padding: '10px 20px', borderRadius: '30px', boxShadow: '0 3px 10px rgba(0,0,0,0.15)', zIndex: 100 },
   partnerLabel: { fontSize: '16px', color: '#333', marginRight: '12px', fontWeight: 'bold' },
   partnerLogo: { maxHeight: '60px', maxWidth: '150px' },
-  
-  // Tabellen Styles
   th: { padding: '12px', borderBottom: '2px solid #ddd', color: '#555' },
   td: { padding: '12px' },
   actionBtn: { background: 'none', border: 'none', cursor: 'pointer', fontSize: '18px', margin: '0 5px' }
