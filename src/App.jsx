@@ -249,7 +249,7 @@ export default function App() {
         {/* PARTNER LOGO UNTEN RECHTS */}
         <div style={styles.partnerLogoWrapper}>
           <span style={styles.partnerLabel}>Powered by The Corner House</span>
-          <img src="/logo.png" alt="Partner" style={styles.partnerLogo} />
+          <img src="/logo_ch.png" alt="Partner" style={styles.partnerLogo} />
         </div>
       </div>
     );
@@ -268,7 +268,7 @@ export default function App() {
         </div>
         <div style={styles.partnerLogoWrapper}>
           <span style={styles.partnerLabel}>Powered by The Corner House</span>
-          <img src="/logo.png" alt="Partner" style={styles.partnerLogo} />
+          <img src="/logo_ch.png" alt="Partner" style={styles.partnerLogo} />
         </div>
       </div>
     );
@@ -347,7 +347,7 @@ export default function App() {
       {/* PARTNER LOGO UNTEN RECHTS */}
       <div style={styles.partnerLogoWrapper}>
         <span style={styles.partnerLabel}>Powered by The Corner House</span>
-        <img src="/logo.png" alt="Partner" style={styles.partnerLogo} />
+        <img src="/logo_ch.png" alt="Partner" style={styles.partnerLogo} />
       </div>
     </div>
   );
