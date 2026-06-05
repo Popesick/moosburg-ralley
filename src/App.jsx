@@ -58,7 +58,7 @@ export default function App() {
     
     if (urlParams.get('admin') === 'boss') {
       setIsAdminView(true);
-      fetchAdminData(); // Daten direkt beim Starten der Admin-Ansicht laden
+      fetchAdminData();
       return;
     }
 
@@ -108,7 +108,6 @@ export default function App() {
       const response = await fetch("https://moosburg-ralley-api.andreas-stetter73.workers.dev/api/admin/teams");
       if (response.ok) {
         const data = await response.json();
-        // Teams nach Registrierungsdatum absteigend sortieren
         data.sort((a, b) => new Date(b.registeredAt) - new Date(a.registeredAt));
         setAdminTeams(data);
       } else {
@@ -117,6 +116,35 @@ export default function App() {
     } catch (error) {
       setErrorMessage("Netzwerkfehler! Konnte die Admin-Daten nicht laden.");
     } finally {
+      setIsLoadingAdmin(false);
+    }
+  };
+
+  // ADMIN: TEAM LÖSCHEN ODER RESETTEN
+  const handleAdminAction = async (targetTeamName, action) => {
+    if (action === 'delete') {
+      if (!window.confirm(`Soll das Team "${targetTeamName}" wirklich unwiderruflich gelöscht werden?`)) return;
+    } else if (action === 'reset') {
+      if (!window.confirm(`Soll der Fortschritt von "${targetTeamName}" wieder auf 0 gesetzt werden?`)) return;
+    }
+
+    setIsLoadingAdmin(true);
+    try {
+      const response = await fetch("https://moosburg-ralley-api.andreas-stetter73.workers.dev/api/admin/teams/action", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ team: targetTeamName, action: action })
+      });
+      
+      if (response.ok) {
+        // Daten neu laden, um die Tabelle zu aktualisieren
+        fetchAdminData();
+      } else {
+        setErrorMessage("Fehler bei der Server-Aktion.");
+        setIsLoadingAdmin(false);
+      }
+    } catch (error) {
+      setErrorMessage("Netzwerkfehler bei der Admin-Aktion.");
       setIsLoadingAdmin(false);
     }
   };
@@ -137,7 +165,6 @@ export default function App() {
     }
   };
 
-  // LIVE-REGISTRIERUNG MIT SERVER-CHECK
   const handleRegister = async (e) => {
     e.preventDefault();
     if (!teamName.trim() || !participationChoice) return;
@@ -180,8 +207,23 @@ export default function App() {
     }
   };
 
-  const handleNextStation = () => {
+  const handleNextStation = async () => {
     const nextIndex = currentStationIndex + 1;
+    
+    try {
+      await fetch("https://moosburg-ralley-api.andreas-stetter73.workers.dev/api/upload", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ 
+          team: teamName, 
+          station: STATIONS[currentStationIndex].id, 
+          progress: nextIndex 
+        })
+      });
+    } catch (error) {
+      console.error("Fortschritt konnte nicht mit dem Server synchronisiert werden.", error);
+    }
+
     setCurrentStationIndex(nextIndex);
     setStationState('SEEKING');
     localStorage.setItem('quiz_team_progress', nextIndex);
@@ -228,7 +270,7 @@ export default function App() {
   // ADMIN VIEW DASHBOARD
   if (isAdminView) {
     return (
-      <div style={{...styles.container, maxWidth: '800px'}}>
+      <div style={{...styles.container, maxWidth: '900px'}}>
         <h1 style={styles.title}>Moosburger Stadtrallye - Admin</h1>
         {errorMessage && <div style={styles.error}>{errorMessage}</div>}
         
@@ -249,34 +291,57 @@ export default function App() {
               <thead>
                 <tr style={{backgroundColor: '#f0f0f0'}}>
                   <th style={styles.th}>Teamname</th>
-                  <th style={styles.th}>Station (Fortschritt)</th>
-                  <th style={styles.th}>Option (Rechte)</th>
+                  <th style={styles.th}>Station</th>
+                  <th style={styles.th} title="Upload Erlaubnis">UL</th>
+                  <th style={styles.th} title="Social Media Erlaubnis">SM</th>
                   <th style={styles.th}>Registriert am</th>
+                  <th style={styles.th}>Aktionen</th>
                 </tr>
               </thead>
               <tbody>
-                {adminTeams.map((team, idx) => (
-                  <tr key={idx} style={{borderBottom: '1px solid #eee'}}>
-                    <td style={styles.td}><strong>{team.originalName}</strong></td>
-                    <td style={styles.td}>
-                      <span style={{backgroundColor: '#eef6ff', padding: '4px 8px', borderRadius: '12px', fontWeight: 'bold', color: '#0070f3'}}>
-                        {team.progress} / {STATIONS.length}
-                      </span>
-                    </td>
-                    <td style={styles.td}>Option {team.choice}</td>
-                    <td style={styles.td}>
-                      {new Date(team.registeredAt).toLocaleDateString('de-DE', {day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'})}
-                    </td>
-                  </tr>
-                ))}
+                {adminTeams.map((team, idx) => {
+                  const canUpload = team.choice === 1 || team.choice === 2;
+                  const canSocialMedia = team.choice === 1;
+
+                  return (
+                    <tr key={idx} style={{borderBottom: '1px solid #eee'}}>
+                      <td style={styles.td}><strong>{team.originalName}</strong></td>
+                      <td style={styles.td}>
+                        <span style={{backgroundColor: '#eef6ff', padding: '4px 8px', borderRadius: '12px', fontWeight: 'bold', color: '#0070f3'}}>
+                          {team.progress} / {STATIONS.length}
+                        </span>
+                      </td>
+                      <td style={styles.td}>{canUpload ? '✅' : '❌'}</td>
+                      <td style={styles.td}>{canSocialMedia ? '✅' : '❌'}</td>
+                      <td style={styles.td}>
+                        {new Date(team.registeredAt).toLocaleDateString('de-DE', {day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'})}
+                      </td>
+                      <td style={styles.td}>
+                        <button 
+                          onClick={() => handleAdminAction(team.originalName, 'reset')} 
+                          style={styles.actionBtn} 
+                          title="Fortschritt auf 0 setzen"
+                        >🔄</button>
+                        <button 
+                          onClick={() => handleAdminAction(team.originalName, 'delete')} 
+                          style={styles.actionBtn} 
+                          title="Team löschen"
+                        >🗑️</button>
+                      </td>
+                    </tr>
+                  )
+                })}
                 {adminTeams.length === 0 && !isLoadingAdmin && (
                   <tr>
-                    <td colSpan="4" style={{padding: '30px', textAlign: 'center', color: '#666'}}>Noch keine Teams registriert.</td>
+                    <td colSpan="6" style={{padding: '30px', textAlign: 'center', color: '#666'}}>Noch keine Teams registriert.</td>
                   </tr>
                 )}
               </tbody>
             </table>
           </div>
+          <p style={{fontSize: '12px', color: '#666', marginTop: '15px'}}>
+            <strong>Legende:</strong> UL = Foto-Upload erlaubt | SM = Social Media Verwendung erlaubt
+          </p>
         </div>
       </div>
     );
@@ -480,7 +545,8 @@ const styles = {
   partnerLabel: { fontSize: '16px', color: '#333', marginRight: '12px', fontWeight: 'bold' },
   partnerLogo: { maxHeight: '60px', maxWidth: '150px' },
   
-  // Admin-Tabellen-Styles
+  // Tabellen Styles
   th: { padding: '12px', borderBottom: '2px solid #ddd', color: '#555' },
-  td: { padding: '12px' }
+  td: { padding: '12px' },
+  actionBtn: { background: 'none', border: 'none', cursor: 'pointer', fontSize: '18px', margin: '0 5px' }
 };
