@@ -54,6 +54,9 @@ export default function App() {
 
   // LOGIK: LADEN & RESET
   useEffect(() => {
+    // Setzt den Titel im Browser-Tab dynamisch
+    document.title = "Stadtrallye 2026";
+
     const urlParams = new URLSearchParams(window.location.search);
     
     if (urlParams.get('admin') === 'boss') {
@@ -239,7 +242,6 @@ export default function App() {
     localStorage.setItem('quiz_station_state', 'SEEKING');
   };
 
-  // NEU: Fehlerbehandlung, die auch Server-Antworten ausliest
   const handlePhotoUpload = async (e, stationId) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -542,7 +544,7 @@ const styles = {
   dateBox: { backgroundColor: '#f0f0f0', padding: '15px', borderRadius: '5px', marginBottom: '25px', fontSize: '15px', textAlign: 'center' },
   input: { width: '100%', padding: '15px', marginBottom: '20px', borderRadius: '4px', border: '1px solid #ccc', fontSize: '16px', boxSizing: 'border-box' },
   radioLabel: { display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: '13px', lineHeight: '1.4', color: '#333', cursor: 'pointer' },
-  button: { width: '100%', padding: '15px', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold', fontSize: '16px' },
+  button: { width: '100%', padding: '15px', backgroundColor: '#0070f3', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold', fontSize: '16px' }, // HIER IST BLAU ZURÜCK!
   header: { display: 'flex', justifyContent: 'space-between', padding: '12px', backgroundColor: '#333', color: '#fff', borderRadius: '5px', marginBottom: '15px', fontSize: '14px' },
   error: { backgroundColor: '#ffe0e0', color: '#cc0000', padding: '10px', borderRadius: '5px', marginBottom: '15px', textAlign: 'center', fontSize: '14px' },
   uploadSection: { marginTop: '20px', borderTop: '1px solid #eee', paddingTop: '15px' },
