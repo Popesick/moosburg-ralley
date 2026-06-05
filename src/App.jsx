@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-// 1. STATIONSDATEN (Station 1 mit neuen Texten, der Rest als Dummys für den Ablauf)
+// 1. STATIONSDATEN
 const STATIONS = [
   {
     id: 1,
@@ -34,10 +34,10 @@ const STATIONS = [
 
 export default function App() {
   const [teamName, setTeamName] = useState('');
-  const [participationChoice, setParticipationChoice] = useState(null); // 1, 2 oder 3
+  const [participationChoice, setParticipationChoice] = useState(null); 
   
   const [currentStationIndex, setCurrentStationIndex] = useState(0);
-  const [stationState, setStationState] = useState('SEEKING'); // 'SEEKING' oder 'FOUND'
+  const [stationState, setStationState] = useState('SEEKING'); 
   
   const [isRegistered, setIsRegistered] = useState(false);
   const [quereinsteigerCode, setQuereinsteigerCode] = useState(null);
@@ -52,7 +52,6 @@ export default function App() {
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     
-    // Geheimer Admin-Modus
     if (urlParams.get('admin') === 'boss') {
       setIsAdminView(true);
       return;
@@ -85,15 +84,12 @@ export default function App() {
       setStationState(savedState);
     }
 
-    // QR-Code Check
     const scannedCode = urlParams.get('code');
     if (scannedCode) {
       if (!savedTeam) {
-        // Unregistrierter Quereinsteiger
         setQuereinsteigerCode(scannedCode);
         setShowQuereinsteigerIntro(true);
       } else {
-        // Registriertes Team scannt Code
         handleScannedCode(scannedCode, currentIndex, savedState || 'SEEKING');
       }
     }
@@ -119,9 +115,6 @@ export default function App() {
     e.preventDefault();
     if (!teamName.trim() || !participationChoice) return;
 
-    // TODO für Iteration 2: Hier den Fetch an den Worker einbauen, um Duplicate Names abzufangen
-    // Beispiel: const res = await fetch('/api/check-name', ...); if(res.status === 409) setErrorMessage('Name vergeben!');
-
     localStorage.setItem('quiz_team_name', teamName.trim());
     localStorage.setItem('quiz_participation_choice', participationChoice.toString());
     localStorage.setItem('quiz_team_progress', '0');
@@ -130,7 +123,6 @@ export default function App() {
     setIsRegistered(true);
     setShowQuereinsteigerIntro(false);
 
-    // Wenn ein Code beim Einstieg gescannt wurde, diesen jetzt anwenden
     if (quereinsteigerCode) {
       handleScannedCode(quereinsteigerCode, 0, 'SEEKING');
     }
@@ -148,7 +140,6 @@ export default function App() {
     const file = e.target.files[0];
     if (!file) return;
 
-    // 10 MB Limit Check
     if (file.size > 10 * 1024 * 1024) {
       setErrorMessage('Das Bild ist zu groß! Maximal erlaubt sind 10 MB.');
       return;
@@ -177,7 +168,6 @@ export default function App() {
 
   // --- UI RENDERING ---
 
-  // ADMIN VIEW
   if (isAdminView) {
     return (
       <div style={styles.container}>
@@ -189,27 +179,39 @@ export default function App() {
     );
   }
 
-  // QUEREINSTEIGER VIEW
   if (showQuereinsteigerIntro) {
     return (
       <div style={styles.container}>
-        <h1 style={styles.title}>Moosburger Stadtrallye</h1>
+        <h1 style={styles.title}>Moosburger Stadtrallye 2026</h1>
         <div style={styles.card}>
           <h2 style={{marginTop: 0}}>Hallo und willkommen! 👋</h2>
           <p style={styles.text}>Du hast einen QR-Code der Stadtrallye gescannt. Bevor es losgeht, musst du schnell ein Team anlegen.</p>
           <button onClick={() => setShowQuereinsteigerIntro(false)} style={styles.button}>Weiter zur Anmeldung</button>
         </div>
+        <div style={styles.partnerLogoWrapper}>
+          <span style={styles.partnerLabel}>Powered by The Corner House</span>
+          <img src="/logo.png" alt="Partner" style={styles.partnerLogo} />
+        </div>
       </div>
     );
   }
 
-  // REGISTRIERUNG
   if (!isRegistered) {
     return (
       <div style={styles.container}>
-        <h1 style={styles.title}>Moosburger Stadtrallye</h1>
+        <h1 style={styles.title}>Moosburger Stadtrallye 2026</h1>
         <div style={styles.card}>
-          <p style={styles.text}>Registriert euch mit eurem Teamnamen (keine E-Mail-Adresse und kein Login erforderlich) und legt los.</p>
+          <p style={styles.text}>
+            Willkommen bei der ersten Moosburger Stadtrallye. Um mitzumachen registriert euch mit eurem Teamnamen (keine E-Mail-Adresse und kein Login erforderlich) und legt los. 
+            Entschlüsselt die Hinweise, findet die versteckten QR-Codes oder NFC-Tags und erreicht das Ziel. 
+            Um eueren Fortschritt zu dokumentieren, ladet an jedem Ort ein Gruppenbild von euch hoch.
+          </p>
+          
+          <div style={styles.dateBox}>
+            <p style={{margin: '8px 0'}}><strong>Start:</strong> xx.xx.xxxx</p>
+            <p style={{margin: '8px 0'}}><strong>Ende:</strong> xx.xx.xxxx</p>
+            <p style={{margin: '8px 0', color: '#0070f3'}}><strong>Siegerehrung:</strong> 21.07.2026</p>
+          </div>
           
           <form onSubmit={handleRegister}>
             <input 
@@ -224,12 +226,12 @@ export default function App() {
             <div style={{display: 'flex', flexDirection: 'column', gap: '15px', marginBottom: '25px'}}>
               <label style={styles.radioLabel}>
                 <input type="radio" name="participation" value="1" onChange={() => setParticipationChoice(1)} required />
-                <span>Ich will an der Verlosung der Preise teilnehmen und stimme zu, dass meine hochgeladenen Bilder vom Veranstalter für Werbe- und Promotionszwecke im Zusammenhang mit der Stadtrallye veröffentlicht werden dürfen. Mehr in der <a href="/privacy.html" target="_blank">Datenschutzerklärung</a>.</span>
+                <span>Ich will an der Verlosung der Preise teilnehmen und stimme zu, dass meine hochgeladenen Bilder vom Veranstalter für Werbe- und Promotionszwecke im Zusammenhang mit der Stadtrallye veröffentlicht werden dürfen. Mehr in der <a href="/privacy.html" target="_blank" rel="noopener noreferrer">Datenschutzerklärung</a>.</span>
               </label>
 
               <label style={styles.radioLabel}>
                 <input type="radio" name="participation" value="2" onChange={() => setParticipationChoice(2)} />
-                <span>Ich will an der Verlosung der Preise teilnehmen und stimme <strong>nicht</strong> zu, dass meine Bilder veröffentlicht werden. Sie dienen nur zur Dokumentation des Fortschritts. Mehr in der <a href="/privacy.html" target="_blank">Datenschutzerklärung</a>.</span>
+                <span>Ich will an der Verlosung der Preise teilnehmen und stimme <strong>nicht</strong> zu, dass meine Bilder veröffentlicht werden. Sie dienen nur zur Dokumentation des Fortschritts. Mehr in der <a href="/privacy.html" target="_blank" rel="noopener noreferrer">Datenschutzerklärung</a>.</span>
               </label>
 
               <label style={styles.radioLabel}>
@@ -243,6 +245,12 @@ export default function App() {
             </button>
           </form>
         </div>
+
+        {/* PARTNER LOGO UNTEN RECHTS */}
+        <div style={styles.partnerLogoWrapper}>
+          <span style={styles.partnerLabel}>Powered by The Corner House</span>
+          <img src="/logo.png" alt="Partner" style={styles.partnerLogo} />
+        </div>
       </div>
     );
   }
@@ -250,14 +258,17 @@ export default function App() {
   const isRalleyFinished = currentStationIndex >= STATIONS.length;
   const currentStation = STATIONS[currentStationIndex]; 
 
-  // FINALE
   if (isRalleyFinished) {
     return (
       <div style={styles.container}>
-        <h1 style={styles.title}>Moosburger Stadtrallye</h1>
+        <h1 style={styles.title}>Moosburger Stadtrallye 2026</h1>
         <div style={styles.card}>
           <h2 style={{textAlign: 'center', marginTop: '0'}}>🎉 FINALE! 🎉</h2>
           <p style={styles.text}>Ziel erreicht! Kommt zur Theke.</p>
+        </div>
+        <div style={styles.partnerLogoWrapper}>
+          <span style={styles.partnerLabel}>Powered by The Corner House</span>
+          <img src="/logo.png" alt="Partner" style={styles.partnerLogo} />
         </div>
       </div>
     );
@@ -269,7 +280,7 @@ export default function App() {
 
   return (
     <div style={styles.container}>
-      <h1 style={styles.title}>Moosburger Stadtrallye</h1>
+      <h1 style={styles.title}>Moosburger Stadtrallye 2026</h1>
       <div style={styles.header}>
         <span>Team: <strong>{teamName}</strong></span>
         <span>Station {currentStationIndex + 1} / {STATIONS.length}</span>
@@ -286,7 +297,6 @@ export default function App() {
             <p style={styles.text}><strong>Euer Hinweis:</strong></p>
             <p style={styles.text}>{currentStation.question}</p>
             
-            {/* Dynamisches Bild: Wird nur angezeigt, wenn die Datei existiert */}
             <img 
               src={`/Hint_Station_${currentStation.id}.png`} 
               alt={`Hinweis für Station ${currentStation.id}`} 
@@ -332,17 +342,24 @@ export default function App() {
             </button>
           </div>
         )}
+      </div>
 
+      {/* PARTNER LOGO UNTEN RECHTS */}
+      <div style={styles.partnerLogoWrapper}>
+        <span style={styles.partnerLabel}>Powered by The Corner House</span>
+        <img src="/logo.png" alt="Partner" style={styles.partnerLogo} />
       </div>
     </div>
   );
 }
 
 const styles = {
-  container: { padding: '20px', maxWidth: '500px', margin: '0 auto', fontFamily: 'Arial, sans-serif', minHeight: '100vh' },
+  // Container braucht padding-bottom: 140px, damit das fixierte Logo nichts verdeckt
+  container: { padding: '20px 20px 140px 20px', maxWidth: '500px', margin: '0 auto', fontFamily: 'Arial, sans-serif', minHeight: '100vh', position: 'relative' },
   title: { textAlign: 'center', color: '#333', fontSize: '26px', marginTop: '0', marginBottom: '20px' },
   card: { backgroundColor: '#fff', padding: '20px', borderRadius: '8px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)', marginBottom: '20px' },
   text: { lineHeight: '1.6', color: '#444', fontSize: '15px' },
+  dateBox: { backgroundColor: '#f0f0f0', padding: '15px', borderRadius: '5px', marginBottom: '25px', fontSize: '15px', textAlign: 'center' },
   input: { width: '100%', padding: '15px', marginBottom: '20px', borderRadius: '4px', border: '1px solid #ccc', fontSize: '16px', boxSizing: 'border-box' },
   radioLabel: { display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: '13px', lineHeight: '1.4', color: '#333', cursor: 'pointer' },
   button: { width: '100%', padding: '15px', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold', fontSize: '16px' },
@@ -351,5 +368,10 @@ const styles = {
   uploadSection: { marginTop: '20px', borderTop: '1px solid #eee', paddingTop: '15px' },
   previewImage: { width: '100%', maxHeight: '180px', objectFit: 'cover', borderRadius: '5px', marginTop: '10px' },
   hintImage: { width: '100%', borderRadius: '8px', marginTop: '15px', marginBottom: '15px', border: '1px solid #ccc' },
-  infoBox: { backgroundColor: '#eef6ff', padding: '15px', borderRadius: '5px', fontSize: '13px', textAlign: 'center', color: '#0056b3' }
+  infoBox: { backgroundColor: '#eef6ff', padding: '15px', borderRadius: '5px', fontSize: '13px', textAlign: 'center', color: '#0056b3' },
+  
+  // DESIGN VOM PARTNER LOGO
+  partnerLogoWrapper: { position: 'fixed', bottom: '20px', right: '20px', display: 'flex', alignItems: 'center', backgroundColor: 'rgba(255,255,255,0.9)', padding: '10px 20px', borderRadius: '30px', boxShadow: '0 3px 10px rgba(0,0,0,0.15)', zIndex: 100 },
+  partnerLabel: { fontSize: '16px', color: '#333', marginRight: '12px', fontWeight: 'bold' },
+  partnerLogo: { maxHeight: '60px', maxWidth: '150px' }
 };
