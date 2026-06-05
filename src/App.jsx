@@ -7,7 +7,7 @@ const STATIONS = [
     name: "Wächter Baracken Mittelschule",
     code: "baracke123",
     question: "Hier trifft eine der größten Mittelschulen in Bayern auf die Überreste des größten Kriegsgefangenenlager innerhalb des Deutschen Reiches im zweiten Weltkrieg.",
-    infoText: "<strong>Ehemalige Baracken der Wachmannschaften:</strong><br/>Die Kaserne der Wachmannschaft befand sich etwa 500 m vom Gefangenenlager entfernt. Die Gebäude dienten nach dem Krieg als Wohngebäude für sozial Bedürftige. Drei dieser Baracken sind noch erhalten und stehen unter Denkmalschutz. Die weitere Nutzung oder der Abriss stehen noch in Diskussion. Ein Teil ist für ein zukünftiges Info- und Dokumentationszentrum vorgesehen. Mehr Informationen unter <a href='https://stalag-moosburg.de/' target='_blank' rel='noopener noreferrer' style='color:#0070f3;'>https://stalag-moosburg.de/</a>"
+    infoText: "<strong>Ehemalige Baracken der Wachmannschaften:</strong><br/>Die Kaserne der Wachmannschaft befindet sich etwa 500 m vom Gefangenenlager entfernt. Die Gebäude dienten nach dem Krieg als Wohngebäude für sozial Bedürftige. Drei dieser Baracken sind noch erhalten und stehen unter Denkmalschutz. Die weitere Nutzung oder der Abriss stehen noch in Diskussion. Ein Teil ist für ein zukünftiges Info- und Dokumentationszentrum vorgesehen. Mehr Informationen unter <a href='https://stalag-moosburg.de/' target='_blank' rel='noopener noreferrer' style='color:#0070f3;'>https://stalag-moosburg.de/</a>"
   },
   {
     id: 2,
@@ -111,20 +111,48 @@ export default function App() {
     }
   };
 
+  // LIVE-REGISTRIERUNG MIT SERVER-CHECK
   const handleRegister = async (e) => {
     e.preventDefault();
     if (!teamName.trim() || !participationChoice) return;
 
-    localStorage.setItem('quiz_team_name', teamName.trim());
-    localStorage.setItem('quiz_participation_choice', participationChoice.toString());
-    localStorage.setItem('quiz_team_progress', '0');
-    localStorage.setItem('quiz_station_state', 'SEEKING');
-    
-    setIsRegistered(true);
-    setShowQuereinsteigerIntro(false);
+    setErrorMessage('');
+    try {
+      const response = await fetch("https://moosburg-ralley-api.andreas-stetter73.workers.dev/api/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ 
+          team: teamName.trim(), 
+          choice: participationChoice 
+        })
+      });
 
-    if (quereinsteigerCode) {
-      handleScannedCode(quereinsteigerCode, 0, 'SEEKING');
+      // Wenn der Server 409 meldet -> Name vergeben!
+      if (response.status === 409) {
+        const data = await response.json();
+        setErrorMessage(data.error || "Dieser Teamname ist leider schon vergeben!");
+        return;
+      }
+
+      if (!response.ok) {
+        setErrorMessage("Fehler bei der Kommunikation mit dem Server. Bitte versucht es nochmal.");
+        return;
+      }
+
+      // Anmeldung war erfolgreich -> Lokal speichern
+      localStorage.setItem('quiz_team_name', teamName.trim());
+      localStorage.setItem('quiz_participation_choice', participationChoice.toString());
+      localStorage.setItem('quiz_team_progress', '0');
+      localStorage.setItem('quiz_station_state', 'SEEKING');
+      
+      setIsRegistered(true);
+      setShowQuereinsteigerIntro(false);
+
+      if (quereinsteigerCode) {
+        handleScannedCode(quereinsteigerCode, 0, 'SEEKING');
+      }
+    } catch (error) {
+      setErrorMessage("Netzwerkfehler! Überprüft eure Internetverbindung.");
     }
   };
 
@@ -151,10 +179,15 @@ export default function App() {
       setIsUploading(true);
       setErrorMessage('');
       try {
-        await fetch("https://moosburg-ralley-api.andreas-stetter73.workers.dev", {
+        await fetch("https://moosburg-ralley-api.andreas-stetter73.workers.dev/api/upload", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ team: teamName, station: stationId, image: reader.result })
+          body: JSON.stringify({ 
+            team: teamName, 
+            station: stationId, 
+            image: reader.result,
+            progress: currentStationIndex + 1 // Synchronisiert den DB-Stand im Hintergrund
+          })
         });
       } catch (error) {
         setErrorMessage('Upload-Fehler! Bild konnte lokal gespeichert, aber nicht an den Server gesendet werden.');
@@ -200,6 +233,9 @@ export default function App() {
     return (
       <div style={styles.container}>
         <h1 style={styles.title}>Moosburger Stadtrallye 2026</h1>
+        
+        {errorMessage && <div style={styles.error}>{errorMessage}</div>}
+
         <div style={styles.card}>
           <p style={styles.text}>
             Willkommen bei der ersten Moosburger Stadtrallye. Um mitzumachen registriert euch mit eurem Teamnamen (keine E-Mail-Adresse und kein Login erforderlich) und legt los. 
@@ -246,7 +282,6 @@ export default function App() {
           </form>
         </div>
 
-        {/* PARTNER LOGO UNTEN RECHTS */}
         <div style={styles.partnerLogoWrapper}>
           <span style={styles.partnerLabel}>Powered by The Corner House</span>
           <img src="/logo_ch.png" alt="Partner" style={styles.partnerLogo} />
@@ -264,7 +299,7 @@ export default function App() {
         <h1 style={styles.title}>Moosburger Stadtrallye 2026</h1>
         <div style={styles.card}>
           <h2 style={{textAlign: 'center', marginTop: '0'}}>🎉 FINALE! 🎉</h2>
-          <p style={styles.text}>Ziel erreicht! Kommt zur Theke.</p>
+          <p style={styles.text}>Ziel erreicht! Kommt zur Theke im Corner House.</p>
         </div>
         <div style={styles.partnerLogoWrapper}>
           <span style={styles.partnerLabel}>Powered by The Corner House</span>
@@ -344,7 +379,6 @@ export default function App() {
         )}
       </div>
 
-      {/* PARTNER LOGO UNTEN RECHTS */}
       <div style={styles.partnerLogoWrapper}>
         <span style={styles.partnerLabel}>Powered by The Corner House</span>
         <img src="/logo_ch.png" alt="Partner" style={styles.partnerLogo} />
@@ -354,7 +388,6 @@ export default function App() {
 }
 
 const styles = {
-  // Container braucht padding-bottom: 140px, damit das fixierte Logo nichts verdeckt
   container: { padding: '20px 20px 140px 20px', maxWidth: '500px', margin: '0 auto', fontFamily: 'Arial, sans-serif', minHeight: '100vh', position: 'relative' },
   title: { textAlign: 'center', color: '#333', fontSize: '26px', marginTop: '0', marginBottom: '20px' },
   card: { backgroundColor: '#fff', padding: '20px', borderRadius: '8px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)', marginBottom: '20px' },
@@ -369,8 +402,6 @@ const styles = {
   previewImage: { width: '100%', maxHeight: '180px', objectFit: 'cover', borderRadius: '5px', marginTop: '10px' },
   hintImage: { width: '100%', borderRadius: '8px', marginTop: '15px', marginBottom: '15px', border: '1px solid #ccc' },
   infoBox: { backgroundColor: '#eef6ff', padding: '15px', borderRadius: '5px', fontSize: '13px', textAlign: 'center', color: '#0056b3' },
-  
-  // DESIGN VOM PARTNER LOGO
   partnerLogoWrapper: { position: 'fixed', bottom: '20px', right: '20px', display: 'flex', alignItems: 'center', backgroundColor: 'rgba(255,255,255,0.9)', padding: '10px 20px', borderRadius: '30px', boxShadow: '0 3px 10px rgba(0,0,0,0.15)', zIndex: 100 },
   partnerLabel: { fontSize: '16px', color: '#333', marginRight: '12px', fontWeight: 'bold' },
   partnerLogo: { maxHeight: '60px', maxWidth: '150px' }
