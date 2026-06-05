@@ -46,7 +46,11 @@ export default function App() {
   const [uploadedPhotos, setUploadedPhotos] = useState({});
   const [errorMessage, setErrorMessage] = useState('');
   const [isUploading, setIsUploading] = useState(false);
+  
+  // ADMIN STATES
   const [isAdminView, setIsAdminView] = useState(false);
+  const [adminTeams, setAdminTeams] = useState([]);
+  const [isLoadingAdmin, setIsLoadingAdmin] = useState(false);
 
   // LOGIK: LADEN & RESET
   useEffect(() => {
@@ -54,6 +58,7 @@ export default function App() {
     
     if (urlParams.get('admin') === 'boss') {
       setIsAdminView(true);
+      fetchAdminData(); // Daten direkt beim Starten der Admin-Ansicht laden
       return;
     }
 
@@ -95,6 +100,27 @@ export default function App() {
     }
   }, []);
 
+  // ADMIN-DATEN ABRUFEN
+  const fetchAdminData = async () => {
+    setIsLoadingAdmin(true);
+    setErrorMessage('');
+    try {
+      const response = await fetch("https://moosburg-ralley-api.andreas-stetter73.workers.dev/api/admin/teams");
+      if (response.ok) {
+        const data = await response.json();
+        // Teams nach Registrierungsdatum absteigend sortieren
+        data.sort((a, b) => new Date(b.registeredAt) - new Date(a.registeredAt));
+        setAdminTeams(data);
+      } else {
+        setErrorMessage("Fehler beim Abrufen der Team-Daten vom Server.");
+      }
+    } catch (error) {
+      setErrorMessage("Netzwerkfehler! Konnte die Admin-Daten nicht laden.");
+    } finally {
+      setIsLoadingAdmin(false);
+    }
+  };
+
   const handleScannedCode = (code, currentIndex, currentState) => {
     if (currentIndex >= STATIONS.length) return;
     const expectedStation = STATIONS[currentIndex];
@@ -127,7 +153,6 @@ export default function App() {
         })
       });
 
-      // Wenn der Server 409 meldet -> Name vergeben!
       if (response.status === 409) {
         const data = await response.json();
         setErrorMessage(data.error || "Dieser Teamname ist leider schon vergeben!");
@@ -139,7 +164,6 @@ export default function App() {
         return;
       }
 
-      // Anmeldung war erfolgreich -> Lokal speichern
       localStorage.setItem('quiz_team_name', teamName.trim());
       localStorage.setItem('quiz_participation_choice', participationChoice.toString());
       localStorage.setItem('quiz_team_progress', '0');
@@ -186,7 +210,7 @@ export default function App() {
             team: teamName, 
             station: stationId, 
             image: reader.result,
-            progress: currentStationIndex + 1 // Synchronisiert den DB-Stand im Hintergrund
+            progress: currentStationIndex + 1 
           })
         });
       } catch (error) {
@@ -201,17 +225,64 @@ export default function App() {
 
   // --- UI RENDERING ---
 
+  // ADMIN VIEW DASHBOARD
   if (isAdminView) {
     return (
-      <div style={styles.container}>
-        <h1 style={styles.title}>Admin Dashboard</h1>
+      <div style={{...styles.container, maxWidth: '800px'}}>
+        <h1 style={styles.title}>Moosburger Stadtrallye - Admin</h1>
+        {errorMessage && <div style={styles.error}>{errorMessage}</div>}
+        
         <div style={styles.card}>
-          <p>Hier siehst du in Kürze alle registrierten Teams und ihren Fortschritt. (Benötigt Datenbank-Update im Backend).</p>
+          <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px'}}>
+            <h2 style={{marginTop: 0, marginBottom: 0}}>Registrierte Teams ({adminTeams.length})</h2>
+            <button 
+              onClick={fetchAdminData} 
+              style={{padding: '8px 16px', backgroundColor: '#0070f3', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold'}}
+              disabled={isLoadingAdmin}
+            >
+              {isLoadingAdmin ? 'Lädt...' : '🔄 Aktualisieren'}
+            </button>
+          </div>
+
+          <div style={{overflowX: 'auto'}}>
+            <table style={{width: '100%', borderCollapse: 'collapse', fontSize: '14px', textAlign: 'left'}}>
+              <thead>
+                <tr style={{backgroundColor: '#f0f0f0'}}>
+                  <th style={styles.th}>Teamname</th>
+                  <th style={styles.th}>Station (Fortschritt)</th>
+                  <th style={styles.th}>Option (Rechte)</th>
+                  <th style={styles.th}>Registriert am</th>
+                </tr>
+              </thead>
+              <tbody>
+                {adminTeams.map((team, idx) => (
+                  <tr key={idx} style={{borderBottom: '1px solid #eee'}}>
+                    <td style={styles.td}><strong>{team.originalName}</strong></td>
+                    <td style={styles.td}>
+                      <span style={{backgroundColor: '#eef6ff', padding: '4px 8px', borderRadius: '12px', fontWeight: 'bold', color: '#0070f3'}}>
+                        {team.progress} / {STATIONS.length}
+                      </span>
+                    </td>
+                    <td style={styles.td}>Option {team.choice}</td>
+                    <td style={styles.td}>
+                      {new Date(team.registeredAt).toLocaleDateString('de-DE', {day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'})}
+                    </td>
+                  </tr>
+                ))}
+                {adminTeams.length === 0 && !isLoadingAdmin && (
+                  <tr>
+                    <td colSpan="4" style={{padding: '30px', textAlign: 'center', color: '#666'}}>Noch keine Teams registriert.</td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     );
   }
 
+  // QUEREINSTEIGER VIEW
   if (showQuereinsteigerIntro) {
     return (
       <div style={styles.container}>
@@ -229,6 +300,7 @@ export default function App() {
     );
   }
 
+  // REGISTRIERUNG VIEW
   if (!isRegistered) {
     return (
       <div style={styles.container}>
@@ -293,6 +365,7 @@ export default function App() {
   const isRalleyFinished = currentStationIndex >= STATIONS.length;
   const currentStation = STATIONS[currentStationIndex]; 
 
+  // FINALE VIEW
   if (isRalleyFinished) {
     return (
       <div style={styles.container}>
@@ -313,6 +386,7 @@ export default function App() {
   const photoUploaded = uploadedPhotos[currentStation.id];
   const canProceed = !uploadRequired || photoUploaded;
 
+  // SPIEL VIEW
   return (
     <div style={styles.container}>
       <h1 style={styles.title}>Moosburger Stadtrallye 2026</h1>
@@ -404,5 +478,9 @@ const styles = {
   infoBox: { backgroundColor: '#eef6ff', padding: '15px', borderRadius: '5px', fontSize: '13px', textAlign: 'center', color: '#0056b3' },
   partnerLogoWrapper: { position: 'fixed', bottom: '20px', right: '20px', display: 'flex', alignItems: 'center', backgroundColor: 'rgba(255,255,255,0.9)', padding: '10px 20px', borderRadius: '30px', boxShadow: '0 3px 10px rgba(0,0,0,0.15)', zIndex: 100 },
   partnerLabel: { fontSize: '16px', color: '#333', marginRight: '12px', fontWeight: 'bold' },
-  partnerLogo: { maxHeight: '60px', maxWidth: '150px' }
+  partnerLogo: { maxHeight: '60px', maxWidth: '150px' },
+  
+  // Admin-Tabellen-Styles
+  th: { padding: '12px', borderBottom: '2px solid #ddd', color: '#555' },
+  td: { padding: '12px' }
 };
