@@ -1,0 +1,17 @@
+{
+  "short_name": "Stadtrallye",
+  "name": "Moosburger Stadtrallye 2026",
+  "icons": [
+    {
+      "src": "/dein-favicon.svg", 
+      "type": "image/svg+xml",
+      "sizes": "any",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#F5F3EB",
+  "display": "standalone",
+  "theme_color": "#0B2846",
+  "description": "Die digitale Schnitzeljagd durch Moosburg"
+}
