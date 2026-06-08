@@ -1,6 +1,10 @@
 {
+  "id": "/?source=pwa",
   "short_name": "Stadtrallye",
   "name": "Moosburger Stadtrallye 2026",
+  "lang": "de-DE",
+  "dir": "ltr",
+  "orientation": "portrait",
   "icons": [
     {
       "src": "/logo_192.png",
