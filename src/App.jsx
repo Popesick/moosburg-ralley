@@ -157,9 +157,8 @@ export default function App() {
   // PWA INSTALL BUTTON LOGIK
   const handleInstallClick = async () => {
     if (isIOS) {
-      setShowIOSHint(!showIOSHint); // Blendet die Apple-Anleitung ein/aus
+      setShowIOSHint(!showIOSHint); 
     } else if (deferredPrompt) {
-      // Android / Chrome Logik
       deferredPrompt.prompt();
       const { outcome } = await deferredPrompt.userChoice;
       if (outcome === 'accepted') {
@@ -347,10 +346,9 @@ export default function App() {
     reader.readAsDataURL(file);
   };
 
-  // --- HILFS-KOMPONENTE FÜR DEN INSTALL-BANNER ---
   const InstallBanner = () => {
-    if (isStandalone) return null; // App ist schon installiert, Banner verstecken!
-    if (!isIOS && !deferredPrompt) return null; // Android, aber Prompt (noch) nicht bereit
+    if (isStandalone) return null; 
+    if (!isIOS && !deferredPrompt) return null; 
 
     return (
       <div style={styles.installBanner}>
@@ -363,8 +361,6 @@ export default function App() {
             Installieren
           </button>
         </div>
-        
-        {/* Spezial-Anleitung für iOS (Apple) */}
         {showIOSHint && (
           <div style={styles.iosHintBox}>
             Tippe in Safari unten auf das <strong>Teilen-Symbol</strong> (Viereck mit Pfeil nach oben) und wähle dann <strong>"Zum Home-Bildschirm"</strong> aus.
@@ -429,9 +425,16 @@ export default function App() {
             </table>
           </div>
         </div>
+
         <div style={styles.footer}>
           <a href="/impressum.html" style={styles.footerLink}>Impressum</a> | 
           <a href="/privacy.html" style={styles.footerLink}>Datenschutz</a>
+        </div>
+
+        {/* PARTNER LOGO */}
+        <div style={styles.partnerLogoWrapper}>
+          <span style={styles.partnerLabel}>Powered by The Corner House</span>
+          <img src="/logo_ch.png" alt="Partner" style={styles.partnerLogo} />
         </div>
       </div>
     );
@@ -448,15 +451,21 @@ export default function App() {
           <p style={styles.text}>Du hast einen QR-Code der Stadtrallye gescannt. Bevor es losgeht, musst du schnell ein Team anlegen.</p>
           <button onClick={() => setShowQuereinsteigerIntro(false)} style={styles.button}>Weiter zur Anmeldung</button>
         </div>
+        
         <div style={styles.footer}>
           <a href="/impressum.html" style={styles.footerLink}>Impressum</a> | 
           <a href="/privacy.html" style={styles.footerLink}>Datenschutz</a>
+        </div>
+
+        <div style={styles.partnerLogoWrapper}>
+          <span style={styles.partnerLabel}>Powered by The Corner House</span>
+          <img src="/logo_ch.png" alt="Partner" style={styles.partnerLogo} />
         </div>
       </div>
     );
   }
 
-  // REGISTRIERUNG VIEW
+  // REGISTRIERUNG VIEW 
   if (!isRegistered) {
     return (
       <div style={styles.container}>
@@ -516,6 +525,11 @@ export default function App() {
           <a href="/impressum.html" style={styles.footerLink}>Impressum</a> | 
           <a href="/privacy.html" style={styles.footerLink}>Datenschutz</a>
         </div>
+
+        <div style={styles.partnerLogoWrapper}>
+          <span style={styles.partnerLabel}>Powered by The Corner House</span>
+          <img src="/logo_ch.png" alt="Partner" style={styles.partnerLogo} />
+        </div>
       </div>
     );
   }
@@ -545,6 +559,11 @@ export default function App() {
           <a href="/impressum.html" style={styles.footerLink}>Impressum</a> | 
           <a href="/privacy.html" style={styles.footerLink}>Datenschutz</a>
         </div>
+
+        <div style={styles.partnerLogoWrapper}>
+          <span style={styles.partnerLabel}>Powered by The Corner House</span>
+          <img src="/logo_ch.png" alt="Partner" style={styles.partnerLogo} />
+        </div>
       </div>
     );
   }
@@ -566,6 +585,10 @@ export default function App() {
         <div style={styles.footer}>
           <a href="/impressum.html" style={styles.footerLink}>Impressum</a> | 
           <a href="/privacy.html" style={styles.footerLink}>Datenschutz</a>
+        </div>
+        <div style={styles.partnerLogoWrapper}>
+          <span style={styles.partnerLabel}>Powered by The Corner House</span>
+          <img src="/logo_ch.png" alt="Partner" style={styles.partnerLogo} />
         </div>
       </div>
     );
@@ -629,13 +652,18 @@ export default function App() {
         <a href="/impressum.html" style={styles.footerLink}>Impressum</a> | 
         <a href="/privacy.html" style={styles.footerLink}>Datenschutz</a>
       </div>
+
+      <div style={styles.partnerLogoWrapper}>
+        <span style={styles.partnerLabel}>Powered by The Corner House</span>
+        <img src="/logo_ch.png" alt="Partner" style={styles.partnerLogo} />
+      </div>
     </div>
   );
 }
 
 // NEUE STYLES BASIEREND AUF DEM FLYER
 const styles = {
-  container: { padding: '20px 20px 60px 20px', maxWidth: '500px', margin: '0 auto', fontFamily: '"Segoe UI", Roboto, Helvetica, Arial, sans-serif', minHeight: '100vh', backgroundColor: '#F5F3EB' },
+  container: { padding: '20px 20px 140px 20px', maxWidth: '500px', margin: '0 auto', fontFamily: '"Segoe UI", Roboto, Helvetica, Arial, sans-serif', minHeight: '100vh', position: 'relative', backgroundColor: '#F5F3EB' },
   title: { textAlign: 'center', color: '#0B2846', fontSize: '32px', marginTop: '10px', marginBottom: '20px', textTransform: 'uppercase', lineHeight: '1.1', fontWeight: '900', letterSpacing: '1px' },
   card: { backgroundColor: '#fff', padding: '25px', borderRadius: '12px', boxShadow: '0 4px 15px rgba(11, 40, 70, 0.08)', marginBottom: '20px', border: '1px solid rgba(11, 40, 70, 0.05)' },
   dashedLine: { height: '0', borderBottom: '2px dashed #0B2846', opacity: '0.2', margin: '15px 0' },
@@ -669,5 +697,10 @@ const styles = {
 
   // Footer Styles
   footer: { textAlign: 'center', marginTop: '30px', paddingBottom: '20px', fontSize: '13px', color: '#888' },
-  footerLink: { color: '#0B2846', textDecoration: 'none', fontWeight: 'bold', margin: '0 10px' }
+  footerLink: { color: '#0B2846', textDecoration: 'none', fontWeight: 'bold', margin: '0 10px' },
+
+  // Partner Logo (wieder eingefügt)
+  partnerLogoWrapper: { position: 'fixed', bottom: '20px', right: '20px', display: 'flex', alignItems: 'center', backgroundColor: 'rgba(255,255,255,0.9)', padding: '10px 20px', borderRadius: '30px', boxShadow: '0 3px 10px rgba(0,0,0,0.15)', zIndex: 100 },
+  partnerLabel: { fontSize: '16px', color: '#333', marginRight: '12px', fontWeight: 'bold' },
+  partnerLogo: { maxHeight: '60px', maxWidth: '150px' }
 };
