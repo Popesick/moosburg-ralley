@@ -346,8 +346,23 @@ export default function App() {
     reader.readAsDataURL(file);
   };
 
+  // --- HILFS-KOMPONENTE FÜR DEN INSTALL-BANNER MIT BROWSER-CHECK ---
   const InstallBanner = () => {
     if (isStandalone) return null; 
+    
+    // Erkennung ob wir im "Gefängnis" eines In-App-Browsers ODER im Samsung Browser stecken
+    const isWebView = /Instagram|FBAV|FBAN|SamsungBrowser/i.test(navigator.userAgent);
+    
+    if (isWebView) {
+      return (
+        <div style={{...styles.installBanner, borderLeft: '4px solid #cc0000'}}>
+          <p style={{fontSize: '13px', color: '#333'}}>
+            Du benutzt einen Browser (z. B. Samsung Internet oder Instagram), der App-Installationen aktuell fehlerhaft verarbeitet. Bitte öffne diese Seite in <strong>Google Chrome</strong> oder <strong>Safari</strong>, um die Stadtrallye sicher zu installieren.
+          </p>
+        </div>
+      );
+    }
+
     if (!isIOS && !deferredPrompt) return null; 
 
     return (
@@ -699,7 +714,7 @@ const styles = {
   footer: { textAlign: 'center', marginTop: '30px', paddingBottom: '20px', fontSize: '13px', color: '#888' },
   footerLink: { color: '#0B2846', textDecoration: 'none', fontWeight: 'bold', margin: '0 10px' },
 
-  // Partner Logo (wieder eingefügt)
+  // Partner Logo
   partnerLogoWrapper: { position: 'fixed', bottom: '20px', right: '20px', display: 'flex', alignItems: 'center', backgroundColor: 'rgba(255,255,255,0.9)', padding: '10px 20px', borderRadius: '30px', boxShadow: '0 3px 10px rgba(0,0,0,0.15)', zIndex: 100 },
   partnerLabel: { fontSize: '16px', color: '#333', marginRight: '12px', fontWeight: 'bold' },
   partnerLogo: { maxHeight: '60px', maxWidth: '150px' }
