@@ -54,14 +54,38 @@ export default function App() {
   const [isRallyActive, setIsRallyActive] = useState(new Date() >= START_DATE);
   const [countdownText, setCountdownText] = useState('');
 
+  // PWA / INSTALL STATES
+  const [isStandalone, setIsStandalone] = useState(false);
+  const [deferredPrompt, setDeferredPrompt] = useState(null);
+  const [isIOS, setIsIOS] = useState(false);
+  const [showIOSHint, setShowIOSHint] = useState(false);
+
   // ADMIN STATES
   const [isAdminView, setIsAdminView] = useState(false);
   const [adminTeams, setAdminTeams] = useState([]);
   const [isLoadingAdmin, setIsLoadingAdmin] = useState(false);
 
-  // LOGIK: LADEN, RESET & COUNTDOWN
+  // LOGIK: LADEN, RESET, COUNTDOWN & PWA
   useEffect(() => {
     document.title = "Stadtrallye 2026";
+
+    // PWA Check: Läuft die App schon als installierte App?
+    if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {
+      setIsStandalone(true);
+    }
+
+    // PWA: Android Install Prompt abfangen
+    const handleBeforeInstallPrompt = (e) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+    };
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+
+    // PWA: Check ob iOS (Apple)
+    const userAgent = window.navigator.userAgent.toLowerCase();
+    if (/iphone|ipad|ipod/.test(userAgent)) {
+      setIsIOS(true);
+    }
 
     const urlParams = new URLSearchParams(window.location.search);
     
@@ -124,8 +148,25 @@ export default function App() {
       }
     }, 1000);
 
-    return () => clearInterval(timer);
+    return () => {
+      clearInterval(timer);
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    };
   }, []);
+
+  // PWA INSTALL BUTTON LOGIK
+  const handleInstallClick = async () => {
+    if (isIOS) {
+      setShowIOSHint(!showIOSHint); // Blendet die Apple-Anleitung ein/aus
+    } else if (deferredPrompt) {
+      // Android / Chrome Logik
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      if (outcome === 'accepted') {
+        setDeferredPrompt(null);
+      }
+    }
+  };
 
   const fetchAdminData = async () => {
     setIsLoadingAdmin(true);
@@ -306,6 +347,34 @@ export default function App() {
     reader.readAsDataURL(file);
   };
 
+  // --- HILFS-KOMPONENTE FÜR DEN INSTALL-BANNER ---
+  const InstallBanner = () => {
+    if (isStandalone) return null; // App ist schon installiert, Banner verstecken!
+    if (!isIOS && !deferredPrompt) return null; // Android, aber Prompt (noch) nicht bereit
+
+    return (
+      <div style={styles.installBanner}>
+        <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
+          <div>
+            <strong style={{display: 'block', color: '#0B2846'}}>App installieren</strong>
+            <span style={{fontSize: '12px', color: '#666'}}>Füge die Stadtrallye zum Startbildschirm hinzu!</span>
+          </div>
+          <button onClick={handleInstallClick} style={styles.installBtn}>
+            Installieren
+          </button>
+        </div>
+        
+        {/* Spezial-Anleitung für iOS (Apple) */}
+        {showIOSHint && (
+          <div style={styles.iosHintBox}>
+            Tippe in Safari unten auf das <strong>Teilen-Symbol</strong> (Viereck mit Pfeil nach oben) und wähle dann <strong>"Zum Home-Bildschirm"</strong> aus.
+          </div>
+        )}
+      </div>
+    );
+  };
+
+
   // --- UI RENDERING ---
 
   // ADMIN VIEW DASHBOARD
@@ -360,6 +429,10 @@ export default function App() {
             </table>
           </div>
         </div>
+        <div style={styles.footer}>
+          <a href="/impressum.html" style={styles.footerLink}>Impressum</a> | 
+          <a href="/privacy.html" style={styles.footerLink}>Datenschutz</a>
+        </div>
       </div>
     );
   }
@@ -375,15 +448,21 @@ export default function App() {
           <p style={styles.text}>Du hast einen QR-Code der Stadtrallye gescannt. Bevor es losgeht, musst du schnell ein Team anlegen.</p>
           <button onClick={() => setShowQuereinsteigerIntro(false)} style={styles.button}>Weiter zur Anmeldung</button>
         </div>
+        <div style={styles.footer}>
+          <a href="/impressum.html" style={styles.footerLink}>Impressum</a> | 
+          <a href="/privacy.html" style={styles.footerLink}>Datenschutz</a>
+        </div>
       </div>
     );
   }
 
-  // REGISTRIERUNG VIEW (Mit ausführlichem Text & FAQ)
+  // REGISTRIERUNG VIEW
   if (!isRegistered) {
     return (
       <div style={styles.container}>
         <h1 style={styles.title}>Moosburger<br/><span style={{color: '#66B014'}}>Stadtrallye</span></h1>
+        
+        <InstallBanner />
         
         {errorMessage && <div style={styles.error}>{errorMessage}</div>}
         
@@ -398,9 +477,8 @@ export default function App() {
           </p>
           
           <div style={styles.dateBox}>
-            {/* HIER WAR DER FEHLER: color: '#0B2846' wurde zu color: '#fff' geändert */}
             <p style={{margin: '5px 0', fontSize: '18px', fontWeight: 'bold', color: '#fff'}}>📅 6. - 12. JULI 2026</p>
-            <p style={{margin: '0', fontSize: '14px', textTransform: 'uppercase'}}>Eine Woche. Deine Stadt. Dein Abenteuer.</p>
+            <p style={{margin: '0', fontSize: '14px', color: '#fff', textTransform: 'uppercase'}}>Eine Woche. Deine Stadt. Dein Abenteuer.</p>
           </div>
           
           <form onSubmit={handleRegister}>
@@ -425,32 +503,19 @@ export default function App() {
           </form>
         </div>
 
-        {/* FAQ BEREICH */}
         <div style={styles.card}>
           <h2 style={{marginTop: 0, color: '#0B2846', textAlign: 'center'}}>FAQ - Häufige Fragen</h2>
           <div style={styles.dashedLine}></div>
-          
-          <details style={styles.faqItem}>
-            <summary style={styles.faqSummary}>Was kostet die Teilnahme?</summary>
-            <div style={styles.faqContent}>Die Teilnahme an der Moosburger Stadtrallye ist völlig kostenlos!</div>
-          </details>
-
-          <details style={styles.faqItem}>
-            <summary style={styles.faqSummary}>Müssen wir alles an einem Tag schaffen?</summary>
-            <div style={styles.faqContent}>Nein. Ihr habt vom 6. bis zum 12. Juli Zeit. Euer Fortschritt wird auf eurem Gerät gespeichert. Ihr könnt jederzeit pausieren und an einem anderen Tag weitermachen.</div>
-          </details>
-
-          <details style={styles.faqItem}>
-            <summary style={styles.faqSummary}>Was brauche ich zum Mitmachen?</summary>
-            <div style={styles.faqContent}>Nur ein Smartphone mit Internetverbindung, eine funktionierende Kamera für die Beweisfotos und gute Laune!</div>
-          </details>
-
-          <details style={styles.faqItem}>
-            <summary style={styles.faqSummary}>Was gibt es zu gewinnen?</summary>
-            <div style={styles.faqContent}>Dank unserer fantastischen Sponsoren (The Corner House, Modehaus Heilingbrunner, Barbaras Bücherstube, Josef Gerlspeck, Leni Goth Place) warten großartige Gutscheine und Sachpreise auf die Gewinnerteams!</div>
-          </details>
+          <details style={styles.faqItem}><summary style={styles.faqSummary}>Was kostet die Teilnahme?</summary><div style={styles.faqContent}>Die Teilnahme an der Moosburger Stadtrallye ist völlig kostenlos!</div></details>
+          <details style={styles.faqItem}><summary style={styles.faqSummary}>Müssen wir alles an einem Tag schaffen?</summary><div style={styles.faqContent}>Nein. Ihr habt vom 6. bis zum 12. Juli Zeit. Euer Fortschritt wird auf eurem Gerät gespeichert. Ihr könnt jederzeit pausieren und an einem anderen Tag weitermachen.</div></details>
+          <details style={styles.faqItem}><summary style={styles.faqSummary}>Was brauche ich zum Mitmachen?</summary><div style={styles.faqContent}>Nur ein Smartphone mit Internetverbindung, eine funktionierende Kamera für die Beweisfotos und gute Laune!</div></details>
+          <details style={styles.faqItem}><summary style={styles.faqSummary}>Was gibt es zu gewinnen?</summary><div style={styles.faqContent}>Dank unserer fantastischen Sponsoren (The Corner House, Modehaus Heilingbrunner, Barbaras Bücherstube, Josef Gerlspeck, Leni Goth Place) warten großartige Gutscheine und Sachpreise auf die Gewinnerteams!</div></details>
         </div>
 
+        <div style={styles.footer}>
+          <a href="/impressum.html" style={styles.footerLink}>Impressum</a> | 
+          <a href="/privacy.html" style={styles.footerLink}>Datenschutz</a>
+        </div>
       </div>
     );
   }
@@ -460,6 +525,9 @@ export default function App() {
     return (
       <div style={styles.container}>
         <h1 style={styles.title}>Moosburger<br/><span style={{color: '#66B014'}}>Stadtrallye</span></h1>
+        
+        <InstallBanner />
+
         <div style={styles.card}>
           <h2 style={{textAlign: 'center', color: '#0B2846', marginTop: 0}}>Anmeldung erfolgreich! 🎉</h2>
           <div style={styles.dashedLine}></div>
@@ -470,10 +538,12 @@ export default function App() {
             <div style={{fontSize: '12px', textTransform: 'uppercase', letterSpacing: '1px', color: '#0B2846', marginBottom: '5px'}}>Startet in:</div>
             <div style={{fontSize: '22px', fontWeight: 'bold', color: '#66B014'}}>{countdownText || 'Lädt...'}</div>
           </div>
+          <p style={{fontSize: '13px', color: '#666', textAlign: 'center', fontStyle: 'italic', marginTop: '20px'}}>Speichert euch diese Seite als Lesezeichen oder ladet sie als App herunter.</p>
+        </div>
 
-          <p style={{fontSize: '13px', color: '#666', textAlign: 'center', fontStyle: 'italic', marginTop: '20px'}}>
-            Speichert euch diese Seite als Lesezeichen oder lasst den Tab einfach offen.
-          </p>
+        <div style={styles.footer}>
+          <a href="/impressum.html" style={styles.footerLink}>Impressum</a> | 
+          <a href="/privacy.html" style={styles.footerLink}>Datenschutz</a>
         </div>
       </div>
     );
@@ -492,6 +562,10 @@ export default function App() {
           <div style={styles.dashedLine}></div>
           <p style={{...styles.text, textAlign: 'center', fontSize: '18px', fontWeight: 'bold'}}>Herzlichen Glückwunsch, Team {teamName}!</p>
           <p style={{...styles.text, textAlign: 'center'}}>Ihr habt alle Rätsel gelöst und Moosburg neu entdeckt. Kommt zur Theke im Corner House und feiert euren Erfolg!</p>
+        </div>
+        <div style={styles.footer}>
+          <a href="/impressum.html" style={styles.footerLink}>Impressum</a> | 
+          <a href="/privacy.html" style={styles.footerLink}>Datenschutz</a>
         </div>
       </div>
     );
@@ -550,6 +624,11 @@ export default function App() {
           </div>
         )}
       </div>
+
+      <div style={styles.footer}>
+        <a href="/impressum.html" style={styles.footerLink}>Impressum</a> | 
+        <a href="/privacy.html" style={styles.footerLink}>Datenschutz</a>
+      </div>
     </div>
   );
 }
@@ -573,6 +652,11 @@ const styles = {
   hintImage: { width: '100%', borderRadius: '8px', marginTop: '15px', marginBottom: '15px', border: '2px solid #eee' },
   infoBox: { backgroundColor: '#eef2f5', padding: '15px', borderRadius: '8px', fontSize: '14px', textAlign: 'center', color: '#0B2846', fontWeight: 'bold' },
   
+  // Install Banner Styles
+  installBanner: { backgroundColor: '#eef2f5', borderLeft: '4px solid #66B014', padding: '15px', borderRadius: '8px', marginBottom: '20px', boxShadow: '0 2px 5px rgba(0,0,0,0.05)' },
+  installBtn: { backgroundColor: '#0B2846', color: '#fff', border: 'none', padding: '8px 15px', borderRadius: '20px', fontSize: '13px', fontWeight: 'bold', cursor: 'pointer' },
+  iosHintBox: { marginTop: '12px', fontSize: '13px', color: '#333', backgroundColor: '#fff', padding: '10px', borderRadius: '5px', border: '1px dashed #ccc' },
+
   // FAQ Styles
   faqItem: { borderBottom: '1px solid #eee', padding: '10px 0' },
   faqSummary: { fontWeight: 'bold', color: '#0B2846', cursor: 'pointer', outline: 'none', fontSize: '15px', padding: '5px 0' },
@@ -581,5 +665,9 @@ const styles = {
   // Admin Table Styles
   th: { padding: '12px', borderBottom: '2px solid #0B2846', color: '#0B2846' },
   td: { padding: '12px', color: '#333' },
-  actionBtn: { background: 'none', border: 'none', cursor: 'pointer', fontSize: '18px', margin: '0 5px' }
+  actionBtn: { background: 'none', border: 'none', cursor: 'pointer', fontSize: '18px', margin: '0 5px' },
+
+  // Footer Styles
+  footer: { textAlign: 'center', marginTop: '30px', paddingBottom: '20px', fontSize: '13px', color: '#888' },
+  footerLink: { color: '#0B2846', textDecoration: 'none', fontWeight: 'bold', margin: '0 10px' }
 };
