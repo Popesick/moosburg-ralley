@@ -398,7 +398,8 @@ export default function App() {
           </p>
           
           <div style={styles.dateBox}>
-            <p style={{margin: '5px 0', fontSize: '18px', fontWeight: 'bold', color: '#0B2846'}}>📅 6. - 12. JULI 2026</p>
+            {/* HIER WAR DER FEHLER: color: '#0B2846' wurde zu color: '#fff' geändert */}
+            <p style={{margin: '5px 0', fontSize: '18px', fontWeight: 'bold', color: '#fff'}}>📅 6. - 12. JULI 2026</p>
             <p style={{margin: '0', fontSize: '14px', textTransform: 'uppercase'}}>Eine Woche. Deine Stadt. Dein Abenteuer.</p>
           </div>
           
