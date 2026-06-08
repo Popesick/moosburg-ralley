@@ -3,34 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Datenschutzerklärung - Moosburger Stadtrallye</title>
+    <title>Datenschutzerklärung - Moosburger Stadtrallye 2026</title>
     <style>
-        body { font-family: Arial, sans-serif; line-height: 1.6; padding: 20px; max-width: 800px; margin: 0 auto; color: #333; }
-        h1 { color: #111; border-bottom: 2px solid #eee; padding-bottom: 10px; }
-        h2 { color: #0070f3; margin-top: 20px; }
-        p, li { font-size: 14px; }
+        body { font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; color: #333; background-color: #F5F3EB; padding: 20px; margin: 0; }
+        .container { max-width: 600px; margin: 0 auto; background: #fff; padding: 30px; borderRadius: 12px; boxShadow: 0 4px 15px rgba(11, 40, 70, 0.08); border: 1px solid rgba(11, 40, 70, 0.05); }
+        h1 { color: #0B2846; font-size: 28px; text-transform: uppercase; font-weight: 900; margin-top: 0; }
+        h2 { color: #0B2846; font-size: 18px; margin-top: 25px; border-bottom: 2px dashed rgba(11, 40, 70, 0.1); padding-bottom: 5px; }
+        p, li { margin: 0 0 15px 0; font-size: 15px; }
+        ul { padding-left: 20px; }
+        a { color: #66B014; text-decoration: none; font-weight: bold; }
+        a:hover { text-decoration: underline; }
+        .back-link { display: inline-block; margin-top: 20px; color: #0B2846; text-transform: uppercase; font-size: 13px; letter-spacing: 1px; }
     </style>
 </head>
 <body>
-    <h1>Datenschutzerklärung</h1>
-    <p><strong>Verantwortlicher für die Datenverarbeitung:</strong><br>
-    Veranstalter der Moosburger Stadtrallye<br>
-    [Hier optional Name/Kontakt des Veranstalters ergänzen]</p>
+    <div class="container">
+        <h1>Datenschutzerklärung</h1>
+        
+        <h2>1. Allgemeine Hinweise</h2>
+        <p>
+            Diese Datenschutzerklärung klärt Sie über die Art, den Umfang und Zweck der Verarbeitung von personenbezogenen Daten innerhalb unserer Web-App zur "Moosburger Stadtrallye 2026" auf. Wir nehmen den Schutz Ihrer Daten sehr ernst und behandeln Ihre personenbezogenen Daten vertraulich und entsprechend der gesetzlichen Datenschutzvorschriften (DSGVO).
+        </p>
 
-    <h2>1. Erhebung und Speicherung von Daten</h2>
-    <p>Für die Teilnahme an der Stadtrallye ist kein Login, kein Passwort und keine Angabe einer E-Mail-Adresse erforderlich. Wir erheben und speichern lediglich folgende Daten:</p>
-    <ul>
-        <li><strong>Teamname:</strong> Ein frei wählbarer Name zur Identifikation eures Teams im Spielverlauf.</li>
-        <li><strong>Hochgeladene Fotos:</strong> Die von euch an den Stationen aufgenommenen und hochgeladenen Teambilder zur Dokumentation des Spielfortschritts.</li>
-    </ul>
+        <h2>2. Verantwortlicher</h2>
+        <p>
+            Andreas Stetter<br>
+            Thalbacher Str. 29<br>
+            85368 Moosburg a. d. Isar<br>
+            E-Mail: andreas.stetter@gmx-topmail.de
+        </p>
 
-    <h2>2. Zweck der Verarbeitung und Werbenutzung</h2>
-    <p>Die Verarbeitung des Teamnamens und des Spielfortschritts dient der technischen Durchführung der Rallye. Mit der expliziten Zustimmung bei der Registrierung (Checkbox) willigt das Team ein, dass die hochgeladenen Gruppenbilder vom Veranstalter und dessen Partnern für Werbe-, Dokumentations- und Promotionszwecke im Zusammenhang mit der Stadtrallye verwendet, vervielfältigt und (z. B. auf Social-Media-Kanälen oder Webseiten) veröffentlicht werden dürfen.</p>
+        <h2>3. Erhebung und Speicherung von Daten</h2>
+        
+        <h3>a) Lokale Speicherung auf Ihrem Endgerät (LocalStorage)</h3>
+        <p>
+            Um Ihnen das Pausieren und Fortsetzen der Rallye zu ermöglichen, speichert die App Ihren gewählten Teamnamen, Ihre Teilnahmeoption sowie Ihren aktuellen Spielfortschritt (aktuelle Station) im lokalen Speicher Ihres Browsers. Diese Daten verbleiben auf Ihrem Endgerät und werden nicht für Werbezwecke genutzt.
+        </p>
 
-    <h2>3. Datenspeicherung und Infrastruktur</h2>
-    <p>Die Daten werden sicher auf Cloud-Infrastrukturen von Cloudflare (Workers & R2 Object Storage) verarbeitet und gespeichert. Es erfolgt keine Weitergabe an unbefugte Dritte außerhalb des Rahmens der Veranstaltung und deren offiziellen Partnern.</p>
+        <h3>b) Registrierung und Spieldaten (Cloudflare KV)</h3>
+        <p>
+            Bei der Registrierung wird Ihr frei gewählter Teamname sowie Ihre gewählte Teilnahme-Option an unseren Server übermittelt und in einer Datenbank gespeichert, um Namensdopplungen zu verhindern und den Fortschritt zu dokumentieren.
+        </p>
 
-    <h2>4. Eure Rechte (Widerruf und Löschung)</h2>
-    <p>Ihr habt jederzeit das Recht, Auskunft über eure gespeicherten Daten zu verlangen oder die Löschung der hochgeladenen Bilder zu beantragen. Ein Widerruf der Einwilligung zur Bildnutzung ist jederzeit mit Wirkung für die Zukunft möglich. Wendet euch dazu bitte direkt an das Organisationsteam oder den Quizmaster im Ziel (The Cornerhouse).</p>
+        <h3>c) Bild-Uploads (Cloudflare R2 Speicher)</h3>
+        <p>
+            Je nach der von Ihnen gewählten Option verarbeiten wir Bilddaten (Gruppenfotos an den Stationen):
+        </p>
+        <ul>
+            <li><strong>Option 1 (Teilnahme an Verlosung mit Freigabe):</strong> Ihre hochgeladenen Fotos werden gespeichert und dürfen vom Veranstalter für Werbe- und Promotionszwecke im Zusammenhang mit der Stadtrallye (z.B. Social Media, Nachberichte) veröffentlicht werden. Rechtsgrundlage ist Ihre ausdrückliche Einwilligung (Art. 6 Abs. 1 lit. a DSGVO).</li>
+            <li><strong>Option 2 (Teilnahme an Verlosung ohne Freigabe):</strong> Ihre Fotos werden ausschließlich intern zur Dokumentation Ihres Spielfortschritts gespeichert, um die faire Teilnahme an der Preisverlosung zu prüfen. Es findet keine Veröffentlichung statt. Die Bilder werden nach Abschluss der Verlosung gelöscht.</li>
+            <li><strong>Option 3 (Just for fun):</strong> Es werden keine Bilder übertragen oder gespeichert.</li>
+        </ul>
+
+        <h2>4. Hosting und Infrastruktur (Cloudflare)</h2>
+        <p>
+            Unsere Web-App und die Datenbanken werden über den Dienst <strong>Cloudflare</strong> (Cloudflare Inc., 101 Townsend St, San Francisco, CA 94107, USA) bereitgestellt. Bei Aufruf der Seite werden technisch notwendige Logfiles (z.B. IP-Adresse, Browsertyp, Datum und Uhrzeit des Aufrufs) über Cloudflare verarbeitet, um die Sicherheit und Stabilität der Anwendung zu gewährleisten. Cloudflare verfügt über eine Zertifizierung nach dem EU-US Data Privacy Framework.
+        </p>
+
+        <h2>5. Speicherdauer und Löschung</h2>
+        <p>
+            Sämtliche internen Spieldaten sowie die zu Dokumentationszwecken hochgeladenen Bilder (Option 2) werden nach dem Ende der Veranstaltung und der erfolgreichen Abwicklung der Preisverlosung (voraussichtlich bis Ende Juli 2026) vollständig gelöscht. Bilder, für die eine Veröffentlichungsvereinbarung getroffen wurde (Option 1), bleiben für die Dokumentation der Öffentlichkeitsarbeit gespeichert, sofern Sie dem nicht widersprechen.
+        </p>
+
+        <h2>6. Ihre Rechte (Betroffenenrechte)</h2>
+        <p>
+            Sie haben das Recht, jederzeit unentgeltlich Auskunft über die bei uns zu Ihrer Person oder Ihrem Team gespeicherten Daten zu erhalten. Zudem haben Sie das Recht auf Berichtigung, Sperrung oder Löschung dieser Daten. 
+        </p>
+        <p>
+            <strong>Widerruf von Einwilligungen:</strong> Wenn Sie Option 1 gewählt haben, können Sie Ihre Einwilligung zur Nutzung und Veröffentlichung der Bilder jederzeit mit Wirkung für die Zukunft per E-Mail an den Verantwortlichen widerrufen.
+        </p>
+
+        <a href="/" class="back-link">← Zurück zur Stadtrallye</a>
+    </div>
 </body>
 </html>
