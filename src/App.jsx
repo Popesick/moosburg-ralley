@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 
-// 1. STATIONSDATEN
+// 1. STARTDATUM DER RALLYE
+const START_DATE = new Date('2026-07-06T00:00:00');
+
+// 2. STATIONSDATEN
 const STATIONS = [
   {
     id: 1,
@@ -47,18 +50,22 @@ export default function App() {
   const [errorMessage, setErrorMessage] = useState('');
   const [isUploading, setIsUploading] = useState(false);
   
+  // LIVE COUNTDOWN STATES
+  const [isRallyActive, setIsRallyActive] = useState(new Date() >= START_DATE);
+  const [countdownText, setCountdownText] = useState('');
+
   // ADMIN STATES
   const [isAdminView, setIsAdminView] = useState(false);
   const [adminTeams, setAdminTeams] = useState([]);
   const [isLoadingAdmin, setIsLoadingAdmin] = useState(false);
 
-  // LOGIK: LADEN & RESET
+  // LOGIK: LADEN, RESET & COUNTDOWN
   useEffect(() => {
-    // Setzt den Titel im Browser-Tab dynamisch
     document.title = "Stadtrallye 2026";
 
     const urlParams = new URLSearchParams(window.location.search);
     
+    // ADMIN BYPASS: Der Admin darf IMMER alles sehen, auch vor dem Startdatum!
     if (urlParams.get('admin') === 'boss') {
       setIsAdminView(true);
       fetchAdminData();
@@ -101,6 +108,25 @@ export default function App() {
         handleScannedCode(scannedCode, currentIndex, savedState || 'SEEKING');
       }
     }
+
+    // COUNTDOWN INTERVALL (aktualisiert sich jede Sekunde)
+    const timer = setInterval(() => {
+      const now = new Date();
+      if (now >= START_DATE) {
+        setIsRallyActive(true);
+        clearInterval(timer);
+      } else {
+        const diff = START_DATE - now;
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+        
+        setCountdownText(`${days}t ${hours}std ${minutes}min ${seconds}sek`);
+      }
+    }, 1000);
+
+    return () => clearInterval(timer);
   }, []);
 
   const fetchAdminData = async () => {
@@ -284,6 +310,7 @@ export default function App() {
 
   // --- UI RENDERING ---
 
+  // ADMIN VIEW DASHBOARD
   if (isAdminView) {
     return (
       <div style={{...styles.container, maxWidth: '900px'}}>
@@ -293,15 +320,10 @@ export default function App() {
         <div style={styles.card}>
           <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px'}}>
             <h2 style={{marginTop: 0, marginBottom: 0}}>Registrierte Teams ({adminTeams.length})</h2>
-            <button 
-              onClick={fetchAdminData} 
-              style={{padding: '8px 16px', backgroundColor: '#0070f3', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold'}}
-              disabled={isLoadingAdmin}
-            >
+            <button onClick={fetchAdminData} style={{padding: '8px 16px', backgroundColor: '#0070f3', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold'}} disabled={isLoadingAdmin}>
               {isLoadingAdmin ? 'Lädt...' : '🔄 Aktualisieren'}
             </button>
           </div>
-
           <div style={{overflowX: 'auto'}}>
             <table style={{width: '100%', borderCollapse: 'collapse', fontSize: '14px', textAlign: 'left'}}>
               <thead>
@@ -318,7 +340,6 @@ export default function App() {
                 {adminTeams.map((team, idx) => {
                   const canUpload = team.choice === 1 || team.choice === 2;
                   const canSocialMedia = team.choice === 1;
-
                   return (
                     <tr key={idx} style={{borderBottom: '1px solid #eee'}}>
                       <td style={styles.td}><strong>{team.originalName}</strong></td>
@@ -329,40 +350,23 @@ export default function App() {
                       </td>
                       <td style={styles.td}>{canUpload ? '✅' : '❌'}</td>
                       <td style={styles.td}>{canSocialMedia ? '✅' : '❌'}</td>
+                      <td style={styles.td}>{new Date(team.registeredAt).toLocaleDateString('de-DE', {day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'})}</td>
                       <td style={styles.td}>
-                        {new Date(team.registeredAt).toLocaleDateString('de-DE', {day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'})}
-                      </td>
-                      <td style={styles.td}>
-                        <button 
-                          onClick={() => handleAdminAction(team.originalName, 'reset')} 
-                          style={styles.actionBtn} 
-                          title="Fortschritt auf 0 setzen"
-                        >🔄</button>
-                        <button 
-                          onClick={() => handleAdminAction(team.originalName, 'delete')} 
-                          style={styles.actionBtn} 
-                          title="Team löschen"
-                        >🗑️</button>
+                        <button onClick={() => handleAdminAction(team.originalName, 'reset')} style={styles.actionBtn} title="Fortschritt auf 0 setzen">🔄</button>
+                        <button onClick={() => handleAdminAction(team.originalName, 'delete')} style={styles.actionBtn} title="Team löschen">🗑️</button>
                       </td>
                     </tr>
                   )
                 })}
-                {adminTeams.length === 0 && !isLoadingAdmin && (
-                  <tr>
-                    <td colSpan="6" style={{padding: '30px', textAlign: 'center', color: '#666'}}>Noch keine Teams registriert.</td>
-                  </tr>
-                )}
               </tbody>
             </table>
           </div>
-          <p style={{fontSize: '12px', color: '#666', marginTop: '15px'}}>
-            <strong>Legende:</strong> UL = Foto-Upload erlaubt | SM = Social Media Verwendung erlaubt
-          </p>
         </div>
       </div>
     );
   }
 
+  // QUEREINSTEIGER VIEW
   if (showQuereinsteigerIntro) {
     return (
       <div style={styles.container}>
@@ -380,59 +384,41 @@ export default function App() {
     );
   }
 
+  // REGISTRIERUNG VIEW (Immer offen für Pre-Registrations!)
   if (!isRegistered) {
     return (
       <div style={styles.container}>
         <h1 style={styles.title}>Moosburger Stadtrallye 2026</h1>
-        
         {errorMessage && <div style={styles.error}>{errorMessage}</div>}
-
         <div style={styles.card}>
           <p style={styles.text}>
-            Willkommen bei der ersten Moosburger Stadtrallye. Um mitzumachen registriert euch mit eurem Teamnamen (keine E-Mail-Adresse und kein Login erforderlich) und legt los. 
-            Entschlüsselt die Hinweise, findet die versteckten QR-Codes oder NFC-Tags und erreicht das Ziel. 
-            Um eueren Fortschritt zu dokumentieren, ladet an jedem Ort ein Gruppenbild von euch hoch.
+            Willkommen bei der ersten Moosburger Stadtrallye. Sichert euch schon jetzt euren Teamnamen und seid pünktlich zum Start am 06. Juli mit dabei!
           </p>
-          
           <div style={styles.dateBox}>
-            <p style={{margin: '8px 0'}}><strong>Start:</strong> xx.xx.xxxx</p>
-            <p style={{margin: '8px 0'}}><strong>Ende:</strong> xx.xx.xxxx</p>
+            <p style={{margin: '8px 0'}}><strong>Offizieller Start:</strong> 06.07.2026 - 00:00 Uhr</p>
             <p style={{margin: '8px 0', color: '#0070f3'}}><strong>Siegerehrung:</strong> 21.07.2026</p>
           </div>
-          
           <form onSubmit={handleRegister}>
-            <input 
-              type="text" 
-              placeholder="Euer Teamname" 
-              value={teamName}
-              onChange={(e) => setTeamName(e.target.value)}
-              style={styles.input}
-              required
-            />
-
+            <input type="text" placeholder="Euer Teamname" value={teamName} onChange={(e) => setTeamName(e.target.value)} style={styles.input} required />
             <div style={{display: 'flex', flexDirection: 'column', gap: '15px', marginBottom: '25px'}}>
               <label style={styles.radioLabel}>
                 <input type="radio" name="participation" value="1" onChange={() => setParticipationChoice(1)} required />
-                <span>Ich will an der Verlosung der Preise teilnehmen und stimme zu, dass meine hochgeladenen Bilder vom Veranstalter für Werbe- und Promotionszwecke im Zusammenhang mit der Stadtrallye veröffentlicht werden dürfen. Mehr in der <a href="/privacy.html" target="_blank" rel="noopener noreferrer">Datenschutzerklärung</a>.</span>
+                <span>Ich will an der Verlosung der Preise teilnehmen und stimme der Bildveröffentlichung zu. <a href="/privacy.html" target="_blank" rel="noopener noreferrer">Datenschutzerklärung</a>.</span>
               </label>
-
               <label style={styles.radioLabel}>
                 <input type="radio" name="participation" value="2" onChange={() => setParticipationChoice(2)} />
-                <span>Ich will an der Verlosung der Preise teilnehmen und stimme <strong>nicht</strong> zu, dass meine Bilder veröffentlicht werden. Sie dienen nur zur Dokumentation des Fortschritts. Mehr in der <a href="/privacy.html" target="_blank" rel="noopener noreferrer">Datenschutzerklärung</a>.</span>
+                <span>Ich will an der Verlosung teilnehmen, stimme der Bildveröffentlichung aber <strong>nicht</strong> zu.</span>
               </label>
-
               <label style={styles.radioLabel}>
                 <input type="radio" name="participation" value="3" onChange={() => setParticipationChoice(3)} />
-                <span>Ich will keine Bilder hochladen und <strong>nicht</strong> an der Verlosung der Preise teilnehmen.</span>
+                <span>Ich will keine Bilder hochladen und nicht an der Verlosung teilnehmen.</span>
               </label>
             </div>
-
             <button type="submit" style={{...styles.button, opacity: participationChoice ? 1 : 0.5}} disabled={!participationChoice}>
-              Rallye starten
+              Team jetzt registrieren
             </button>
           </form>
         </div>
-
         <div style={styles.partnerLogoWrapper}>
           <span style={styles.partnerLabel}>Powered by The Corner House</span>
           <img src="/logo_ch.png" alt="Partner" style={styles.partnerLogo} />
@@ -441,6 +427,34 @@ export default function App() {
     );
   }
 
+  // INTERMEDIATE: LANDINGPAGE / COUNTDOWN VIEW (Wird angezeigt, wenn registriert aber Startdatum noch nicht erreicht)
+  if (isRegistered && !isRallyActive) {
+    return (
+      <div style={styles.container}>
+        <h1 style={styles.title}>Moosburger Stadtrallye 2026</h1>
+        <div style={styles.card}>
+          <h2 style={{textAlign: 'center', color: '#0070f3', marginTop: 0}}>Anmeldung erfolgreich! 🎉</h2>
+          <p style={styles.text}>Euer Team <strong>{teamName}</strong> ist im System registriert und startklar.</p>
+          <p style={styles.text}>Aktuell befindet sich die Rallye noch in der Vorbereitungsphase. Pünktlich am <strong>06. Juli um 00:00 Uhr</strong> wird genau auf dieser Seite euer allererster Hinweis freigeschaltet!</p>
+          
+          <div style={styles.countdownBox}>
+            <div style={{fontSize: '12px', textTransform: 'uppercase', letterSpacing: '1px', color: '#666', marginBottom: '5px'}}>Startet in:</div>
+            <div style={{fontSize: '22px', fontWeight: 'bold', color: '#333'}}>{countdownText || 'Lädt...'}</div>
+          </div>
+
+          <p style={{fontSize: '13px', color: '#666', textAlign: 'center', fontStyle: 'italic', marginTop: '20px'}}>
+            Speichert euch diese Seite als Lesezeichen oder lasst den Tab einfach offen.
+          </p>
+        </div>
+        <div style={styles.partnerLogoWrapper}>
+          <span style={styles.partnerLabel}>Powered by The Corner House</span>
+          <img src="/logo_ch.png" alt="Partner" style={styles.partnerLogo} />
+        </div>
+      </div>
+    );
+  }
+
+  // SPIEL LOGIK AB HIER (Wird erst ab dem 06.07. aktiv)
   const isRalleyFinished = currentStationIndex >= STATIONS.length;
   const currentStation = STATIONS[currentStationIndex]; 
 
@@ -475,23 +489,13 @@ export default function App() {
       {errorMessage && <div style={styles.error}>{errorMessage}</div>}
 
       <div style={styles.card}>
-        
         {stationState === 'SEEKING' && (
           <div>
             <h2 style={{marginTop: '0', color: '#0070f3'}}>🔍 Finde Station {currentStationIndex + 1}</h2>
             <p style={styles.text}><strong>Euer Hinweis:</strong></p>
             <p style={styles.text}>{currentStation.question}</p>
-            
-            <img 
-              src={`/Hint_Station_${currentStation.id}.png`} 
-              alt={`Hinweis für Station ${currentStation.id}`} 
-              style={styles.hintImage} 
-              onError={(e) => e.target.style.display = 'none'} 
-            />
-
-            <div style={styles.infoBox}>
-              Sucht dort nach dem QR-Code und scannt ihn, um die Station freizuschalten!
-            </div>
+            <img src={`/Hint_Station_${currentStation.id}.png`} alt={`Hinweis`} style={styles.hintImage} onError={(e) => e.target.style.display = 'none'} />
+            <div style={styles.infoBox}>Sucht dort nach dem QR-Code und scannt ihn!</div>
           </div>
         )}
 
@@ -499,38 +503,22 @@ export default function App() {
           <div>
             <h2 style={{marginTop: '0', color: '#28a745'}}>✅ Station gefunden!</h2>
             <h3 style={{marginTop: 0}}>{currentStation.name}</h3>
-            
-            <div 
-              style={{...styles.text, backgroundColor: '#f9f9f9', padding: '15px', borderRadius: '5px', marginBottom: '20px'}}
-              dangerouslySetInnerHTML={{ __html: currentStation.infoText }}
-            />
-
+            <div style={{...styles.text, backgroundColor: '#f9f9f9', padding: '15px', borderRadius: '5px', marginBottom: '20px'}} dangerouslySetInnerHTML={{ __html: currentStation.infoText }} />
             {uploadRequired ? (
               <div style={styles.uploadSection}>
                 <h4 style={{marginTop: '0'}}>📸 Fotobeweis hochladen</h4>
-                <p style={{fontSize: '12px', color: '#666', marginTop: '-10px'}}>Macht ein Gruppenfoto vor Ort (Max. 10 MB).</p>
                 <input type="file" accept="image/*" onChange={(e) => handlePhotoUpload(e, currentStation.id)} disabled={isUploading} />
                 {isUploading && <p style={{color: '#0070f3', fontSize: '14px', fontWeight: 'bold'}}>Bild wird hochgeladen... ⏳</p>}
                 {photoUploaded && !isUploading && <img src={photoUploaded} alt="Beweis" style={styles.previewImage} />}
               </div>
             ) : (
-              <p style={{fontSize: '13px', color: '#666', fontStyle: 'italic'}}>Da ihr Option 3 gewählt habt, ist kein Bild-Upload erforderlich.</p>
+              <p style={{fontSize: '13px', color: '#666', fontStyle: 'italic'}}>Kein Bild-Upload erforderlich.</p>
             )}
-
-            <button 
-              onClick={handleNextStation} 
-              style={{...styles.button, marginTop: '20px', backgroundColor: canProceed ? '#0070f3' : '#ccc'}}
-              disabled={!canProceed}
-            >
+            <button onClick={handleNextStation} style={{...styles.button, marginTop: '20px', backgroundColor: canProceed ? '#0070f3' : '#ccc'}} disabled={!canProceed}>
               Weiter zur nächsten Station
             </button>
           </div>
         )}
-      </div>
-
-      <div style={styles.partnerLogoWrapper}>
-        <span style={styles.partnerLabel}>Powered by The Corner House</span>
-        <img src="/logo_ch.png" alt="Partner" style={styles.partnerLogo} />
       </div>
     </div>
   );
@@ -542,9 +530,10 @@ const styles = {
   card: { backgroundColor: '#fff', padding: '20px', borderRadius: '8px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)', marginBottom: '20px' },
   text: { lineHeight: '1.6', color: '#444', fontSize: '15px' },
   dateBox: { backgroundColor: '#f0f0f0', padding: '15px', borderRadius: '5px', marginBottom: '25px', fontSize: '15px', textAlign: 'center' },
+  countdownBox: { backgroundColor: '#f4f9ff', border: '2px dashed #0070f3', padding: '20px', borderRadius: '8px', textAlign: 'center', margin: '25px 0' },
   input: { width: '100%', padding: '15px', marginBottom: '20px', borderRadius: '4px', border: '1px solid #ccc', fontSize: '16px', boxSizing: 'border-box' },
   radioLabel: { display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: '13px', lineHeight: '1.4', color: '#333', cursor: 'pointer' },
-  button: { width: '100%', padding: '15px', backgroundColor: '#0070f3', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold', fontSize: '16px' }, // HIER IST BLAU ZURÜCK!
+  button: { width: '100%', padding: '15px', backgroundColor: '#0070f3', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold', fontSize: '16px' },
   header: { display: 'flex', justifyContent: 'space-between', padding: '12px', backgroundColor: '#333', color: '#fff', borderRadius: '5px', marginBottom: '15px', fontSize: '14px' },
   error: { backgroundColor: '#ffe0e0', color: '#cc0000', padding: '10px', borderRadius: '5px', marginBottom: '15px', textAlign: 'center', fontSize: '14px' },
   uploadSection: { marginTop: '20px', borderTop: '1px solid #eee', paddingTop: '15px' },
