@@ -563,8 +563,11 @@ export default function App() {
                   return (
                     <tr key={idx} style={{borderBottom: '1px dashed #ccc'}}>
                       <td style={styles.td}><strong>{team.originalName}</strong></td>
-                      <td style={styles.td}><code style={{backgroundColor: '#eee', padding: '2px 6px', borderRadius: '4px', fontWeight: 'bold'}}>{team.pin || '----'}</code></td>
-                      <td style={styles.td}>
+<td style={styles.td}>
+  <code style={{backgroundColor: '#eee', padding: '2px 6px', borderRadius: '4px', fontWeight: 'bold'}}>
+    {team.pin || team.PIN || '----'}
+  </code>
+</td>                      <td style={styles.td}>
                         <span style={{backgroundColor: '#0B2846', padding: '4px 8px', borderRadius: '12px', fontWeight: 'bold', color: '#fff'}}>
                           {team.progress} / {STATIONS.length}
                         </span>
