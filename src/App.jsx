@@ -59,7 +59,7 @@ const STATIONS = [
     name: "8. Stadtmarketing Moosburg",
     code: "marketing555",
     question: "Nicht jede wichtige Institution erkennt man auf den ersten Blick.\nWer dafür sorgt, dass andere sichtbar werden, bleibt oft selbst im Hintergrund.",
-    infoText: "Das Stadtmarketing Moosburg setzt sich dafür ein, die Innenstadt attraktiv und lebendig zu halten.<br/><br/>Zu den Aufgaben gehören die Unterstützung von Veranstaltungen, die Förderung des Einzelhandels sowie die Vermarktung Moosburgs als Einkaufs-, Kultur- und Erlebnisstandort."
+    infoText: "Das Stadtmarketing Moosburg setzt sich dafür ein, die Innenstadt attraktiv und lebendig to halten.<br/><br/>Zu den Aufgaben gehören die Unterstützung von Veranstaltungen, die Förderung des Einzelhandels sowie die Vermarktung Moosburgs als Einkaufs-, Kultur- und Erlebnisstandort."
   },
   {
     id: 9,
@@ -94,7 +94,7 @@ const STATIONS = [
     name: "13. Flughafen Moosburg",
     code: "flughafen000",
     question: "Die nächste Station bringt euch an einen Ort, an dem manche Menschen den kürzesten Weg zwischen zwei Punkten für völlig überschätzt halten.\nHier hebt man regelmäßig ab, obwohl weder Bahnhof noch Flughafen-Terminal zu sehen sind.",
-    infoText: "Der Flugplatz Moosburg ist die Heimat des Fliegerclubs Moosburg. Hier gehen Segel- und Motorflieger ihrem Hobby nach und genießen die Region aus einer Perspektive, die den meisten Menschen verborgen bleibt.<br/><br/>Besonders bekannt ist der Flugplatz für das zweimal jährlich stattprimitive Flugplatzfest. Während am Samstag Rundflüge und Flugbetrieb im Mittelpunkt stehen, verwandelt sich die Start- und Landebahn am Sonntag in einen der größten Flohmärkte Bayerns."
+    infoText: "Der Flugplatz Moosburg ist die Heimat des Fliegerclubs Moosburg. Hier gehen Segel- und Motorflieger ihrem Hobby nach und genießen die Region aus einer Perspektive, die den meisten Menschen verborgen bleibt.<br/><br/>Besonders bekannt ist der Flugplatz für das zweimal jährlich stattfindende Flugplatzfest. Während am Samstag Rundflüge und Flugbetrieb im Mittelpunkt stehen, verwandelt sich die Start- und Landebahn am Sonntag in einen der größten Flohmärkte Bayerns."
   },
   {
     id: 14,
@@ -120,8 +120,15 @@ const STATIONS = [
 ];
 
 export default function App() {
+  // --- DEMO MODUS LOGIK ---
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('demo') === '1') localStorage.setItem('demo_mode', '1');
+  if (urlParams.get('demo') === '0') localStorage.removeItem('demo_mode');
+  const isDemoMode = localStorage.getItem('demo_mode') === '1';
+
   const [teamName, setTeamName] = useState('');
   const [participationChoice, setParticipationChoice] = useState(null); 
+  const [teamPin, setTeamPin] = useState(''); // Generierte oder geladene PIN
   
   const [currentStationIndex, setCurrentStationIndex] = useState(0);
   const [stationState, setStationState] = useState('SEEKING'); 
@@ -133,9 +140,14 @@ export default function App() {
   const [uploadedPhotos, setUploadedPhotos] = useState({});
   const [errorMessage, setErrorMessage] = useState('');
   const [isUploading, setIsUploading] = useState(false);
+
+  // LOGIK FÜR CO-RECOVERY (NOTFALL-PIN)
+  const [teamToRestore, setTeamToRestore] = useState(null);
+  const [enteredPin, setEnteredPin] = useState('');
+  const [pinError, setPinError] = useState(false);
   
   // LIVE COUNTDOWN STATES
-  const [isRallyActive, setIsRallyActive] = useState(new Date() >= START_DATE);
+  const [isRallyActive, setIsRallyActive] = useState(isDemoMode || new Date() >= START_DATE);
   const [countdownText, setCountdownText] = useState('');
 
   // PWA / INSTALL STATES
@@ -168,15 +180,15 @@ export default function App() {
       setIsIOS(true);
     }
 
-    const urlParams = new URLSearchParams(window.location.search);
+    const currentUrlParams = new URLSearchParams(window.location.search);
     
-    if (urlParams.get('admin') === 'boss') {
+    if (currentUrlParams.get('admin') === 'boss') {
       setIsAdminView(true);
       fetchAdminData();
       return;
     }
 
-    if (urlParams.get('reset') === 'boss') {
+    if (currentUrlParams.get('reset') === 'boss') {
       localStorage.clear();
       window.location.href = window.location.pathname;
       return;
@@ -186,10 +198,12 @@ export default function App() {
     const savedChoice = localStorage.getItem('quiz_participation_choice');
     const savedProgress = localStorage.getItem('quiz_team_progress');
     const savedState = localStorage.getItem('quiz_station_state');
+    const savedPin = localStorage.getItem('quiz_team_pin');
     
     if (savedTeam && savedChoice) {
       setTeamName(savedTeam);
       setParticipationChoice(parseInt(savedChoice, 10));
+      setTeamPin(savedPin || '----');
       setIsRegistered(true);
     }
     
@@ -203,7 +217,7 @@ export default function App() {
       setStationState(savedState);
     }
 
-    const scannedCode = urlParams.get('code');
+    const scannedCode = currentUrlParams.get('code');
     if (scannedCode) {
       if (!savedTeam) {
         setQuereinsteigerCode(scannedCode);
@@ -214,6 +228,11 @@ export default function App() {
     }
 
     const timer = setInterval(() => {
+      if (isDemoMode) {
+        clearInterval(timer);
+        return;
+      }
+
       const now = new Date();
       if (now >= START_DATE) {
         setIsRallyActive(true);
@@ -233,7 +252,7 @@ export default function App() {
       clearInterval(timer);
       window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
     };
-  }, []);
+  }, [isDemoMode]);
 
   const handleInstallClick = async () => {
     if (isIOS) {
@@ -286,10 +305,7 @@ export default function App() {
         const localTeam = localStorage.getItem('quiz_team_name');
         if (localTeam && localTeam.trim().toLowerCase() === targetTeamName.trim().toLowerCase()) {
           if (action === 'delete') {
-            localStorage.removeItem('quiz_team_name');
-            localStorage.removeItem('quiz_participation_choice');
-            localStorage.removeItem('quiz_team_progress');
-            localStorage.removeItem('quiz_station_state');
+            localStorage.clear();
           } else if (action === 'reset') {
             localStorage.setItem('quiz_team_progress', '0');
             localStorage.setItem('quiz_station_state', 'SEEKING');
@@ -326,32 +342,55 @@ export default function App() {
     if (!teamName.trim() || !participationChoice) return;
 
     setErrorMessage('');
+    setTeamToRestore(null);
+    setPinError(false);
+
+    // ZUFÄLLIGE 4-STELLIGE PIN GENERIEREN
+    const generatedPin = Math.floor(1000 + Math.random() * 9000).toString();
+
     try {
       const response = await fetch("https://moosburg-ralley-api.andreas-stetter73.workers.dev/api/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 
           team: teamName.trim(), 
-          choice: participationChoice 
+          choice: participationChoice,
+          pin: generatedPin // PIN mitsenden
         })
       });
 
       if (response.status === 409) {
-        const data = await response.json();
-        setErrorMessage(data.error || "Dieser Teamname ist leider schon vergeben!");
+        // Team existiert. Hole Server-Daten zur Verifizierung.
+        try {
+          const adminRes = await fetch("https://moosburg-ralley-api.andreas-stetter73.workers.dev/api/admin/teams");
+          if (adminRes.ok) {
+            const teams = await adminRes.json();
+            const existingTeam = teams.find(t => t.originalName.toLowerCase() === teamName.trim().toLowerCase());
+            if (existingTeam) {
+              setTeamToRestore(existingTeam);
+              return; 
+            }
+          }
+        } catch (fError) {
+          console.error(fError);
+        }
+        setErrorMessage("Dieser Teamname ist bereits vergeben!");
         return;
       }
 
       if (!response.ok) {
-        setErrorMessage("Fehler bei der Kommunikation mit dem Server. Bitte versucht es nochmal.");
+        setErrorMessage("Fehler bei der Kommunikation mit dem Server.");
         return;
       }
 
+      // ERFOLGREICHE NEUREGISTRIERUNG
       localStorage.setItem('quiz_team_name', teamName.trim());
       localStorage.setItem('quiz_participation_choice', participationChoice.toString());
       localStorage.setItem('quiz_team_progress', '0');
       localStorage.setItem('quiz_station_state', 'SEEKING');
+      localStorage.setItem('quiz_team_pin', generatedPin);
       
+      setTeamPin(generatedPin);
       setIsRegistered(true);
       setShowQuereinsteigerIntro(false);
 
@@ -361,6 +400,34 @@ export default function App() {
     } catch (error) {
       setErrorMessage("Netzwerkfehler! Überprüft eure Internetverbindung.");
     }
+  };
+
+  const handleRestoreTeam = () => {
+    if (!teamToRestore) return;
+
+    // PIN ABGLEICHEN
+    if (enteredPin.trim() !== teamToRestore.pin) {
+      setPinError(true);
+      return;
+    }
+
+    localStorage.setItem('quiz_team_name', teamToRestore.originalName);
+    localStorage.setItem('quiz_participation_choice', teamToRestore.choice.toString());
+    localStorage.setItem('quiz_team_progress', teamToRestore.progress.toString());
+    localStorage.setItem('quiz_station_state', 'SEEKING'); 
+    localStorage.setItem('quiz_team_pin', teamToRestore.pin);
+
+    setTeamName(teamToRestore.originalName);
+    setParticipationChoice(teamToRestore.choice);
+    setCurrentStationIndex(teamToRestore.progress);
+    setTeamPin(teamToRestore.pin);
+    setStationState('SEEKING');
+
+    setIsRegistered(true);
+    setShowQuereinsteigerIntro(false);
+    setTeamToRestore(null);
+    setEnteredPin('');
+    setPinError(false);
   };
 
   const handleNextStation = async () => {
@@ -453,7 +520,7 @@ export default function App() {
         </div>
         {showIOSHint && (
           <div style={styles.iosHintBox}>
-            Tippe in Safari unten auf das <strong>Teilen-Symbol</strong> (Viereck mit Pfeil nach oben) und wähle dann <strong>\"Zum Home-Bildschirm\"</strong> aus.
+            Tippe in Safari unten auf das <strong>Teilen-Symbol</strong> (Viereck mit Pfeil nach oben) und wähle dann <strong>"Zum Home-Bildschirm"</strong> aus.
           </div>
         )}
       </div>
@@ -481,6 +548,7 @@ export default function App() {
               <thead>
                 <tr style={{backgroundColor: '#eef2f5'}}>
                   <th style={styles.th}>Teamname</th>
+                  <th style={styles.th}>PIN</th>
                   <th style={styles.th}>Station</th>
                   <th style={styles.th} title="Upload Erlaubnis">UL</th>
                   <th style={styles.th} title="Social Media Erlaubnis">SM</th>
@@ -495,6 +563,7 @@ export default function App() {
                   return (
                     <tr key={idx} style={{borderBottom: '1px dashed #ccc'}}>
                       <td style={styles.td}><strong>{team.originalName}</strong></td>
+                      <td style={styles.td}><code style={{backgroundColor: '#eee', padding: '2px 6px', borderRadius: '4px', fontWeight: 'bold'}}>{team.pin || '----'}</code></td>
                       <td style={styles.td}>
                         <span style={{backgroundColor: '#0B2846', padding: '4px 8px', borderRadius: '12px', fontWeight: 'bold', color: '#fff'}}>
                           {team.progress} / {STATIONS.length}
@@ -573,24 +642,54 @@ export default function App() {
           </div>
           
           <form onSubmit={handleRegister}>
-            <input type="text" placeholder="Euer Teamname" value={teamName} onChange={(e) => setTeamName(e.target.value)} style={styles.input} required />
-            <div style={{display: 'flex', flexDirection: 'column', gap: '15px', marginBottom: '25px', backgroundColor: '#f9fafb', padding: '15px', borderRadius: '8px', border: '1px solid #eee'}}>
-              <label style={styles.radioLabel}>
-                <input type="radio" name="participation" value="1" onChange={() => setParticipationChoice(1)} required />
-                <span>Wir wollen an der <strong>Verlosung der Preise</strong> teilnehmen und stimmen der Bildveröffentlichung zu. (<a href="/privacy.html" target="_blank" rel="noopener noreferrer" style={{color: '#0B2846'}}>Datenschutz</a>)</span>
-              </label>
-              <label style={styles.radioLabel}>
-                <input type="radio" name="participation" value="2" onChange={() => setParticipationChoice(2)} />
-                <span>Wir wollen an der Verlosung teilnehmen, stimmen der Bildveröffentlichung aber <strong>nicht</strong> zu. (Bilder dienen nur als Beweis).</span>
-              </label>
-              <label style={styles.radioLabel}>
-                <input type="radio" name="participation" value="3" onChange={() => setParticipationChoice(3)} />
-                <span>Wir wollen keine Bilder hochladen und <strong>nicht</strong> an der Verlosung teilnehmen. (Just for fun!)</span>
-              </label>
-            </div>
-            <button type="submit" style={{...styles.button, opacity: participationChoice ? 1 : 0.5}} disabled={!participationChoice}>
-              {isRallyActive ? 'Rallye jetzt starten!' : 'Team vorab registrieren'}
-            </button>
+            <input type="text" placeholder="Euer Teamname" value={teamName} onChange={(e) => setTeamName(e.target.value)} style={styles.input} required disabled={!!teamToRestore} />
+            
+            {!teamToRestore && (
+              <div style={{display: 'flex', flexDirection: 'column', gap: '15px', marginBottom: '25px', backgroundColor: '#f9fafb', padding: '15px', borderRadius: '8px', border: '1px solid #eee'}}>
+                <label style={styles.radioLabel}>
+                  <input type="radio" name="participation" value="1" onChange={() => setParticipationChoice(1)} required />
+                  <span>Wir wollen an der <strong>Verlosung der Preise</strong> teilnehmen und stimmen der Bildveröffentlichung zu. (<a href="/privacy.html" target="_blank" rel="noopener noreferrer" style={{color: '#0B2846'}}>Datenschutz</a>)</span>
+                </label>
+                <label style={styles.radioLabel}>
+                  <input type="radio" name="participation" value="2" onChange={() => setParticipationChoice(2)} />
+                  <span>Wir wollen an der Verlosung teilnehmen, stimmen der Bildveröffentlichung aber <strong>nicht</strong> zu. (Bilder dienen nur als Beweis).</span>
+                </label>
+                <label style={styles.radioLabel}>
+                  <input type="radio" name="participation" value="3" onChange={() => setParticipationChoice(3)} />
+                  <span>Wir wollen keine Bilder hochladen und <strong>nicht</strong> an der Verlosung teilnehmen. (Just for fun!)</span>
+                </label>
+              </div>
+            )}
+            
+            {/* CO-RECOVERY / PIN INTERFACE */}
+            {teamToRestore ? (
+              <div style={{...styles.infoBox, backgroundColor: '#fff3cd', border: '2px solid #ffc107', padding: '20px', borderRadius: '8px', textAlign: 'left'}}>
+                <p style={{margin: '0 0 12px 0', color: '#856404', fontWeight: 'bold'}}>Dieser Teamname existiert bereits!</p>
+                <p style={{margin: '0 0 15px 0', fontSize: '13px', color: '#666', lineHeight: '1.4'}}>
+                  Um den bestehenden Spielstand (Station {Math.min(teamToRestore.progress + 1, STATIONS.length)}) auf diesem Gerät fortzusetzen, gebt bitte eure 4-stellige Notfall-PIN ein:
+                </p>
+                <input type="number" placeholder="4-stellige PIN" value={enteredPin} onChange={(e) => setEnteredPin(e.target.value)} style={{...styles.input, marginBottom: '10px', textAlign: 'center', letterSpacing: '5px', fontSize: '20px'}} />
+                
+                {pinError && <p style={{color: '#cc0000', fontSize: '13px', margin: '0 0 10px 0', fontWeight: 'bold'}}>Falsche PIN! Bitte versucht es erneut.</p>}
+                
+                <button type="button" onClick={handleRestoreTeam} style={{...styles.button, backgroundColor: '#0B2846', color: '#fff', fontSize: '15px', padding: '12px'}}>
+                  Spielstand laden 🔄
+                </button>
+                
+                <p style={{fontSize: '11px', color: '#777', marginTop: '15px', lineHeight: '1.3', fontStyle: 'italic'}}>
+                  Die PIN kann bei Verlust beim Veranstalter neu angefordert werden. Kontaktdaten siehe Impressum.
+                </p>
+                
+                <button type="button" onClick={() => { setTeamToRestore(null); setEnteredPin(''); setPinError(false); }} style={{background: 'none', border: 'none', color: '#666', marginTop: '15px', textDecoration: 'underline', cursor: 'pointer', fontSize: '13px', display: 'block', width: '100%', textAlign: 'center'}}>
+                  Abbrechen / Anderen Namen wählen
+                </button>
+              </div>
+            ) : (
+              <button type="submit" style={{...styles.button, opacity: participationChoice ? 1 : 0.5}} disabled={!participationChoice}>
+                {isRallyActive ? 'Rallye jetzt starten!' : 'Team vorab registrieren'}
+              </button>
+            )}
+
           </form>
         </div>
 
@@ -627,6 +726,16 @@ export default function App() {
           <h2 style={{textAlign: 'center', color: '#0B2846', marginTop: 0}}>Anmeldung erfolgreich! 🎉</h2>
           <div style={styles.dashedLine}></div>
           <p style={styles.text}>Euer Team <strong>{teamName}</strong> ist im System registriert und startklar.</p>
+          
+          {/* ANZEIGE DER WICHTIGEN NOTFALL PIN */}
+          <div style={{backgroundColor: '#fff7cd', border: '1px solid #ffc107', padding: '15px', borderRadius: '8px', textAlign: 'center', margin: '20px 0'}}>
+            <span style={{fontSize: '12px', textTransform: 'uppercase', color: '#856404', fontWeight: 'bold', display: 'block', marginBottom: '5px'}}>🔒 Eure persönliche Notfall-PIN:</span>
+            <span style={{fontSize: '28px', fontWeight: '900', letterSpacing: '4px', color: '#0B2846'}}>{teamPin}</span>
+            <p style={{fontSize: '11px', color: '#666', margin: '8px 0 0 0', lineHeight: '1.4'}}>
+              Macht jetzt einen <strong>Screenshot</strong>! Diese PIN braucht ihr, falls euer Akku leer geht oder ihr das Handy wechseln müsst.
+            </p>
+          </div>
+
           <p style={styles.text}>Aktuell befindet sich die Rallye noch in der Vorbereitungsphase. Pünktlich am <strong>06. Juli um 00:00 Uhr</strong> wird genau auf dieser Seite euer allererster Hinweis freigeschaltet!</p>
           
           <div style={styles.countdownBox}>
@@ -682,7 +791,7 @@ export default function App() {
     <div style={styles.container}>
       <h1 style={styles.title}>Moosburger<br/><span style={{color: '#66B014', fontSize: '22px'}}>Stadtrallye</span></h1>
       <div style={styles.header}>
-        <span>Team: <strong>{teamName}</strong></span>
+        <span>Team: <strong>{teamName}</strong> (PIN: {teamPin})</span>
         <span>Station {currentStationIndex + 1} / {STATIONS.length}</span>
       </div>
 
@@ -709,9 +818,8 @@ export default function App() {
             </h2>
             <div style={styles.dashedLine}></div>
             <h3 style={{marginTop: 0, color: '#0B2846'}}>{currentStation.name}</h3>
-            <div style={{...styles.text, backgroundColor: '#f9fafb', padding: '15px', borderRadius: '8px', marginBottom: '20px', border: '1px solid #eee'}} dangerouslySetInnerHTML={{ __html: currentStation.infoText }} />
+            <div style={{...styles.text, backgroundColor: '#f9fafb', padding: '15px', borderRadius: '8px', marginBottom: '20px', border: '1px solid #eeefixed'}} dangerouslySetInnerHTML={{ __html: currentStation.infoText }} />
             
-            {/* NEU: ZUSATZ-INFOGRAFIK (wird nur angezeigt, wenn die Datei /Info_Station_X.png existiert) */}
             <img src={`/Info_Station_${currentStation.id}.png`} alt={`Zusatzgrafik`} style={styles.hintImage} onError={(e) => e.target.style.display = 'none'} />
             
             {uploadRequired ? (
