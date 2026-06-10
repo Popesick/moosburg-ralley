@@ -3,35 +3,119 @@ import React, { useState, useEffect } from 'react';
 // 1. STARTDATUM DER RALLYE
 const START_DATE = new Date('2026-07-06T00:00:00');
 
-// 2. STATIONSDATEN
+// 2. ALLE 16 FINALEN STATIONSDATEN
 const STATIONS = [
   {
     id: 1,
-    name: "Wächter Baracken Mittelschule",
+    name: "1. Wächterbaracken",
     code: "baracke123",
-    question: "Hier trifft eine der größten Mittelschulen in Bayern auf die Überreste des größten Kriegsgefangenenlager innerhalb des Deutschen Reiches im zweiten Weltkrieg.",
-    infoText: "<strong>Ehemalige Baracken der Wachmannschaften:</strong><br/>Die Kaserne der Wachmannschaft befindet sich etwa 500 m vom Gefangenenlager entfernt. Die Gebäude dienten nach dem Krieg als Wohngebäude für sozial Bedürftige. Drei dieser Baracken sind noch erhalten und stehen unter Denkmalschutz. Die weitere Nutzung oder der Abriss stehen noch in Diskussion. Ein Teil ist für ein zukünftiges Info- und Dokumentationszentrum vorgesehen. Mehr Informationen unter <a href='https://stalag-moosburg.de/' target='_blank' rel='noopener noreferrer' style='color:#66B014;'>https://stalag-moosburg.de/</a>"
+    question: "Willkommen zur ersten Moosburger Stadtrallye!\nIn den nächsten Tagen werdet ihr bekannte Orte neu entdecken und Geschichten finden, die oft direkt vor unserer Nase liegen.\nEure erste Station führt euch an einen Ort, an dem Vergangenheit und Gegenwart Tür an Tür wohnen.\nWo einst die Bewacher wohnten, lernen heute die Jugendlichen. Doch drei Zeugen der Vergangenheit stehen noch immer daneben.",
+    infoText: "Die drei erhaltenen Wächterbaracken gehören zu den letzten sichtbaren Überresten des ehemaligen Kriegsgefangenenlagers Stalag VII A. Während des Zweiten Weltkriegs waren hier Angehörige der Wachmannschaften untergebracht.<br/><br/>Das Stalag VII A war zeitweise das größte Kriegsgefangenenlager auf deutschem Boden. Nach Kriegsende wurden die Baracken als Wohnraum genutzt. Heute stehen sie unter Denkmalschutz und sollen teilweise zu einem Informations- und Dokumentationszentrum weiterentwickelt werden."
   },
   {
     id: 2,
-    name: "Station 2 (Platzhalter)",
-    code: "grieserie456",
-    question: "Hinweis-Frage für Ort 2...",
-    infoText: "Infotext für Ort 2..."
+    name: "2. Stalag-Gedenkplatz",
+    code: "gedenkplatz789",
+    question: "Eure Reise führt euch nun zu einem Ort des Erinnerns.\nManchmal erzählen Steine Geschichten.\nDieser hier erzählt von Rhône, Loire, Garonne und Seine.",
+    infoText: "Der Stalag-Gedenkplatz ist der zentrale Erinnerungsort an das ehemalige Kriegsgefangenenlager Stalag VII A.<br/><br/>Im Mittelpunkt steht der sogenannte Franzosenbrunnen. Er wurde vom französischen Bildhauer Antoniucci Volti während seiner Gefangenschaft geschaffen. Das Relief zeigt die vier großen Flüsse Frankreichs: Rhône, Loire, Garonne und Seine.<br/><br/>Heute erinnern Informationstafeln an die Geschichte der über eine Million Menschen, die das Lager während seines Bestehens durchliefen."
   },
   {
     id: 3,
-    name: "Station 3 (Platzhalter)",
-    code: "mariensaeule789",
-    question: "Hinweis-Frage für Ort 3...",
-    infoText: "Infotext für Ort 3..."
+    name: "3. Haus der Heimat",
+    code: "heimat456",
+    question: "Die nächste Station erinnert daran, dass Heimat manchmal mehr ist als ein Ort auf der Landkarte.\nManche Menschen mussten ihre Heimat verlassen. An diesem Ort werden ihre Geschichten, Erinnerungen und Traditionen bis heute bewahrt.",
+    infoText: "Das Haus der Heimat wurde 2005 als Vereinsheim, Museum und Begegnungsstätte errichtet.<br/><br/>Hier engagieren sich verschiedene Landsmannschaften und Heimatvereine, deren Mitglieder nach dem Zweiten Weltkrieg ihre Heimat in Ost- und Südosteuropa verlassen mussten.<br/><br/>Das Haus erinnert daran, dass die Geschichte Moosburgs nicht nur von den Menschen geprägt wurde, die hier immer gelebt haben, sondern auch von denen, die nach dem Krieg hier eine neue Heimat gefunden haben."
   },
   {
     id: 4,
-    name: "The Cornerhouse (Ziel)",
+    name: "4. Zehentstadel",
+    code: "zehentstadel111",
+    question: "Für die nächste Station müsst ihr einige Jahrhunderte zurückreisen.\nFrüher brachte man hier den zehnten Teil seiner Ernte vorbei. Heute kommen die Menschen freiwillig.",
+    infoText: "Der Zehentstadel erinnert an eine Zeit, in der Bauern einen Teil ihrer Ernte als Abgabe an Kirche oder Grundherrn leisten mussten.<br/><br/>Heute werden hier keine Naturalien mehr gesammelt, sondern Kultur, Kunst und Begegnungen. Der Zehentstadel zählt zu den bedeutenden historischen Gebäuden Moosburgs und wird regelmäßig für Veranstaltungen genutzt."
+  },
+  {
+    id: 5,
+    name: "5. Heimatmuseum",
+    code: "museum222",
+    question: "Wer die Zukunft verstehen will, sollte manchmal zuerst einen Blick in die Vergangenheit werfen.\nWer wissen möchte, wie Moosburg geworden ist, was es heute ist, findet die Antworten zwischen Urzeit und Neuzeit.",
+    infoText: "Das Heimatmuseum erzählt die Geschichte der Region von der Urgeschichte bis in die Gegenwart.<br/><br/>Seit 1975 befindet sich die Sammlung in der ehemaligen Klosterschule am Kastulusplatz. Die Ausstellungen reichen von archäologischen Funden über Stadtgeschichte bis hin zu Alltagsgegenständen vergangener Generationen."
+  },
+  {
+    id: 6,
+    name: "6. Kastulusmünster & Johanneskirche",
+    code: "muenster333",
+    question: "Die nächste Station verbindet zwei Glaubenszeugen, die sich nie begegnet sind.\nDer eine lebte im alten Rom, der andere am Jordan. Heute stehen sie in Moosburg Seite an Seite.",
+    infoText: "Das Kastulusmünster ist das Wahrzeichen Moosburgs und prägt die Silhouette der Stadt seit Jahrhunderten.<br/><br/>Benannt ist es nach dem heiligen Kastulus, einem römischen Märtyrer des 3. Jahrhunderts. Direkt daneben steht die Johanneskirche, die Johannes dem Täufer gewidmet ist.<br/><br/>Im Inneren des Münsters befindet sich mit dem Hochaltar von Hans Leinberger eines der bedeutendsten Kunstwerke der Spätgotik in Altbayern."
+  },
+  {
+    id: 7,
+    name: "7. Grieserie",
+    code: "grieserie456",
+    question: "Die Zeit hinterlässt Spuren. Manche Häuser erzählen davon besonders eindrucksvoll.\nDas älteste erhaltene Haus der Stadt hat schon viele Jahrhunderte erlebt. Heute trifft man hier auf Menschen statt auf Geschichte hinter Glas.",
+    infoText: "Die Grieserie gilt als das älteste erhaltene Haus Moosburgs.<br/><br/>Heute dient sie als soziale Begegnungsstätte. Hier stehen Austausch, Gemeinschaft und Begegnung im Mittelpunkt.<br/><br/>2025 wurde die Grieserie mit dem Oberbayerischen Denkmalpreis ausgezeichnet."
+  },
+  {
+    id: 8,
+    name: "8. Stadtmarketing Moosburg",
+    code: "marketing555",
+    question: "Nicht jede wichtige Institution erkennt man auf den ersten Blick.\nWer dafür sorgt, dass andere sichtbar werden, bleibt oft selbst im Hintergrund.",
+    infoText: "Das Stadtmarketing Moosburg setzt sich dafür ein, die Innenstadt attraktiv und lebendig zu halten.<br/><br/>Zu den Aufgaben gehören die Unterstützung von Veranstaltungen, die Förderung des Einzelhandels sowie die Vermarktung Moosburgs als Einkaufs-, Kultur- und Erlebnisstandort."
+  },
+  {
+    id: 9,
+    name: "9. Modehaus Heilingbrunner",
+    code: "heilingbrunner666",
+    question: "Die nächste Station beweist, dass manche Erfolgsgeschichten mehrere Jahrhunderte dauern können.\nSeit über 200 Jahren kleidet dieses Haus die Menschen der Region ein. Für Mode sind zwei Jahrhunderte eine ziemlich lange Saison.",
+    infoText: "Das Modehaus Heilingbrunner gehört seit mehr als 200 Jahren zu Moosburg.<br/><br/>Nur wenige Geschäfte können auf eine derart lange Geschichte zurückblicken und sind gleichzeitig bis heute fest im Stadtleben verankert."
+  },
+  {
+    id: 10,
+    name: "10. Badehimmel",
+    code: "badehimmel777",
+    question: "Für die nächste Station braucht ihr weder Schwimmflügel noch Badekappe.\nHier dreht sich alles ums Baden, aber niemand wird nass.",
+    infoText: "Der Moosburger Badehimmel ist ein Paradies für alle, die sich selbst oder anderen etwas Gutes tun möchten.<br/><br/>Im Sortiment finden sich Naturkosmetik, Badezusätze, Badekugeln, Naturcremes, handgemachte Seifen und viele weitere Wellness- und Pflegeprodukte. Ergänzt wird das Angebot durch Geschenkartikel, Dekorationen und besondere Fundstücke.<br/><br/>Wer auf der Suche nach einem Geschenk ist oder sich selbst eine kleine Auszeit gönnen möchte, wird hier meist fündig."
+  },
+  {
+    id: 11,
+    name: "11. Leni Goth Place",
+    code: "lenigoth888",
+    question: "Die nächste Station ist nichts für Menschen, die sich mit dem Gewöhnlichen zufriedengeben.\nDrachen, Tarotkarten, Räucherwerk und ein Vorhang, hinter dem nicht jeder stöbern darf.",
+    infoText: "Der Leni Goth Place gehört zu den außergewöhnlichsten Geschäften Moosburgs.<br/><br/>Hier treffen Gothic-Kultur, Fantasy, Esoterik und Handwerkskunst aufeinander. Zum Sortiment gehören unter anderem Drachenfiguren, Tarotkarten, Räucherstäbchen, Kerzen, Holzgravuren, individuell gestaltete Textilien und viele weitere besondere Artikel.<br/><br/>Außerdem gibt es eine separate Ü18-Abteilung hinter dem berühmten Vorhang, die ausschließlich erwachsenen Besuchern zugänglich ist."
+  },
+  {
+    id: 12,
+    name: "12. Gerlspeck",
+    code: "gerlspeck999",
+    question: "Manche Namen gehören so selbstverständlich zur Stadt, dass man kaum noch über sie nachdenkt.\nSchuhe, Taschen und Lederwaren haben hier Tradition. Manche Moosburger kennen den Namen schon ihr ganzes Leben.",
+    infoText: "Das Schuhhaus und Lederwarengeschäft Gerlspeck gehört seit Jahrzehnten zum Stadtplatz.<br/><br/>Als Familienunternehmen begleitet es Generationen von Moosburgern vom ersten Kinderschuh bis zur Reisetasche für den Urlaub."
+  },
+  {
+    id: 13,
+    name: "13. Flughafen Moosburg",
+    code: "flughafen000",
+    question: "Die nächste Station bringt euch an einen Ort, an dem manche Menschen den kürzesten Weg zwischen zwei Punkten für völlig überschätzt halten.\nHier hebt man regelmäßig ab, obwohl weder Bahnhof noch Flughafen-Terminal zu sehen sind.",
+    infoText: "Der Flugplatz Moosburg ist die Heimat des Fliegerclubs Moosburg. Hier gehen Segel- und Motorflieger ihrem Hobby nach und genießen die Region aus einer Perspektive, die den meisten Menschen verborgen bleibt.<br/><br/>Besonders bekannt ist der Flugplatz für das zweimal jährlich stattprimitive Flugplatzfest. Während am Samstag Rundflüge und Flugbetrieb im Mittelpunkt stehen, verwandelt sich die Start- und Landebahn am Sonntag in einen der größten Flohmärkte Bayerns."
+  },
+  {
+    id: 14,
+    name: "14. Zum Hirschn",
+    code: "hirschn123",
+    question: "Die nächste Station hat ihren Namen nicht von einem Musikinstrument, obwohl dort regelmäßig Musik erklingt.\nJazz, Sandwiches und kalte Getränke. Der Name dieses Hauses hat vier Beine und ein Geweih.",
+    infoText: "Das Zum Hirschn ist seit vielen Jahren ein beliebter Treffpunkt für Menschen jeden Alters.<br/><br/>Besonders bekannt ist die Verbindung zum Jazz Club Hirsch, der das kulturelle Leben Moosburgs mit Konzerten und Veranstaltungen bereichert."
+  },
+  {
+    id: 15,
+    name: "15. Moosi",
+    code: "moosi456",
+    question: "Für die nächste Station geht es ein paar Stufen nach unten.\nWer hier landen will, muss erst ein paar Stufen überwinden. Danach wird es meistens geselliger.",
+    infoText: "Das Moosi gehört zu den jüngsten Lokalen Moosburgs und hat erst 2026 seine Türen geöffnet.<br/><br/>Alteingesessene Moosburger erinnern sich vielleicht noch daran, dass sich hier früher das „Sowieso“ befand. Wer also beim Lesen von „Irgendwie und Sowieso“ ein kleines Déjà-vu hat, liegt vermutlich gar nicht so falsch.<br/><br/>Heute ist das Moosi ein Treffpunkt für alle, die in entspannter Atmosphäre zusammensitzen, etwas trinken und den Abend genießen möchten."
+  },
+  {
+    id: 16,
+    name: "16. Corner House",
     code: "cornerhouse999",
-    question: "Hinweis-Frage für das Ziel...",
-    infoText: "Geschafft! Ihr seid am Ziel. Meldet euch an der Theke."
+    question: "Die nächste Station liegt geografisch in Moosburg, kulturell aber ein gutes Stück weiter westlich.\nIrland liegt nicht in Oberbayern. Zumindest eigentlich nicht.",
+    infoText: "Das Corner House bringt ein Stück irische Pub-Kultur nach Moosburg.<br/><br/>Neben Burgern, Guinness und Live-Sport finden hier regelmäßig Konzerte, Veranstaltungen und das beste Pub Quiz der Welt (in Moosburg) statt. Zumindest sind sich darüber alle einig, die das Quiz veranstalten.<br/><br/>Das Pub Quiz lockt seit Jahren Ratefüchse, Besserwisser, Halbwissende und Menschen an, die eigentlich nur auf ein Feierabendbier vorbeischauen wollten.<br/><br/>Und ganz nebenbei entstand hier auch die Idee zur ersten Moosburger Stadtrallye. Was ursprünglich als kleine Sommerbeschäftigung für die Quiz-Teams gedacht war, entwickelte sich Schritt für Schritt zu diesem Projekt."
   }
 ];
 
@@ -69,19 +153,16 @@ export default function App() {
   useEffect(() => {
     document.title = "Stadtrallye 2026";
 
-    // PWA Check: Läuft die App schon als installierte App?
     if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {
       setIsStandalone(true);
     }
 
-    // PWA: Android Install Prompt abfangen
     const handleBeforeInstallPrompt = (e) => {
       e.preventDefault();
       setDeferredPrompt(e);
     };
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
 
-    // PWA: Check ob iOS (Apple)
     const userAgent = window.navigator.userAgent.toLowerCase();
     if (/iphone|ipad|ipod/.test(userAgent)) {
       setIsIOS(true);
@@ -154,7 +235,6 @@ export default function App() {
     };
   }, []);
 
-  // PWA INSTALL BUTTON LOGIK
   const handleInstallClick = async () => {
     if (isIOS) {
       setShowIOSHint(!showIOSHint); 
@@ -346,11 +426,8 @@ export default function App() {
     reader.readAsDataURL(file);
   };
 
-  // --- HILFS-KOMPONENTE FÜR DEN INSTALL-BANNER MIT BROWSER-CHECK ---
   const InstallBanner = () => {
     if (isStandalone) return null; 
-    
-    // Erkennung ob wir im "Gefängnis" eines In-App-Browsers ODER im Samsung Browser stecken
     const isWebView = /Instagram|FBAV|FBAN|SamsungBrowser/i.test(navigator.userAgent);
     
     if (isWebView) {
@@ -372,13 +449,11 @@ export default function App() {
             <strong style={{display: 'block', color: '#0B2846'}}>App installieren</strong>
             <span style={{fontSize: '12px', color: '#666'}}>Füge die Stadtrallye zum Startbildschirm hinzu!</span>
           </div>
-          <button onClick={handleInstallClick} style={styles.installBtn}>
-            Installieren
-          </button>
+          <button onClick={handleInstallClick} style={styles.installBtn}>Installieren</button>
         </div>
         {showIOSHint && (
           <div style={styles.iosHintBox}>
-            Tippe in Safari unten auf das <strong>Teilen-Symbol</strong> (Viereck mit Pfeil nach oben) und wähle dann <strong>"Zum Home-Bildschirm"</strong> aus.
+            Tippe in Safari unten auf das <strong>Teilen-Symbol</strong> (Viereck mit Pfeil nach oben) und wähle dann <strong>\"Zum Home-Bildschirm\"</strong> aus.
           </div>
         )}
       </div>
@@ -388,7 +463,6 @@ export default function App() {
 
   // --- UI RENDERING ---
 
-  // ADMIN VIEW DASHBOARD
   if (isAdminView) {
     return (
       <div style={{...styles.container, maxWidth: '900px'}}>
@@ -440,13 +514,10 @@ export default function App() {
             </table>
           </div>
         </div>
-
         <div style={styles.footer}>
           <a href="/impressum.html" style={styles.footerLink}>Impressum</a> | 
           <a href="/privacy.html" style={styles.footerLink}>Datenschutz</a>
         </div>
-
-        {/* PARTNER LOGO */}
         <div style={styles.partnerLogoWrapper}>
           <span style={styles.partnerLabel}>Powered by The Corner House</span>
           <img src="/logo_ch.png" alt="Partner" style={styles.partnerLogo} />
@@ -455,7 +526,6 @@ export default function App() {
     );
   }
 
-  // QUEREINSTEIGER VIEW
   if (showQuereinsteigerIntro) {
     return (
       <div style={styles.container}>
@@ -466,12 +536,10 @@ export default function App() {
           <p style={styles.text}>Du hast einen QR-Code der Stadtrallye gescannt. Bevor es losgeht, musst du schnell ein Team anlegen.</p>
           <button onClick={() => setShowQuereinsteigerIntro(false)} style={styles.button}>Weiter zur Anmeldung</button>
         </div>
-        
         <div style={styles.footer}>
           <a href="/impressum.html" style={styles.footerLink}>Impressum</a> | 
           <a href="/privacy.html" style={styles.footerLink}>Datenschutz</a>
         </div>
-
         <div style={styles.partnerLogoWrapper}>
           <span style={styles.partnerLabel}>Powered by The Corner House</span>
           <img src="/logo_ch.png" alt="Partner" style={styles.partnerLogo} />
@@ -480,7 +548,6 @@ export default function App() {
     );
   }
 
-  // REGISTRIERUNG VIEW 
   if (!isRegistered) {
     return (
       <div style={styles.container}>
@@ -549,7 +616,6 @@ export default function App() {
     );
   }
 
-  // INTERMEDIATE: LANDINGPAGE / COUNTDOWN VIEW
   if (isRegistered && !isRallyActive) {
     return (
       <div style={styles.container}>
@@ -583,7 +649,6 @@ export default function App() {
     );
   }
 
-  // SPIEL LOGIK
   const isRalleyFinished = currentStationIndex >= STATIONS.length;
   const currentStation = STATIONS[currentStationIndex]; 
 
@@ -631,7 +696,7 @@ export default function App() {
             </h2>
             <div style={styles.dashedLine}></div>
             <p style={styles.text}><strong>Euer Hinweis:</strong></p>
-            <p style={{...styles.text, fontSize: '16px', backgroundColor: '#f9fafb', padding: '15px', borderRadius: '8px', borderLeft: '4px solid #66B014'}}>{currentStation.question}</p>
+            <p style={{...styles.text, fontSize: '16px', backgroundColor: '#f9fafb', padding: '15px', borderRadius: '8px', borderLeft: '4px solid #66B014', whiteSpace: 'pre-line'}}>{currentStation.question}</p>
             <img src={`/Hint_Station_${currentStation.id}.png`} alt={`Hinweis`} style={styles.hintImage} onError={(e) => e.target.style.display = 'none'} />
             <div style={styles.infoBox}>Sucht an diesem Ort nach dem QR-Code und scannt ihn!</div>
           </div>
@@ -645,6 +710,9 @@ export default function App() {
             <div style={styles.dashedLine}></div>
             <h3 style={{marginTop: 0, color: '#0B2846'}}>{currentStation.name}</h3>
             <div style={{...styles.text, backgroundColor: '#f9fafb', padding: '15px', borderRadius: '8px', marginBottom: '20px', border: '1px solid #eee'}} dangerouslySetInnerHTML={{ __html: currentStation.infoText }} />
+            
+            {/* NEU: ZUSATZ-INFOGRAFIK (wird nur angezeigt, wenn die Datei /Info_Station_X.png existiert) */}
+            <img src={`/Info_Station_${currentStation.id}.png`} alt={`Zusatzgrafik`} style={styles.hintImage} onError={(e) => e.target.style.display = 'none'} />
             
             {uploadRequired ? (
               <div style={styles.uploadSection}>
@@ -676,7 +744,6 @@ export default function App() {
   );
 }
 
-// NEUE STYLES BASIEREND AUF DEM FLYER
 const styles = {
   container: { padding: '20px 20px 140px 20px', maxWidth: '500px', margin: '0 auto', fontFamily: '"Segoe UI", Roboto, Helvetica, Arial, sans-serif', minHeight: '100vh', position: 'relative', backgroundColor: '#F5F3EB' },
   title: { textAlign: 'center', color: '#0B2846', fontSize: '32px', marginTop: '10px', marginBottom: '20px', textTransform: 'uppercase', lineHeight: '1.1', fontWeight: '900', letterSpacing: '1px' },
@@ -694,27 +761,17 @@ const styles = {
   previewImage: { width: '100%', maxHeight: '220px', objectFit: 'cover', borderRadius: '8px', marginTop: '10px', border: '2px solid #eee' },
   hintImage: { width: '100%', borderRadius: '8px', marginTop: '15px', marginBottom: '15px', border: '2px solid #eee' },
   infoBox: { backgroundColor: '#eef2f5', padding: '15px', borderRadius: '8px', fontSize: '14px', textAlign: 'center', color: '#0B2846', fontWeight: 'bold' },
-  
-  // Install Banner Styles
   installBanner: { backgroundColor: '#eef2f5', borderLeft: '4px solid #66B014', padding: '15px', borderRadius: '8px', marginBottom: '20px', boxShadow: '0 2px 5px rgba(0,0,0,0.05)' },
   installBtn: { backgroundColor: '#0B2846', color: '#fff', border: 'none', padding: '8px 15px', borderRadius: '20px', fontSize: '13px', fontWeight: 'bold', cursor: 'pointer' },
   iosHintBox: { marginTop: '12px', fontSize: '13px', color: '#333', backgroundColor: '#fff', padding: '10px', borderRadius: '5px', border: '1px dashed #ccc' },
-
-  // FAQ Styles
   faqItem: { borderBottom: '1px solid #eee', padding: '10px 0' },
   faqSummary: { fontWeight: 'bold', color: '#0B2846', cursor: 'pointer', outline: 'none', fontSize: '15px', padding: '5px 0' },
   faqContent: { padding: '10px 0 5px 0', fontSize: '14px', color: '#444', lineHeight: '1.5' },
-
-  // Admin Table Styles
   th: { padding: '12px', borderBottom: '2px solid #0B2846', color: '#0B2846' },
   td: { padding: '12px', color: '#333' },
   actionBtn: { background: 'none', border: 'none', cursor: 'pointer', fontSize: '18px', margin: '0 5px' },
-
-  // Footer Styles
   footer: { textAlign: 'center', marginTop: '30px', paddingBottom: '20px', fontSize: '13px', color: '#888' },
   footerLink: { color: '#0B2846', textDecoration: 'none', fontWeight: 'bold', margin: '0 10px' },
-
-  // Partner Logo
   partnerLogoWrapper: { position: 'fixed', bottom: '20px', right: '20px', display: 'flex', alignItems: 'center', backgroundColor: 'rgba(255,255,255,0.9)', padding: '10px 20px', borderRadius: '30px', boxShadow: '0 3px 10px rgba(0,0,0,0.15)', zIndex: 100 },
   partnerLabel: { fontSize: '16px', color: '#333', marginRight: '12px', fontWeight: 'bold' },
   partnerLogo: { maxHeight: '60px', maxWidth: '150px' }
