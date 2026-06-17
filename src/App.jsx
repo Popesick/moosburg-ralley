@@ -59,7 +59,7 @@ const STATIONS = [
     name: "8. Stadtmarketing Moosburg",
     code: "marketing555",
     question: "Nicht jede wichtige Institution erkennt man auf den ersten Blick.\nWer dafür sorgt, dass andere sichtbar werden, bleibt oft selbst im Hintergrund.",
-    infoText: "Das Stadtmarketing Moosburg setzt sich dafür ein, die Innenstadt attraktiv und lebendig to halten.<br/><br/>Zu den Aufgaben gehören die Unterstützung von Veranstaltungen, die Förderung des Einzelhandels sowie die Vermarktung Moosburgs als Einkaufs-, Kultur- und Erlebnisstandort."
+    infoText: "Das Stadtmarketing Moosburg setzt sich dafür ein, die Innenstadt attraktiv und lebendig zu halten.<br/><br/>Zu den Aufgaben gehören die Unterstützung von Veranstaltungen, die Förderung des Einzelhandels sowie die Vermarktung Moosburgs als Einkaufs-, Kultur- und Erlebnisstandort."
   },
   {
     id: 9,
@@ -77,10 +77,10 @@ const STATIONS = [
   },
   {
     id: 11,
-    name: "11. Leni Goth Place",
+    name: "11. Wasserturm",
     code: "lenigoth888",
-    question: "Die nächste Station ist nichts für Menschen, die sich mit dem Gewöhnlichen zufriedengeben.\nDrachen, Tarotkarten, Räucherwerk und ein Vorhang, hinter dem nicht jeder stöbern darf.",
-    infoText: "Der Leni Goth Place gehört zu den außergewöhnlichsten Geschäften Moosburgs.<br/><br/>Hier treffen Gothic-Kultur, Fantasy, Esoterik und Handwerkskunst aufeinander. Zum Sortiment gehören unter anderem Drachenfiguren, Tarotkarten, Räucherstäbchen, Kerzen, Holzgravuren, individuell gestaltete Textilien und viele weitere besondere Artikel.<br/><br/>Außerdem gibt es eine separate Ü18-Abteilung hinter dem berühmten Vorhang, die ausschließlich erwachsenen Besuchern zugänglich ist."
+    question: "Die nächste Station erinnert an eine Zeit, in der fließendes Wasser alles andere als selbstverständlich war.\nHeute ist er stillgelegt. Früher sorgte er dafür, dass in Moosburg die Leitungen nicht trocken blieben.",
+    infoText: "Der Wasserturm wurde Anfang des 20. Jahrhunderts errichtet und war über viele Jahrzehnte ein wichtiger Bestandteil der Moosburger Wasserversorgung.<br/><br/>Seine Aufgabe bestand darin, Wasser zu speichern und durch den Höhenunterschied den notwendigen Druck im Leitungsnetz aufrechtzuerhalten. Damit gehörte der Turm zu den Bauwerken, die den Alltag der Menschen oft unbemerkt, aber entscheidend beeinflussten.<br/><br/>Heute wird der Turm nicht mehr für die Wasserversorgung genutzt, prägt aber weiterhin das Stadtbild und erinnert an die technische Entwicklung Moosburgs.<br/><br/>Der Turm befindet sich heute im Besitz des Deutschen Alpenvereins (DAV). Während der Wasserturm selbst derzeit nicht genutzt wird, betreibt der DAV in Moosburg eine moderne Kletterhalle und engagiert sich aktiv im Vereins- und Breitensport.<br/><br/>Werft auch einen Blick auf die historischen Baupläne dieser Station. Sie zeigen eindrucksvoll, wie dieses technische Bauwerk ursprünglich geplant wurde und geben einen spannenden Einblick in die Ingenieurskunst seiner Zeit."
   },
   {
     id: 12,
@@ -128,7 +128,7 @@ export default function App() {
 
   const [teamName, setTeamName] = useState('');
   const [participationChoice, setParticipationChoice] = useState(null); 
-  const [teamPin, setTeamPin] = useState(''); // Generierte oder geladene PIN
+  const [teamPin, setTeamPin] = useState(''); 
   
   const [currentStationIndex, setCurrentStationIndex] = useState(0);
   const [stationState, setStationState] = useState('SEEKING'); 
@@ -345,7 +345,6 @@ export default function App() {
     setTeamToRestore(null);
     setPinError(false);
 
-    // ZUFÄLLIGE 4-STELLIGE PIN GENERIEREN
     const generatedPin = Math.floor(1000 + Math.random() * 9000).toString();
 
     try {
@@ -355,12 +354,11 @@ export default function App() {
         body: JSON.stringify({ 
           team: teamName.trim(), 
           choice: participationChoice,
-          pin: generatedPin // PIN mitsenden
+          pin: generatedPin 
         })
       });
 
       if (response.status === 409) {
-        // Team existiert. Hole Server-Daten zur Verifizierung.
         try {
           const adminRes = await fetch("https://moosburg-ralley-api.andreas-stetter73.workers.dev/api/admin/teams");
           if (adminRes.ok) {
@@ -383,7 +381,6 @@ export default function App() {
         return;
       }
 
-      // ERFOLGREICHE NEUREGISTRIERUNG
       localStorage.setItem('quiz_team_name', teamName.trim());
       localStorage.setItem('quiz_participation_choice', participationChoice.toString());
       localStorage.setItem('quiz_team_progress', '0');
@@ -405,7 +402,6 @@ export default function App() {
   const handleRestoreTeam = () => {
     if (!teamToRestore) return;
 
-    // PIN ABGLEICHEN
     if (enteredPin.trim() !== teamToRestore.pin) {
       setPinError(true);
       return;
@@ -527,7 +523,6 @@ export default function App() {
     );
   };
 
-
   // --- UI RENDERING ---
 
   if (isAdminView) {
@@ -563,11 +558,8 @@ export default function App() {
                   return (
                     <tr key={idx} style={{borderBottom: '1px dashed #ccc'}}>
                       <td style={styles.td}><strong>{team.originalName}</strong></td>
-<td style={styles.td}>
-  <code style={{backgroundColor: '#eee', padding: '2px 6px', borderRadius: '4px', fontWeight: 'bold'}}>
-    {team.pin || team.PIN || '----'}
-  </code>
-</td>                      <td style={styles.td}>
+                      <td style={styles.td}><code style={{backgroundColor: '#eee', padding: '2px 6px', borderRadius: '4px', fontWeight: 'bold'}}>{team.pin || team.PIN || '----'}</code></td>
+                      <td style={styles.td}>
                         <span style={{backgroundColor: '#0B2846', padding: '4px 8px', borderRadius: '12px', fontWeight: 'bold', color: '#fff'}}>
                           {team.progress} / {STATIONS.length}
                         </span>
@@ -664,7 +656,6 @@ export default function App() {
               </div>
             )}
             
-            {/* CO-RECOVERY / PIN INTERFACE */}
             {teamToRestore ? (
               <div style={{...styles.infoBox, backgroundColor: '#fff3cd', border: '2px solid #ffc107', padding: '20px', borderRadius: '8px', textAlign: 'left'}}>
                 <p style={{margin: '0 0 12px 0', color: '#856404', fontWeight: 'bold'}}>Dieser Teamname existiert bereits!</p>
@@ -692,7 +683,6 @@ export default function App() {
                 {isRallyActive ? 'Rallye jetzt starten!' : 'Team vorab registrieren'}
               </button>
             )}
-
           </form>
         </div>
 
@@ -730,7 +720,6 @@ export default function App() {
           <div style={styles.dashedLine}></div>
           <p style={styles.text}>Euer Team <strong>{teamName}</strong> ist im System registriert und startklar.</p>
           
-          {/* ANZEIGE DER WICHTIGEN NOTFALL PIN */}
           <div style={{backgroundColor: '#fff7cd', border: '1px solid #ffc107', padding: '15px', borderRadius: '8px', textAlign: 'center', margin: '20px 0'}}>
             <span style={{fontSize: '12px', textTransform: 'uppercase', color: '#856404', fontWeight: 'bold', display: 'block', marginBottom: '5px'}}>🔒 Eure persönliche Notfall-PIN:</span>
             <span style={{fontSize: '28px', fontWeight: '900', letterSpacing: '4px', color: '#0B2846'}}>{teamPin}</span>
@@ -803,6 +792,17 @@ export default function App() {
       <div style={styles.card}>
         {stationState === 'SEEKING' && (
           <div>
+            {/* NEU: DIE GELBE PIN-BOX BEI STATION 1 */}
+            {currentStationIndex === 0 && (
+              <div style={{backgroundColor: '#fff7cd', border: '1px solid #ffc107', padding: '15px', borderRadius: '8px', textAlign: 'center', marginBottom: '20px'}}>
+                <span style={{fontSize: '12px', textTransform: 'uppercase', color: '#856404', fontWeight: 'bold', display: 'block', marginBottom: '5px'}}>🔒 Eure persönliche Notfall-PIN:</span>
+                <span style={{fontSize: '28px', fontWeight: '900', letterSpacing: '4px', color: '#0B2846'}}>{teamPin}</span>
+                <p style={{fontSize: '11px', color: '#666', margin: '8px 0 0 0', lineHeight: '1.4'}}>
+                  Macht jetzt einen <strong>Screenshot</strong>! Diese PIN braucht ihr, falls euer Akku leer geht oder ihr das Gerät wechseln müsst.
+                </p>
+              </div>
+            )}
+
             <h2 style={{marginTop: '0', color: '#0B2846', display: 'flex', alignItems: 'center', gap: '8px'}}>
               <span style={{fontSize: '24px'}}>📍</span> Finde Station {currentStationIndex + 1}
             </h2>
