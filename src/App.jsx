@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 // 1. STARTDATUM DER RALLYE
 const START_DATE = new Date('2026-07-06T00:00:00');
 
-// 2. ALLE 16 FINALEN STATIONSDATEN
+// 2. ALLE 16 FINALEN STATIONSDATEN (NEUE REIHENFOLGE)
 const STATIONS = [
   {
     id: 1,
@@ -28,77 +28,77 @@ const STATIONS = [
   },
   {
     id: 4,
-    name: "4. Zehentstadel",
-    code: "zehentstadel111",
+    name: "4. DAV Kletterhalle",
+    code: "kletterhalle444", // NEUER CODE FÜR DIE NEUE STATION
+    question: "Die nächste Station führt euch an einen Ort, an dem manche Menschen freiwillig die Wand hochgehen.\nFrüher wurde hier eingekehrt, heute wird geklettert. Gesucht wird ein Ort, an dem Höhenmeter mitten in Moosburg gesammelt werden.",
+    infoText: "Die DAV-Sektion Moosburg bietet Kletterbegeisterten mitten in der Stadt die Möglichkeit, ihrem Sport nachzugehen. Hier trainieren Anfänger ebenso wie erfahrene Kletterer und Bergsteiger für ihre nächsten Abenteuer am Fels oder in den Alpen.<br/><br/>Das Vereinsheim steht auf geschichtsträchtigem Boden. Bis in die 1950er Jahre befand sich hier eine Gastwirtschaft, die im Volksmund als „Staunznwirt“ bekannt war. Der Name leitet sich vom bairischen Wort „Staunzn“ für Mücken ab. Woher dieser Name kommt, habt ihr auf dem Weg hierher möglicherweise selbst am eigenen Leib erfahren.<br/><br/>Als später das Vereinsheim errichtet werden sollte, sorgten die Pläne in Moosburg für reichlich Diskussionen. Zeitzeugen berichten noch heute von Unterschriftensammlungen und hitzigen Debatten, die man rückblickend fast als kleinen Volksaufstand bezeichnen könnte.<br/><br/>Heute geht es deutlich friedlicher zu. Statt über Baupläne wird hier über Kletterrouten diskutiert, und statt Maßkrügen stehen Seile, Karabiner und Kletterschuhe im Mittelpunkt.<br/><br/>Wenn ihr diese Station am 11. Juli besucht, fragt ihr euch vielleicht, warum hier plötzlich so viele Menschen unterwegs sind. Die Antwort ist einfach: Auf dem Gelände findet an diesem Tag das Sommerfest der DAV-Sektion mit Biergartenbetrieb statt.<br/><br/>Solltet ihr also plötzlich den Duft von Grillgut wahrnehmen oder Menschen mit Getränken in der Hand entdecken, gehört das ausnahmsweise nicht zur Rallye, sondern zum Programm des DAV."
+  },
+  {
+    id: 5,
+    name: "5. Zehentstadel",
+    code: "zehentstadel111", // ALTE CODES BLEIBEN AB HIER ERHALTEN
     question: "Für die nächste Station müsst ihr einige Jahrhunderte zurückreisen.\nFrüher brachte man hier den zehnten Teil seiner Ernte vorbei. Heute kommen die Menschen freiwillig.",
     infoText: "Der Zehentstadel erinnert an eine Zeit, in der Bauern einen Teil ihrer Ernte als Abgabe an Kirche oder Grundherrn leisten mussten.<br/><br/>Heute werden hier keine Naturalien mehr gesammelt, sondern Kultur, Kunst und Begegnungen. Der Zehentstadel zählt zu den bedeutenden historischen Gebäuden Moosburgs und wird regelmäßig für Veranstaltungen genutzt."
   },
   {
-    id: 5,
-    name: "5. Heimatmuseum",
+    id: 6,
+    name: "6. Heimatmuseum",
     code: "museum222",
     question: "Wer die Zukunft verstehen will, sollte manchmal zuerst einen Blick in die Vergangenheit werfen.\nWer wissen möchte, wie Moosburg geworden ist, was es heute ist, findet die Antworten zwischen Urzeit und Neuzeit.",
     infoText: "Das Heimatmuseum erzählt die Geschichte der Region von der Urgeschichte bis in die Gegenwart.<br/><br/>Seit 1975 befindet sich die Sammlung in der ehemaligen Klosterschule am Kastulusplatz. Die Ausstellungen reichen von archäologischen Funden über Stadtgeschichte bis hin zu Alltagsgegenständen vergangener Generationen."
   },
   {
-    id: 6,
-    name: "6. Kastulusmünster & Johanneskirche",
+    id: 7,
+    name: "7. Kastulusmünster & Johanneskirche",
     code: "muenster333",
     question: "Die nächste Station verbindet zwei Glaubenszeugen, die sich nie begegnet sind.\nDer eine lebte im alten Rom, der andere am Jordan. Heute stehen sie in Moosburg Seite an Seite.",
     infoText: "Das Kastulusmünster ist das Wahrzeichen Moosburgs und prägt die Silhouette der Stadt seit Jahrhunderten.<br/><br/>Benannt ist es nach dem heiligen Kastulus, einem römischen Märtyrer des 3. Jahrhunderts. Direkt daneben steht die Johanneskirche, die Johannes dem Täufer gewidmet ist.<br/><br/>Im Inneren des Münsters befindet sich mit dem Hochaltar von Hans Leinberger eines der bedeutendsten Kunstwerke der Spätgotik in Altbayern."
   },
   {
-    id: 7,
-    name: "7. Grieserie",
+    id: 8,
+    name: "8. Grieserie",
     code: "grieserie456",
     question: "Die Zeit hinterlässt Spuren. Manche Häuser erzählen davon besonders eindrucksvoll.\nDas älteste erhaltene Haus der Stadt hat schon viele Jahrhunderte erlebt. Heute trifft man hier auf Menschen statt auf Geschichte hinter Glas.",
     infoText: "Die Grieserie gilt als das älteste erhaltene Haus Moosburgs.<br/><br/>Heute dient sie als soziale Begegnungsstätte. Hier stehen Austausch, Gemeinschaft und Begegnung im Mittelpunkt.<br/><br/>2025 wurde die Grieserie mit dem Oberbayerischen Denkmalpreis ausgezeichnet."
   },
   {
-    id: 8,
-    name: "8. Stadtmarketing Moosburg",
+    id: 9,
+    name: "9. Stadtmarketing Moosburg",
     code: "marketing555",
     question: "Nicht jede wichtige Institution erkennt man auf den ersten Blick.\nWer dafür sorgt, dass andere sichtbar werden, bleibt oft selbst im Hintergrund.",
     infoText: "Das Stadtmarketing Moosburg setzt sich dafür ein, die Innenstadt attraktiv und lebendig zu halten.<br/><br/>Zu den Aufgaben gehören die Unterstützung von Veranstaltungen, die Förderung des Einzelhandels sowie die Vermarktung Moosburgs als Einkaufs-, Kultur- und Erlebnisstandort."
   },
   {
-    id: 9,
-    name: "9. Modehaus Heilingbrunner",
+    id: 10,
+    name: "10. Modehaus Heilingbrunner",
     code: "heilingbrunner666",
     question: "Die nächste Station beweist, dass manche Erfolgsgeschichten mehrere Jahrhunderte dauern können.\nSeit über 200 Jahren kleidet dieses Haus die Menschen der Region ein. Für Mode sind zwei Jahrhunderte eine ziemlich lange Saison.",
     infoText: "Das Modehaus Heilingbrunner gehört seit mehr als 200 Jahren zu Moosburg.<br/><br/>Nur wenige Geschäfte können auf eine derart lange Geschichte zurückblicken und sind gleichzeitig bis heute fest im Stadtleben verankert."
   },
   {
-    id: 10,
-    name: "10. Badehimmel",
+    id: 11,
+    name: "11. Badehimmel",
     code: "badehimmel777",
     question: "Für die nächste Station braucht ihr weder Schwimmflügel noch Badekappe.\nHier dreht sich alles ums Baden, aber niemand wird nass.",
     infoText: "Der Moosburger Badehimmel ist ein Paradies für alle, die sich selbst oder anderen etwas Gutes tun möchten.<br/><br/>Im Sortiment finden sich Naturkosmetik, Badezusätze, Badekugeln, Naturcremes, handgemachte Seifen und viele weitere Wellness- und Pflegeprodukte. Ergänzt wird das Angebot durch Geschenkartikel, Dekorationen und besondere Fundstücke.<br/><br/>Wer auf der Suche nach einem Geschenk ist oder sich selbst eine kleine Auszeit gönnen möchte, wird hier meist fündig."
   },
   {
-    id: 11,
-    name: "11. Wasserturm",
-    code: "lenigoth888",
+    id: 12,
+    name: "12. Wasserturm",
+    code: "lenigoth888", // Alter Code wurde exakt beibehalten!
     question: "Die nächste Station erinnert an eine Zeit, in der fließendes Wasser alles andere als selbstverständlich war.\nHeute ist er stillgelegt. Früher sorgte er dafür, dass in Moosburg die Leitungen nicht trocken blieben.",
     infoText: "Der Wasserturm wurde Anfang des 20. Jahrhunderts errichtet und war über viele Jahrzehnte ein wichtiger Bestandteil der Moosburger Wasserversorgung.<br/><br/>Seine Aufgabe bestand darin, Wasser zu speichern und durch den Höhenunterschied den notwendigen Druck im Leitungsnetz aufrechtzuerhalten. Damit gehörte der Turm zu den Bauwerken, die den Alltag der Menschen oft unbemerkt, aber entscheidend beeinflussten.<br/><br/>Heute wird der Turm nicht mehr für die Wasserversorgung genutzt, prägt aber weiterhin das Stadtbild und erinnert an die technische Entwicklung Moosburgs.<br/><br/>Der Turm befindet sich heute im Besitz des Deutschen Alpenvereins (DAV). Während der Wasserturm selbst derzeit nicht genutzt wird, betreibt der DAV in Moosburg eine moderne Kletterhalle und engagiert sich aktiv im Vereins- und Breitensport.<br/><br/>Werft auch einen Blick auf die historischen Baupläne dieser Station. Sie zeigen eindrucksvoll, wie dieses technische Bauwerk ursprünglich geplant wurde und geben einen spannenden Einblick in die Ingenieurskunst seiner Zeit."
   },
   {
-    id: 12,
-    name: "12. Gerlspeck",
+    id: 13,
+    name: "13. Gerlspeck",
     code: "gerlspeck999",
     question: "Manche Namen gehören so selbstverständlich zur Stadt, dass man kaum noch über sie nachdenkt.\nSchuhe, Taschen und Lederwaren haben hier Tradition. Manche Moosburger kennen den Namen schon ihr ganzes Leben.",
     infoText: "Das Schuhhaus und Lederwarengeschäft Gerlspeck gehört seit Jahrzehnten zum Stadtplatz.<br/><br/>Als Familienunternehmen begleitet es Generationen von Moosburgern vom ersten Kinderschuh bis zur Reisetasche für den Urlaub."
   },
   {
-    id: 13,
-    name: "13. Flughafen Moosburg",
-    code: "flughafen000",
-    question: "Die nächste Station bringt euch an einen Ort, an dem manche Menschen den kürzesten Weg zwischen zwei Punkten für völlig überschätzt halten.\nHier hebt man regelmäßig ab, obwohl weder Bahnhof noch Flughafen-Terminal zu sehen sind.",
-    infoText: "Der Flugplatz Moosburg ist die Heimat des Fliegerclubs Moosburg. Hier gehen Segel- und Motorflieger ihrem Hobby nach und genießen die Region aus einer Perspektive, die den meisten Menschen verborgen bleibt.<br/><br/>Besonders bekannt ist der Flugplatz für das zweimal jährlich stattfindende Flugplatzfest. Während am Samstag Rundflüge und Flugbetrieb im Mittelpunkt stehen, verwandelt sich die Start- und Landebahn am Sonntag in einen der größten Flohmärkte Bayerns."
-  },
-  {
     id: 14,
-    name: "14. Zum Hirschn",
+    name: "14. Zum Hirschn", // Station rutscht nicht, bleibt ID 14!
     code: "hirschn123",
     question: "Die nächste Station hat ihren Namen nicht von einem Musikinstrument, obwohl dort regelmäßig Musik erklingt.\nJazz, Sandwiches und kalte Getränke. Der Name dieses Hauses hat vier Beine und ein Geweih.",
     infoText: "Das Zum Hirschn ist seit vielen Jahren ein beliebter Treffpunkt für Menschen jeden Alters.<br/><br/>Besonders bekannt ist die Verbindung zum Jazz Club Hirsch, der das kulturelle Leben Moosburgs mit Konzerten und Veranstaltungen bereichert."
@@ -377,7 +377,7 @@ export default function App() {
       }
 
       if (!response.ok) {
-        setErrorMessage("Fehler bei der Kommunikation mit dem Server.");
+        setErrorMessage("Fehler bei der Kommunikation mit Server.");
         return;
       }
 
@@ -440,7 +440,7 @@ export default function App() {
         })
       });
     } catch (error) {
-      console.error("Fortschritt konnte nicht mit dem Server synchronisiert werden.", error);
+      console.error("Fortschritt konnte nicht mit Server synchronisiert werden.", error);
     }
 
     setCurrentStationIndex(nextIndex);
@@ -579,6 +579,7 @@ export default function App() {
           </div>
         </div>
         <div style={styles.footer}>
+          <a href="https://www.instagram.com/moosburgrallye/" target="_blank" rel="noopener noreferrer" style={{...styles.footerLink, color: '#E1306C'}}>Instagram</a> | 
           <a href="/impressum.html" style={styles.footerLink}>Impressum</a> | 
           <a href="/privacy.html" style={styles.footerLink}>Datenschutz</a>
         </div>
@@ -601,6 +602,7 @@ export default function App() {
           <button onClick={() => setShowQuereinsteigerIntro(false)} style={styles.button}>Weiter zur Anmeldung</button>
         </div>
         <div style={styles.footer}>
+          <a href="https://www.instagram.com/moosburgrallye/" target="_blank" rel="noopener noreferrer" style={{...styles.footerLink, color: '#E1306C'}}>Instagram</a> | 
           <a href="/impressum.html" style={styles.footerLink}>Impressum</a> | 
           <a href="/privacy.html" style={styles.footerLink}>Datenschutz</a>
         </div>
@@ -692,10 +694,11 @@ export default function App() {
           <details style={styles.faqItem}><summary style={styles.faqSummary}>Was kostet die Teilnahme?</summary><div style={styles.faqContent}>Die Teilnahme an der Moosburger Stadtrallye ist völlig kostenlos!</div></details>
           <details style={styles.faqItem}><summary style={styles.faqSummary}>Müssen wir alles an einem Tag schaffen?</summary><div style={styles.faqContent}>Nein. Ihr habt vom 6. bis zum 12. Juli Zeit. Euer Fortschritt wird auf eurem Gerät gespeichert. Ihr könnt jederzeit pausieren und an einem anderen Tag weitermachen.</div></details>
           <details style={styles.faqItem}><summary style={styles.faqSummary}>Was brauche ich zum Mitmachen?</summary><div style={styles.faqContent}>Nur ein Smartphone mit Internetverbindung, eine funktionierende Kamera für die Beweisfotos und gute Laune!</div></details>
-          <details style={styles.faqItem}><summary style={styles.faqSummary}>Was gibt es zu gewinnen?</summary><div style={styles.faqContent}>Dank unserer fantastischen Sponsoren (The Corner House, Modehaus Heilingbrunner, Barbaras Bücherstube, Josef Gerlspeck, Leni Goth Place) warten großartige Gutscheine und Sachpreise auf die Gewinnerteams!</div></details>
+          <details style={styles.faqItem}><summary style={styles.faqSummary}>Was gibt es zu gewinnen?</summary><div style={styles.faqContent}>Dank unserer fantastischen Sponsoren (The Corner House, Modehaus Heilingbrunner, Barbaras Bücherstube, Josef Gerlspeck, DAV Kletterhalle) warten großartige Gutscheine und Sachpreise auf die Gewinnerteams!</div></details>
         </div>
 
         <div style={styles.footer}>
+          <a href="https://www.instagram.com/moosburgrallye/" target="_blank" rel="noopener noreferrer" style={{...styles.footerLink, color: '#E1306C'}}>Instagram</a> | 
           <a href="/impressum.html" style={styles.footerLink}>Impressum</a> | 
           <a href="/privacy.html" style={styles.footerLink}>Datenschutz</a>
         </div>
@@ -724,7 +727,7 @@ export default function App() {
             <span style={{fontSize: '12px', textTransform: 'uppercase', color: '#856404', fontWeight: 'bold', display: 'block', marginBottom: '5px'}}>🔒 Eure persönliche Notfall-PIN:</span>
             <span style={{fontSize: '28px', fontWeight: '900', letterSpacing: '4px', color: '#0B2846'}}>{teamPin}</span>
             <p style={{fontSize: '11px', color: '#666', margin: '8px 0 0 0', lineHeight: '1.4'}}>
-              Macht jetzt einen <strong>Screenshot</strong>! Diese PIN braucht ihr, falls euer Akku leer geht oder ihr das Handy wechseln müsst.
+              Macht jetzt einen <strong>Screenshot</strong>! Diese PIN braucht ihr, falls euer Akku leer geht oder ihr das Gerät wechseln müsst.
             </p>
           </div>
 
@@ -734,10 +737,19 @@ export default function App() {
             <div style={{fontSize: '12px', textTransform: 'uppercase', letterSpacing: '1px', color: '#0B2846', marginBottom: '5px'}}>Startet in:</div>
             <div style={{fontSize: '22px', fontWeight: 'bold', color: '#66B014'}}>{countdownText || 'Lädt...'}</div>
           </div>
+          
+          {/* NEU: INSTAGRAM BOX AUF DER COUNTDOWN SEITE */}
+          <div style={{backgroundColor: '#ffe8f0', border: '1px solid #ffb3c6', padding: '15px', borderRadius: '8px', textAlign: 'center', marginTop: '20px'}}>
+            <span style={{fontSize: '15px', display: 'block', marginBottom: '5px', color: '#E1306C', fontWeight: 'bold'}}>📷 Folgt uns auf Instagram!</span>
+            <p style={{fontSize: '13px', color: '#666', margin: '0 0 12px 0', lineHeight: '1.4'}}>Verpasst keine Updates und schaut euch an, was die anderen Teams zur Vorbereitung treiben.</p>
+            <a href="https://www.instagram.com/moosburgrallye/" target="_blank" rel="noopener noreferrer" style={{...styles.button, backgroundColor: '#E1306C', padding: '10px 15px', fontSize: '14px', display: 'inline-block', textDecoration: 'none', width: 'auto'}}>@moosburgrallye besuchen</a>
+          </div>
+
           <p style={{fontSize: '13px', color: '#666', textAlign: 'center', fontStyle: 'italic', marginTop: '20px'}}>Speichert euch diese Seite als Lesezeichen oder ladet sie als App herunter.</p>
         </div>
 
         <div style={styles.footer}>
+          <a href="https://www.instagram.com/moosburgrallye/" target="_blank" rel="noopener noreferrer" style={{...styles.footerLink, color: '#E1306C'}}>Instagram</a> | 
           <a href="/impressum.html" style={styles.footerLink}>Impressum</a> | 
           <a href="/privacy.html" style={styles.footerLink}>Datenschutz</a>
         </div>
@@ -762,8 +774,17 @@ export default function App() {
           <div style={styles.dashedLine}></div>
           <p style={{...styles.text, textAlign: 'center', fontSize: '18px', fontWeight: 'bold'}}>Herzlichen Glückwunsch, Team {teamName}!</p>
           <p style={{...styles.text, textAlign: 'center'}}>Ihr habt alle Rätsel gelöst und Moosburg neu entdeckt. Kommt zur Theke im Corner House und feiert euren Erfolg!</p>
+          
+          {/* NEU: INSTAGRAM BOX AUF DER ZIEL-SEITE */}
+          <div style={{backgroundColor: '#ffe8f0', border: '1px solid #ffb3c6', padding: '20px', borderRadius: '8px', textAlign: 'center', margin: '25px 0'}}>
+            <p style={{margin: '0 0 10px 0', color: '#E1306C', fontWeight: 'bold', fontSize: '18px'}}>📸 Teilt euren Erfolg!</p>
+            <p style={{fontSize: '14px', color: '#666', margin: '0 0 15px 0'}}>Postet eure besten Bilder der Rallye, markiert uns und feiert euren Sieg mit der ganzen Stadt.</p>
+            <a href="https://www.instagram.com/moosburgrallye/" target="_blank" rel="noopener noreferrer" style={{...styles.button, backgroundColor: '#E1306C', padding: '12px', fontSize: '15px', display: 'block', textDecoration: 'none', textAlign: 'center'}}>Zu Instagram ➔</a>
+          </div>
+
         </div>
         <div style={styles.footer}>
+          <a href="https://www.instagram.com/moosburgrallye/" target="_blank" rel="noopener noreferrer" style={{...styles.footerLink, color: '#E1306C'}}>Instagram</a> | 
           <a href="/impressum.html" style={styles.footerLink}>Impressum</a> | 
           <a href="/privacy.html" style={styles.footerLink}>Datenschutz</a>
         </div>
@@ -792,7 +813,6 @@ export default function App() {
       <div style={styles.card}>
         {stationState === 'SEEKING' && (
           <div>
-            {/* NEU: DIE GELBE PIN-BOX BEI STATION 1 */}
             {currentStationIndex === 0 && (
               <div style={{backgroundColor: '#fff7cd', border: '1px solid #ffc107', padding: '15px', borderRadius: '8px', textAlign: 'center', marginBottom: '20px'}}>
                 <span style={{fontSize: '12px', textTransform: 'uppercase', color: '#856404', fontWeight: 'bold', display: 'block', marginBottom: '5px'}}>🔒 Eure persönliche Notfall-PIN:</span>
@@ -843,6 +863,7 @@ export default function App() {
       </div>
 
       <div style={styles.footer}>
+        <a href="https://www.instagram.com/moosburgrallye/" target="_blank" rel="noopener noreferrer" style={{...styles.footerLink, color: '#E1306C'}}>Instagram</a> | 
         <a href="/impressum.html" style={styles.footerLink}>Impressum</a> | 
         <a href="/privacy.html" style={styles.footerLink}>Datenschutz</a>
       </div>
