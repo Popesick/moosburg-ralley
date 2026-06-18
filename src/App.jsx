@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 // 1. STARTDATUM DER RALLYE
 const START_DATE = new Date('2026-07-06T00:00:00');
 
-// 2. ALLE 16 FINALEN STATIONSDATEN (NEUE REIHENFOLGE)
+// 2. ALLE 17 FINALEN STATIONSDATEN (MIT BÜCHERSTUBE)
 const STATIONS = [
   {
     id: 1,
@@ -29,14 +29,14 @@ const STATIONS = [
   {
     id: 4,
     name: "4. DAV Kletterhalle",
-    code: "kletterhalle444", // NEUER CODE FÜR DIE NEUE STATION
+    code: "kletterhalle444",
     question: "Die nächste Station führt euch an einen Ort, an dem manche Menschen freiwillig die Wand hochgehen.\nFrüher wurde hier eingekehrt, heute wird geklettert. Gesucht wird ein Ort, an dem Höhenmeter mitten in Moosburg gesammelt werden.",
     infoText: "Die DAV-Sektion Moosburg bietet Kletterbegeisterten mitten in der Stadt die Möglichkeit, ihrem Sport nachzugehen. Hier trainieren Anfänger ebenso wie erfahrene Kletterer und Bergsteiger für ihre nächsten Abenteuer am Fels oder in den Alpen.<br/><br/>Das Vereinsheim steht auf geschichtsträchtigem Boden. Bis in die 1950er Jahre befand sich hier eine Gastwirtschaft, die im Volksmund als „Staunznwirt“ bekannt war. Der Name leitet sich vom bairischen Wort „Staunzn“ für Mücken ab. Woher dieser Name kommt, habt ihr auf dem Weg hierher möglicherweise selbst am eigenen Leib erfahren.<br/><br/>Als später das Vereinsheim errichtet werden sollte, sorgten die Pläne in Moosburg für reichlich Diskussionen. Zeitzeugen berichten noch heute von Unterschriftensammlungen und hitzigen Debatten, die man rückblickend fast als kleinen Volksaufstand bezeichnen könnte.<br/><br/>Heute geht es deutlich friedlicher zu. Statt über Baupläne wird hier über Kletterrouten diskutiert, und statt Maßkrügen stehen Seile, Karabiner und Kletterschuhe im Mittelpunkt.<br/><br/>Wenn ihr diese Station am 11. Juli besucht, fragt ihr euch vielleicht, warum hier plötzlich so viele Menschen unterwegs sind. Die Antwort ist einfach: Auf dem Gelände findet an diesem Tag das Sommerfest der DAV-Sektion mit Biergartenbetrieb statt.<br/><br/>Solltet ihr also plötzlich den Duft von Grillgut wahrnehmen oder Menschen mit Getränken in der Hand entdecken, gehört das ausnahmsweise nicht zur Rallye, sondern zum Programm des DAV."
   },
   {
     id: 5,
     name: "5. Zehentstadel",
-    code: "zehentstadel111", // ALTE CODES BLEIBEN AB HIER ERHALTEN
+    code: "zehentstadel111", 
     question: "Für die nächste Station müsst ihr einige Jahrhunderte zurückreisen.\nFrüher brachte man hier den zehnten Teil seiner Ernte vorbei. Heute kommen die Menschen freiwillig.",
     infoText: "Der Zehentstadel erinnert an eine Zeit, in der Bauern einen Teil ihrer Ernte als Abgabe an Kirche oder Grundherrn leisten mussten.<br/><br/>Heute werden hier keine Naturalien mehr gesammelt, sondern Kultur, Kunst und Begegnungen. Der Zehentstadel zählt zu den bedeutenden historischen Gebäuden Moosburgs und wird regelmäßig für Veranstaltungen genutzt."
   },
@@ -85,7 +85,7 @@ const STATIONS = [
   {
     id: 12,
     name: "12. Wasserturm",
-    code: "lenigoth888", // Alter Code wurde exakt beibehalten!
+    code: "lenigoth888", 
     question: "Die nächste Station erinnert an eine Zeit, in der fließendes Wasser alles andere als selbstverständlich war.\nHeute ist er stillgelegt. Früher sorgte er dafür, dass in Moosburg die Leitungen nicht trocken blieben.",
     infoText: "Der Wasserturm wurde Anfang des 20. Jahrhunderts errichtet und war über viele Jahrzehnte ein wichtiger Bestandteil der Moosburger Wasserversorgung.<br/><br/>Seine Aufgabe bestand darin, Wasser zu speichern und durch den Höhenunterschied den notwendigen Druck im Leitungsnetz aufrechtzuerhalten. Damit gehörte der Turm zu den Bauwerken, die den Alltag der Menschen oft unbemerkt, aber entscheidend beeinflussten.<br/><br/>Heute wird der Turm nicht mehr für die Wasserversorgung genutzt, prägt aber weiterhin das Stadtbild und erinnert an die technische Entwicklung Moosburgs.<br/><br/>Der Turm befindet sich heute im Besitz des Deutschen Alpenvereins (DAV). Während der Wasserturm selbst derzeit nicht genutzt wird, betreibt der DAV in Moosburg eine moderne Kletterhalle und engagiert sich aktiv im Vereins- und Breitensport.<br/><br/>Werft auch einen Blick auf die historischen Baupläne dieser Station. Sie zeigen eindrucksvoll, wie dieses technische Bauwerk ursprünglich geplant wurde und geben einen spannenden Einblick in die Ingenieurskunst seiner Zeit."
   },
@@ -98,21 +98,28 @@ const STATIONS = [
   },
   {
     id: 14,
-    name: "14. Zum Hirschn", // Station rutscht nicht, bleibt ID 14!
+    name: "14. Barbaras Bücherstube",
+    code: "buecherstube888",
+    question: "Für die nächste Station braucht ihr keinen Reisepass, obwohl euch dort seit mehr als 45 Jahren tausende Welten erwarten.\nIhr müsst dafür nicht einmal Moosburg verlassen.",
+    infoText: "Seit mehr als 45 Jahren gehört Barbaras Bücherstube zum Moosburger Stadtbild.<br/><br/>Die Buchhandlung ist weit mehr als ein Geschäft. Sie ist Treffpunkt für Leserinnen und Leser, Ort für Entdeckungen und Ansprechpartner für alle, die gerne in Geschichten eintauchen.<br/><br/>Wer behauptet, Reisen bilde, hat vermutlich noch nie ein gutes Buch gelesen."
+  },
+  {
+    id: 15,
+    name: "15. Zum Hirschn", 
     code: "hirschn123",
     question: "Die nächste Station hat ihren Namen nicht von einem Musikinstrument, obwohl dort regelmäßig Musik erklingt.\nJazz, Sandwiches und kalte Getränke. Der Name dieses Hauses hat vier Beine und ein Geweih.",
     infoText: "Das Zum Hirschn ist seit vielen Jahren ein beliebter Treffpunkt für Menschen jeden Alters.<br/><br/>Besonders bekannt ist die Verbindung zum Jazz Club Hirsch, der das kulturelle Leben Moosburgs mit Konzerten und Veranstaltungen bereichert."
   },
   {
-    id: 15,
-    name: "15. Moosi",
+    id: 16,
+    name: "16. Moosi",
     code: "moosi456",
     question: "Für die nächste Station geht es ein paar Stufen nach unten.\nWer hier landen will, muss erst ein paar Stufen überwinden. Danach wird es meistens geselliger.",
     infoText: "Das Moosi gehört zu den jüngsten Lokalen Moosburgs und hat erst 2026 seine Türen geöffnet.<br/><br/>Alteingesessene Moosburger erinnern sich vielleicht noch daran, dass sich hier früher das „Sowieso“ befand. Wer also beim Lesen von „Irgendwie und Sowieso“ ein kleines Déjà-vu hat, liegt vermutlich gar nicht so falsch.<br/><br/>Heute ist das Moosi ein Treffpunkt für alle, die in entspannter Atmosphäre zusammensitzen, etwas trinken und den Abend genießen möchten."
   },
   {
-    id: 16,
-    name: "16. Corner House",
+    id: 17,
+    name: "17. Corner House",
     code: "cornerhouse999",
     question: "Die nächste Station liegt geografisch in Moosburg, kulturell aber ein gutes Stück weiter westlich.\nIrland liegt nicht in Oberbayern. Zumindest eigentlich nicht.",
     infoText: "Das Corner House bringt ein Stück irische Pub-Kultur nach Moosburg.<br/><br/>Neben Burgern, Guinness und Live-Sport finden hier regelmäßig Konzerte, Veranstaltungen und das beste Pub Quiz der Welt (in Moosburg) statt. Zumindest sind sich darüber alle einig, die das Quiz veranstalten.<br/><br/>Das Pub Quiz lockt seit Jahren Ratefüchse, Besserwisser, Halbwissende und Menschen an, die eigentlich nur auf ein Feierabendbier vorbeischauen wollten.<br/><br/>Und ganz nebenbei entstand hier auch die Idee zur ersten Moosburger Stadtrallye. Was ursprünglich als kleine Sommerbeschäftigung für die Quiz-Teams gedacht war, entwickelte sich Schritt für Schritt zu diesem Projekt."
@@ -738,7 +745,6 @@ export default function App() {
             <div style={{fontSize: '22px', fontWeight: 'bold', color: '#66B014'}}>{countdownText || 'Lädt...'}</div>
           </div>
           
-          {/* NEU: INSTAGRAM BOX AUF DER COUNTDOWN SEITE */}
           <div style={{backgroundColor: '#ffe8f0', border: '1px solid #ffb3c6', padding: '15px', borderRadius: '8px', textAlign: 'center', marginTop: '20px'}}>
             <span style={{fontSize: '15px', display: 'block', marginBottom: '5px', color: '#E1306C', fontWeight: 'bold'}}>📷 Folgt uns auf Instagram!</span>
             <p style={{fontSize: '13px', color: '#666', margin: '0 0 12px 0', lineHeight: '1.4'}}>Verpasst keine Updates und schaut euch an, was die anderen Teams zur Vorbereitung treiben.</p>
@@ -775,7 +781,6 @@ export default function App() {
           <p style={{...styles.text, textAlign: 'center', fontSize: '18px', fontWeight: 'bold'}}>Herzlichen Glückwunsch, Team {teamName}!</p>
           <p style={{...styles.text, textAlign: 'center'}}>Ihr habt alle Rätsel gelöst und Moosburg neu entdeckt. Kommt zur Theke im Corner House und feiert euren Erfolg!</p>
           
-          {/* NEU: INSTAGRAM BOX AUF DER ZIEL-SEITE */}
           <div style={{backgroundColor: '#ffe8f0', border: '1px solid #ffb3c6', padding: '20px', borderRadius: '8px', textAlign: 'center', margin: '25px 0'}}>
             <p style={{margin: '0 0 10px 0', color: '#E1306C', fontWeight: 'bold', fontSize: '18px'}}>📸 Teilt euren Erfolg!</p>
             <p style={{fontSize: '14px', color: '#666', margin: '0 0 15px 0'}}>Postet eure besten Bilder der Rallye, markiert uns und feiert euren Sieg mit der ganzen Stadt.</p>
