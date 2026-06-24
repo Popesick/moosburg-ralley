@@ -9,7 +9,7 @@ const STATIONS = [
     id: 1,
     name: "1. Wächterbaracken",
     code: "baracke123",
-    question: "Willkommen zur ersten Moosburger Stadtrallye!\n\nIn den nächsten Tagen werdet ihr bekannte Orte neu entdecken und Geschichten finden, die oft direkt vor unserer Nase liegen.\n\nEure erste Station führt euch an einen Ort, an dem Vergangenheit und Gegenwart Tür an Tür wohnen.\nWo einst die Bewacher wohnten, lernen heute die Jugendlichen. Doch drei Zeugen der Vergangenheit stehen noch immer daneben.",
+    question: "Willkommen zur (wahrscheinlich) ersten Moosburger Stadtrallye!\n\nIn den nächsten Tagen werdet ihr bekannte Orte neu entdecken und Geschichten finden, die oft direkt vor unserer Nase liegen.\n\nEure erste Station führt euch an einen Ort, an dem Vergangenheit und Gegenwart Tür an Tür wohnen.\nWo einst die Bewacher wohnten, lernen heute die Jugendlichen. Doch drei Zeugen der Vergangenheit stehen noch immer daneben.",
     infoText: "Die drei erhaltenen Wächterbaracken gehören zu den letzten sichtbaren Überresten des ehemaligen Kriegsgefangenenlagers Stalag VII A. Während des Zweiten Weltkriegs waren hier Angehörige der Wachmannschaften untergebracht.<br/><br/>Das Stalag VII A war zeitweise das größte Kriegsgefangenenlager auf deutschem Boden. Nach Kriegsende wurden die Baracken als Wohnraum genutzt. Heute stehen sie unter Denkmalschutz und sollen teilweise zu einem Informations- und Dokumentationszentrum weiterentwickelt werden."
   },
   {
