@@ -16,7 +16,7 @@ const STATIONS = [
     id: 2,
     name: "2. Stalag-Gedenkplatz",
     code: "gedenkplatz789",
-    question: "Eure Reise führt euch nun zu einem Ort des Erinnerns.\nManchmal erzählen Steine Geschichten.\nDieser hier erzählt von Rhône, Loire, Garonne und Seine.",
+    question: "Eure Reise führt euch nun zu einem Ort des Erinnerns.\n\nManchmal erzählen Steine Geschichten.\n\nDieser hier erzählt von Rhône, Loire, Garonne und Seine.\n\nDas Bild verrät euch den Weg. Und falls ihr euch dort kurz setzen möchtet: Manchmal verstecken sich interessante Dinge sogar auf der Rückseite einer Bank.",
     infoText: "Der Stalag-Gedenkplatz ist der zentrale Erinnerungsort an das ehemalige Kriegsgefangenenlager Stalag VII A.<br/><br/>Im Mittelpunkt steht der sogenannte Franzosenbrunnen. Er wurde vom französischen Bildhauer Antoniucci Volti während seiner Gefangenschaft geschaffen. Das Relief zeigt die vier großen Flüsse Frankreichs: Rhône, Loire, Garonne und Seine.<br/><br/>Heute erinnern Informationstafeln an die Geschichte der über eine Million Menschen, die das Lager während seines Bestehens durchliefen."
   },
   {
