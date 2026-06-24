@@ -45,7 +45,7 @@ const STATIONS = [
     name: "6. Heimatmuseum",
     code: "museum222",
     question: "Wer die Zukunft verstehen will, sollte manchmal zuerst einen Blick in die Vergangenheit werfen.\n\nWer wissen möchte, wie Moosburg geworden ist, was es heute ist, findet die Antworten zwischen Urzeit und Neuzeit.\n\nPassenderweise befindet sich der Ort in einer ehemaligen Schule. Auch heute kann man hier noch einiges lernen – und mit etwas Aufmerksamkeit entdeckt ihr auch den nächsten QR-Code.",
-    infoText: "Das Heimatmuseum erzählt die Geschichte der Region von der Urgeschichte bis in die Gegenwart.<br/><br/>Seit 1975 befindet sich die Sammlung in der ehemaligen Klosterschule am Kastulusplatz. Die Ausstellungen reichen von archäologischen Funden über Stadtgeschichte bis hin zu Alltagsgegenständen vergangener Generationen."
+    infoText: "Das Heimatmuseum erzählt die Geschichte der Region von der Urgeschichte bis in die Gegenwart.<br/><br/>Seit 1975 befindet sich die Sammlung in der ehemaligen Klosterschule am Kastulusplatz. Die Ausstellungen reichen von archäologischen Funden über Stadtgeschichte bis hin zu Alltagsgegenständen vergangener Generationen. <br/><br/>Die Bildercollage zeigt eine kleine Auswahl der Ausstellungsstücke und Themenbereiche des Museums. Vor Ort gibt es noch deutlich mehr zu entdecken: von den frühesten Spuren menschlicher Besiedlung bis zur jüngeren Geschichte Moosburgs."
   },
   {
     id: 7,
