@@ -51,7 +51,7 @@ const STATIONS = [
     id: 7,
     name: "7. Kastulusmünster & Johanneskirche",
     code: "muenster333",
-    question: "Die nächste Station verbindet zwei Glaubenszeugen, die sich nie begegnet sind.\nDer eine lebte im alten Rom, der andere am Jordan. Heute stehen sie in Moosburg Seite an Seite.",
+    question: "Die nächste Station verbindet zwei Glaubenszeugen, die sich nie begegnet sind.\n\nDer eine lebte im alten Rom, der andere am Jordan. Heute stehen sie in Moosburg Seite an Seite.\n\nDas Bild hilft euch bei der Suche. Haltet die Augen offen – der nächste QR-Code befindet sich genau dort, wo das Foto aufgenommen wurde.",
     infoText: "Das Kastulusmünster ist das Wahrzeichen Moosburgs und prägt die Silhouette der Stadt seit Jahrhunderten.<br/><br/>Benannt ist es nach dem heiligen Kastulus, einem römischen Märtyrer des 3. Jahrhunderts. Direkt daneben steht die Johanneskirche, die Johannes dem Täufer gewidmet ist.<br/><br/>Im Inneren des Münsters befindet sich mit dem Hochaltar von Hans Leinberger eines der bedeutendsten Kunstwerke der Spätgotik in Altbayern."
   },
   {
