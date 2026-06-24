@@ -44,7 +44,7 @@ const STATIONS = [
     id: 6,
     name: "6. Heimatmuseum",
     code: "museum222",
-    question: "Wer die Zukunft verstehen will, sollte manchmal zuerst einen Blick in die Vergangenheit werfen.\nWer wissen möchte, wie Moosburg geworden ist, was es heute ist, findet die Antworten zwischen Urzeit und Neuzeit.",
+    question: "Wer die Zukunft verstehen will, sollte manchmal zuerst einen Blick in die Vergangenheit werfen.\n\nWer wissen möchte, wie Moosburg geworden ist, was es heute ist, findet die Antworten zwischen Urzeit und Neuzeit.\n\nPassenderweise befindet sich der Ort in einer ehemaligen Schule. Auch heute kann man hier noch einiges lernen – und mit etwas Aufmerksamkeit entdeckt ihr auch den nächsten QR-Code.",
     infoText: "Das Heimatmuseum erzählt die Geschichte der Region von der Urgeschichte bis in die Gegenwart.<br/><br/>Seit 1975 befindet sich die Sammlung in der ehemaligen Klosterschule am Kastulusplatz. Die Ausstellungen reichen von archäologischen Funden über Stadtgeschichte bis hin zu Alltagsgegenständen vergangener Generationen."
   },
   {
