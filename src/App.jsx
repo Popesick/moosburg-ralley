@@ -37,7 +37,7 @@ const STATIONS = [
     id: 5,
     name: "5. Zehentstadel",
     code: "zehentstadel111", 
-    question: "Für die nächste Station müsst ihr einige Jahrhunderte zurückreisen.\nFrüher brachte man hier den zehnten Teil seiner Ernte vorbei. Heute kommen die Menschen freiwillig.",
+    question: "Für die nächste Station müsst ihr einige Jahrhunderte zurückreisen.\n\nFrüher brachte man hier den zehnten Teil seiner Ernte vorbei. Heute kommen die Menschen freiwillig.\n\nFür euren nächsten Fund müsst ihr nichts abgeben, sondern nur aufmerksam sein. Der QR-Code wartet hinter Glas auf euch.",
     infoText: "Der Zehentstadel erinnert an eine Zeit, in der Bauern einen Teil ihrer Ernte als Abgabe an Kirche oder Grundherrn leisten mussten.<br/><br/>Heute werden hier keine Naturalien mehr gesammelt, sondern Kultur, Kunst und Begegnungen. Der Zehentstadel zählt zu den bedeutenden historischen Gebäuden Moosburgs und wird regelmäßig für Veranstaltungen genutzt."
   },
   {
