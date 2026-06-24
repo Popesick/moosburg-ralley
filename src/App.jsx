@@ -23,7 +23,7 @@ const STATIONS = [
     id: 3,
     name: "3. Haus der Heimat",
     code: "heimat456",
-    question: "Die nächste Station erinnert daran, dass Heimat manchmal mehr ist als ein Ort auf der Landkarte.\nManche Menschen mussten ihre Heimat verlassen. An diesem Ort werden ihre Geschichten, Erinnerungen und Traditionen bis heute bewahrt.",
+    question: "Die nächste Station erinnert daran, dass Heimat manchmal mehr ist als ein Ort auf der Landkarte.\n\nManche Menschen mussten ihre Heimat verlassen. An diesem Ort werden ihre Geschichten, Erinnerungen und Traditionen bis heute bewahrt.\n\nWer wissen möchte, was hier passiert, wirft oft zuerst einen Blick auf die aktuellen Aushänge. Vielleicht findet ihr dort auch etwas, das euch weiterbringt.",
     infoText: "Das Haus der Heimat wurde 2005 als Vereinsheim, Museum und Begegnungsstätte errichtet.<br/><br/>Hier engagieren sich verschiedene Landsmannschaften und Heimatvereine, deren Mitglieder nach dem Zweiten Weltkrieg ihre Heimat in Ost- und Südosteuropa verlassen mussten.<br/><br/>Das Haus erinnert daran, dass die Geschichte Moosburgs nicht nur von den Menschen geprägt wurde, die hier immer gelebt haben, sondern auch von denen, die nach dem Krieg hier eine neue Heimat gefunden haben."
   },
   {
