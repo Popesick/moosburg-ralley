@@ -65,8 +65,8 @@ const STATIONS = [
     id: 9,
     name: "9. Stadtmarketing Moosburg",
     code: "marketing555",
-    question: "Nicht jede wichtige Institution erkennt man auf den ersten Blick.\nWer dafür sorgt, dass andere sichtbar werden, bleibt oft selbst im Hintergrund.",
-    infoText: "Das Stadtmarketing Moosburg setzt sich dafür ein, die Innenstadt attraktiv und lebendig zu halten.<br/><br/>Zu den Aufgaben gehören die Unterstützung von Veranstaltungen, die Förderung des Einzelhandels sowie die Vermarktung Moosburgs als Einkaufs-, Kultur- und Erlebnisstandort."
+    question: "Die nächste Station führt euch zu den Menschen, die dafür sorgen, dass in Moosburg etwas los ist.\n\nOb Stadtfeste, Märkte, Aktionen oder verkaufsoffene Sonntage – vieles wird hier geplant, organisiert oder begleitet.\n\nGesucht wird das Büro, in dem all diese Fäden zusammenlaufen.",
+    infoText: "Das Stadtmarketing Moosburg setzt sich dafür ein, die Innenstadt attraktiv und lebendig zu gestalten.<br/><br/>Es organisiert und unterstützt Veranstaltungen, stärkt den örtlichen Einzelhandel und trägt dazu bei, Moosburg als Einkaufs-, Kultur- und Erlebnisstadt bekannt zu machen.<br/><br/>Viele Aktionen, die das Leben in der Innenstadt bereichern, entstehen hier – oft unbemerkt im Hintergrund, aber mit großer Wirkung."
   },
   {
     id: 10,
