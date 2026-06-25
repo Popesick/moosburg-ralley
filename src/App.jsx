@@ -58,8 +58,8 @@ const STATIONS = [
     id: 8,
     name: "8. Grieserie",
     code: "grieserie456",
-    question: "Die Zeit hinterlässt Spuren. Manche Häuser erzählen davon besonders eindrucksvoll.\nDas älteste erhaltene Haus der Stadt hat schon viele Jahrhunderte erlebt. Heute trifft man hier auf Menschen statt auf Geschichte hinter Glas.",
-    infoText: "Die Grieserie gilt als das älteste erhaltene Haus Moosburgs.<br/><br/>Heute dient sie als soziale Begegnungsstätte. Hier stehen Austausch, Gemeinschaft und Begegnung im Mittelpunkt.<br/><br/>2025 wurde die Grieserie mit dem Oberbayerischen Denkmalpreis ausgezeichnet."
+    question: "Nicht jedes Denkmal steht hinter Absperrungen.\n\nDie nächste Station führt euch zum ältesten erhaltenen Haus Moosburgs.\n\nSeine Geschichte reicht viele Jahrhunderte zurück – und trotzdem ist hier auch heute noch jede Menge Leben.",
+    infoText: "Die Grieserie gilt als das älteste erhaltene Wohnhaus Moosburgs und blickt auf mehrere Jahrhunderte Stadtgeschichte zurück.<br/><br/>Heute hat das historische Gebäude eine ganz andere Aufgabe: Als soziale Begegnungsstätte bringt es Menschen zusammen und bietet Raum für Austausch, Kultur und gemeinschaftliches Miteinander.<br/><br/>Für die gelungene Verbindung von Denkmalpflege und moderner Nutzung wurde die Grieserie 2025 mit dem Oberbayerischen Denkmalpreis ausgezeichnet.<br/><br/>Die Grieserie zeigt eindrucksvoll, dass Geschichte nicht nur bewahrt, sondern auch gelebt werden kann."
   },
   {
     id: 9,
