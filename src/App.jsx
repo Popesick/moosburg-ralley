@@ -72,8 +72,8 @@ const STATIONS = [
     id: 10,
     name: "10. Modehaus Heilingbrunner",
     code: "heilingbrunner666",
-    question: "Die nächste Station beweist, dass manche Erfolgsgeschichten mehrere Jahrhunderte dauern können.\nSeit über 200 Jahren kleidet dieses Haus die Menschen der Region ein. Für Mode sind zwei Jahrhunderte eine ziemlich lange Saison.",
-    infoText: "Das Modehaus Heilingbrunner gehört seit mehr als 200 Jahren zu Moosburg.<br/><br/>Nur wenige Geschäfte können auf eine derart lange Geschichte zurückblicken und sind gleichzeitig bis heute fest im Stadtleben verankert."
+    question: "Die nächste Station zeigt, dass gute Qualität nie aus der Mode kommt.\n\nSeit über 200 Jahren kleidet dieses Traditionshaus die Menschen der Region ein.\n\nFür die Modewelt sind zwei Jahrhunderte eine ziemlich lange Saison.",
+    infoText: "Das Modehaus Heilingbrunner gehört seit mehr als 200 Jahren zum Moosburger Stadtbild.<br/><br/>Nur wenige familiengeführte Geschäfte können auf eine so lange Geschichte zurückblicken und sind gleichzeitig bis heute fest im Stadtleben verankert.<br/><br/>Heilingbrunner unterstützt die Moosburger Stadtrallye als Supporter mit tollen Preisen. Vielen Dank für die Unterstützung!"
   },
   {
     id: 11,
