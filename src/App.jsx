@@ -115,7 +115,7 @@ const STATIONS = [
     name: "16. Moosi",
     code: "moosi456",
     question: "Für die nächste Station geht es ein paar Stufen nach unten.\n\nWer hier landen will, muss zuerst ein paar Stufen überwinden. Danach wird es meistens geselliger.\n\nDas Bild verrät euch, welchen Ort ihr sucht.",
-    infoText: "Das Moosi gehört zu den jüngsten Lokalen Moosburgs und hat erst 2026 seine Türen geöffnet.<br/><br/>Viele alteingesessene Moosburger erinnern sich noch an das „Sowieso“, das sich früher an gleicher Stelle befand. Wenn euch beim Motto „Irgendwie und Sowieso“ ein kleines Déjà-vu beschleicht, ist das also kein Zufall.<br/><br/>Heute lädt das Moosi dazu ein, den Alltag für eine Weile hinter sich zu lassen – bei einem kühlen Getränk, guter Gesellschaft und entspannter Atmosphäre."
+    infoText: "Das Moosi gehört zu den jüngsten Lokalen Moosburgs und hat erst 2026 seine Türen geöffnet.<br/><br/>Viele Moosburger kennen die Räume noch unter ihrem früheren Namen „Sowieso“. Nach umfangreicher Neugestaltung erstrahlt das Lokal heute in neuem Glanz und hat sich bereits als beliebter Treffpunkt etabliert.<br/><br/>Ob auf ein Getränk mit Freunden oder einen entspannten Abend – das Moosi lädt zum Verweilen ein."
   },
   {
     id: 17,
