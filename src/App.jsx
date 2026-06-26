@@ -100,7 +100,7 @@ const STATIONS = [
     id: 14,
     name: "14. Barbaras Bücherstube",
     code: "buecherstube888",
-    question: "Für die nächste Station braucht ihr keinen Reisepass, obwohl euch dort seit mehr als 45 Jahren tausende Welten erwarten.\nIhr müsst dafür nicht einmal Moosburg verlassen.",
+    question: "Für die nächste Station braucht ihr keinen Reisepass, obwohl euch dort seit mehr als 45 Jahren tausende Welten erwarten.\n\nIhr müsst dafür nicht einmal Moosburg verlassen.",
     infoText: "Seit mehr als 45 Jahren gehört Barbaras Bücherstube zum Moosburger Stadtbild.<br/><br/>Die Buchhandlung ist weit mehr als ein Geschäft. Sie ist Treffpunkt für Leserinnen und Leser, Ort für Entdeckungen und Ansprechpartner für alle, die gerne in Geschichten eintauchen.<br/><br/>Zwischen den Regalen warten tausende Abenteuer, spannende Begegnungen und neue Perspektiven. Ganz ohne Kofferpacken."
   },
   {
