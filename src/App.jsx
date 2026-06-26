@@ -107,7 +107,7 @@ const STATIONS = [
     id: 15,
     name: "15. Zum Hirschn", 
     code: "hirschn123",
-    question: "Die nächste Station hat ihren Namen nicht von einem Musikinstrument, obwohl dort regelmäßig Musik erklingt.\nJazz, Sandwiches und kalte Getränke. Der Name dieses Hauses hat vier Beine.",
+    question: "Die nächste Station hat ihren Namen nicht von einem Musikinstrument, obwohl dort regelmäßig Musik erklingt.\n\nJazz, Sandwiches und kalte Getränke. Der Name dieses Hauses hat vier Beine.",
     Zum Hirschn ist einer der bekanntesten Treffpunkte für Livemusik in Moosburg. Hier treffen sich Musikbegeisterte, Nachtschwärmer und alle, die einen entspannten Abend bei einem kühlen Getränk verbringen möchten.<br/><br/>Regelmäßig verwandelt der Jazz Club Hirsch das Lokal in eine Konzertbühne und bringt nationale wie internationale Musiker nach Moosburg. Der Name lässt zwar ein Wildtier vermuten, aber tatsächlich steht hier vor allem die Musik im Mittelpunkt.<br/><br/>Dazu gibt es frisch zubereitete Sandwiches und eine große Auswahl an Getränken. Eine Kombination, die seit vielen Jahren bestens funktioniert. Und vielleicht ist genau jetzt der richtige Zeitpunkt, um eine kurze Pause einzulegen und den nächsten Hinweis bei einem kühlen Getränk zu diskutieren."
   },
   {
