@@ -79,8 +79,8 @@ const STATIONS = [
     id: 11,
     name: "11. Badehimmel",
     code: "badehimmel777",
-    question: "Für die nächste Station braucht ihr weder Schwimmflügel noch Badekappe.\nHier dreht sich alles ums Baden, aber niemand wird nass.",
-    infoText: "Der Moosburger Badehimmel ist ein Paradies für alle, die sich selbst oder anderen etwas Gutes tun möchten.<br/><br/>Im Sortiment finden sich Naturkosmetik, Badezusätze, Badekugeln, Naturcremes, handgemachte Seifen und viele weitere Wellness- und Pflegeprodukte. Ergänzt wird das Angebot durch Geschenkartikel, Dekorationen und besondere Fundstücke.<br/><br/>Wer auf der Suche nach einem Geschenk ist oder sich selbst eine kleine Auszeit gönnen möchte, wird hier meist fündig."
+    question: "Für die nächste Station braucht ihr weder Schwimmflügel noch Badekappe.\n\nHier dreht sich alles um Entspannung, Wohlfühlen und den Duft handgemachter Seifen.\n\nDas Bild hilft euch dabei, den richtigen Ort zu finden.",
+    infoText: "Der Moosburger Badehimmel ist ein Paradies für alle, die sich selbst oder anderen etwas Gutes tun möchten.<br/><br/>Im Sortiment finden sich Naturkosmetik, Badezusätze, Badekugeln, Naturcremes, handgemachte Seifen und viele weitere Wellness- und Pflegeprodukte. Ergänzt wird das Angebot durch Geschenkartikel, Dekorationen und liebevoll ausgewählte Wohnaccessoires.<br/><br/>Ob kleines Mitbringsel, Geburtstagsgeschenk oder eine Auszeit für sich selbst – hier findet sich für viele Anlässe etwas Passendes."
   },
   {
     id: 12,
