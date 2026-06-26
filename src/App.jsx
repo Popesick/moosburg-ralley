@@ -93,8 +93,8 @@ const STATIONS = [
     id: 13,
     name: "13. Gerlspeck",
     code: "gerlspeck999",
-    question: "Manche Namen gehören so selbstverständlich zur Stadt, dass man kaum noch über sie nachdenkt.\nSchuhe, Taschen und Lederwaren haben hier Tradition. Manche Moosburger kennen den Namen schon ihr ganzes Leben.",
-    infoText: "Das Schuhhaus und Lederwarengeschäft Gerlspeck gehört seit Jahrzehnten zum Stadtplatz.<br/><br/>Als Familienunternehmen begleitet es Generationen von Moosburgern vom ersten Kinderschuh bis zur Reisetasche für den Urlaub."
+    question: "Manche Namen gehören so selbstverständlich zu einer Stadt, dass man kaum noch über sie nachdenkt.\n\nSchuhe, Taschen und Lederwaren haben hier seit Generationen ihren festen Platz.\n\nViele Moosburger kennen den Namen vermutlich schon ihr ganzes Leben.",
+    infoText: "Das Schuhhaus & Lederwaren Gerlspeck gehört seit vielen Jahrzehnten zum Moosburger Stadtplatz und ist für viele Menschen eine feste Anlaufstelle rund um Schuhe, Taschen und Lederwaren.<br/><br/>Als Familienunternehmen begleitet Gerlspeck Generationen von Moosburgerinnen und Moosburgern – vom ersten Kinderschuh bis zur Reisetasche für den nächsten Urlaub.<br/><br/>Gerlspeck unterstützt die Moosburger Stadtrallye als Supporter mit tollen Sachpreisen. Vielen Dank für die Unterstützung!"
   },
   {
     id: 14,
