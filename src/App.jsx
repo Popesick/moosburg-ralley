@@ -17,7 +17,7 @@ const STATIONS = [
     name: "2. Stalag-Gedenkplatz",
     code: "gedenkplatz789",
     question: "Eure Reise führt euch nun zu einem Ort des Erinnerns.\n\nHier steht der 'Gedenkbrunnen', im Volksmund als 'Franzosenbrunnen' bekannt, ein vom französischen Bildhauer Antoniucci Volti im Stalag VII A gestalteter und gefertigter Brunnenstein mit einem Rundumrelief, das die vier großen Flüsse Frankreichs allegorisch darstellt\n\nDas Bild hilft euch den QR-Code zu finden.",
-    infoText: "Zentraler Erinnerungsort oder Gedenkort auf dem Gelände des ehemaligen Lagerlazarettes ist der Stalag-Gedenkplatz mit dem Gedenkbrunnen (sog. 'Franzosenbrunnen') und Informationstafeln. <br/><br/>Der Brunnen wurde vom französischen Bildhauer Antoniucci Volti während seiner Gefangenschaft gestaltet und gefertigt. Der Brunnenstein zeigt vier allegorische Darstellungen der wichtigsten französichen Flüsse. <br/><br/>Er wurde im Jahre 1963 als erstes Denkmal zum Gedenken an die französischen Kriegsgefangenen im Stalag VII A aufgestellt und eingeweiht. Im Jahr 2015 wurde der Platz neu gestaltet und zum Gedenken an alle Kriegsgefangenen umgewidmet. <br/><br/>Hier findet jedes Jahr zum Befreiungstag am 29. April eine Gedenkzeremonie mit Kranzniederlegungenstatt."
+    infoText: "Zentraler Erinnerungsort oder Gedenkort auf dem Gelände des ehemaligen Lagerlazarettes ist der Stalag-Gedenkplatz mit dem Gedenkbrunnen (sog. 'Franzosenbrunnen') und Informationstafeln. <br/><br/>Der Brunnen wurde vom französischen Bildhauer Antoniucci Volti während seiner Gefangenschaft gestaltet und gefertigt. Der Brunnenstein zeigt vier allegorische Darstellungen der wichtigsten französichen Flüsse. <br/><br/>Er wurde im Jahre 1963 als erstes Denkmal zum Gedenken an die französischen Kriegsgefangenen im Stalag VII A aufgestellt und eingeweiht. Im Jahr 2015 wurde der Platz neu gestaltet und zum Gedenken an alle Kriegsgefangenen umgewidmet. <br/><br/>Hier findet jedes Jahr zum Befreiungstag am 29. April eine Gedenkzeremonie mit Kranzniederlegungen statt."
   },
   {
     id: 3,
@@ -114,8 +114,8 @@ const STATIONS = [
     id: 16,
     name: "16. Moosi",
     code: "moosi456",
-    question: "Für die nächste Station geht es ein paar Stufen nach unten.\n\nWer hier landen will, muss zuerst ein paar Stufen überwinden. Danach wird es meistens geselliger.\n\nDas Bild verrät euch, welchen Ort ihr sucht.",
-    infoText: "Das Moosi gehört zu den jüngsten Lokalen Moosburgs und hat erst 2026 seine Türen geöffnet.<br/><br/>Viele Moosburger kennen die Räume noch unter ihrem früheren Namen „Sowieso“. Nach umfangreicher Neugestaltung erstrahlt das Lokal heute in neuem Glanz und hat sich bereits als beliebter Treffpunkt etabliert.<br/><br/>Ob auf ein Getränk mit Freunden oder einen entspannten Abend – das Moosi lädt zum Verweilen ein."
+    question: "<strong>🚨 ACHTUNG: Wegen eines Wasserschadens fällt diese Station leider kurzfristig aus!</strong>\n\nIhr müsst nicht dorthin gehen und nichts suchen. Klickt einfach auf den folgenden Link, um den QR-Code virtuell zu scannen und die Station zu überspringen:\n\n👉 <a href=\"?code=moosi456\" style=\"color: #66B014; font-weight: bold; text-decoration: underline;\">Station 16 jetzt abschließen</a>",
+    infoText: "Leider hat das Moosi kurz vor dem Start der Stadtrallye einen Wasserschaden erlitten und kann deshalb nicht wie geplant als Station teilnehmen.<br/><br/>Das tut uns wirklich sehr leid. Wir wünschen dem gesamten Team, dass der Schaden schnell behoben werden kann und das Moosi schon bald wieder seine Türen öffnen kann.<br/><br/>Wenn es soweit ist, schaut doch gerne einmal vorbei und unterstützt das Lokal nach der Wiedereröffnung. ❤️<br/><br/>Damit euch das System direkt zur finalen Station weiterleitet, macht hier einfach ein lustiges Trost-Selfie von euch, fotografiert eine Wasserpfütze oder ladet ein beliebiges anderes Bild hoch. ☔<br/><br/>Danach geht es direkt weiter zum großen Finale!"
   },
   {
     id: 17,
@@ -125,7 +125,6 @@ const STATIONS = [
     infoText: "Das Corner House bringt ein Stück irische Pub-Kultur nach Moosburg.<br/><br/>Neben Burgern, Guinness und Live-Sport finden hier regelmäßig Konzerte, Veranstaltungen und das beste Pub Quiz der Welt (in Moosburg) statt. Zumindest sind sich darüber alle einig, die das Quiz veranstalten.<br/><br/>Das Pub Quiz lockt seit Jahren Ratefüchse, Besserwisser, Halbwissende und Menschen an, die einfach einen unterhaltsamen Abend verbringen möchten.<br/><br/>Und ganz nebenbei entstand hier auch die Idee zur ersten Moosburger Stadtrallye. Was ursprünglich als kleine Sommerbeschäftigung für die Quiz-Teams gedacht war, entwickelte sich Schritt für Schritt zu diesem Projekt.<br/><br/>Die Moosburger Stadtrallye wird deshalb nicht ohne Grund von The Corner House präsentiert. Wirt Andi hat die Idee von Anfang an unterstützt und das Projekt auf vielfältige Weise begleitet.<br/><br/>Auch die Ziehung der Gewinner findet hier statt: Am <strong>21.07.2026 um voraussichtlich 19:30 Uhr</strong> werden im Corner House die Gewinnerinnen und Gewinner der Stadtrallye ausgelost."
   }
 ];
-
 export default function App() {
   // --- DEMO MODUS LOGIK ---
   const urlParams = new URLSearchParams(window.location.search);
@@ -832,8 +831,7 @@ export default function App() {
               <span style={{fontSize: '24px'}}>📍</span> Finde Station {currentStationIndex + 1}
             </h2>
             <div style={styles.dashedLine}></div>
-            <p style={styles.text}><strong>Euer Hinweis:</strong></p>
-            <p style={{...styles.text, fontSize: '16px', backgroundColor: '#f9fafb', padding: '15px', borderRadius: '8px', borderLeft: '4px solid #66B014', whiteSpace: 'pre-line'}}>{currentStation.question}</p>
+            <p style={styles.text}><strong>Euer Hinweis:</strong></p><div style={{...styles.text, fontSize: '16px', backgroundColor: '#f9fafb', padding: '15px', borderRadius: '8px', borderLeft: '4px solid #66B014', whiteSpace: 'pre-line'}} dangerouslySetInnerHTML={{ __html: currentStation.question }} />
             <img src={`/Hint_Station_${currentStation.id}.png`} alt={`Hinweis`} style={styles.hintImage} onError={(e) => e.target.style.display = 'none'} />
             <div style={styles.infoBox}>Sucht an diesem Ort nach dem QR-Code und scannt ihn!</div>
           </div>
