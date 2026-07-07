@@ -377,22 +377,16 @@ export default function App() {
         })
       });
 
+      // Name vergeben! Der Server schickt uns jetzt die sichere Flagge zurück
       if (response.status === 409) {
-        try {
-          // Temporär das Passwort mitsenden für den Namens-Check (falls benötigt im Backend)
-          const adminRes = await fetch("https://moosburg-ralley-api.andreas-stetter73.workers.dev/api/admin/teams", {
-            headers: { "X-Admin-Password": "Moosburg2026" } // Temporärer Zugriff für Recovery-Check
+        const data = await response.json();
+        if (data.teamExists) {
+          setTeamToRestore({
+            originalName: data.originalName,
+            progress: data.progress
+            // KEINE PIN HIER! Die bleibt auf dem Server.
           });
-          if (adminRes.ok) {
-            const teams = await adminRes.json();
-            const existingTeam = teams.find(t => t.originalName.toLowerCase() === teamName.trim().toLowerCase());
-            if (existingTeam) {
-              setTeamToRestore(existingTeam);
-              return; 
-            }
-          }
-        } catch (fError) {
-          console.error(fError);
+          return;
         }
         setErrorMessage("Dieser Teamname ist bereits vergeben!");
         return;
@@ -420,32 +414,51 @@ export default function App() {
       setErrorMessage("Netzwerkfehler! Überprüft eure Internetverbindung.");
     }
   };
-
-  const handleRestoreTeam = () => {
+  
+const handleRestoreTeam = async () => {
     if (!teamToRestore) return;
-
-    if (enteredPin.trim() !== teamToRestore.pin) {
-      setPinError(true);
-      return;
-    }
-
-    localStorage.setItem('quiz_team_name', teamToRestore.originalName);
-    localStorage.setItem('quiz_participation_choice', teamToRestore.choice.toString());
-    localStorage.setItem('quiz_team_progress', teamToRestore.progress.toString());
-    localStorage.setItem('quiz_station_state', 'SEEKING'); 
-    localStorage.setItem('quiz_team_pin', teamToRestore.pin);
-
-    setTeamName(teamToRestore.originalName);
-    setParticipationChoice(teamToRestore.choice);
-    setCurrentStationIndex(teamToRestore.progress);
-    setTeamPin(teamToRestore.pin);
-    setStationState('SEEKING');
-
-    setIsRegistered(true);
-    setShowQuereinsteigerIntro(false);
-    setTeamToRestore(null);
-    setEnteredPin('');
+    setErrorMessage('');
     setPinError(false);
+
+    try {
+      // Wir schicken Name + eingegebene PIN zur Verifizierung an den Server
+      const response = await fetch("https://moosburg-ralley-api.andreas-stetter73.workers.dev/api/restore", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          team: teamToRestore.originalName,
+          pin: enteredPin.trim()
+        })
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        const restored = data.teamData; // Der Server gibt uns die Daten erst nach erfolgreichem PIN-Check!
+
+        localStorage.setItem('quiz_team_name', restored.originalName);
+        localStorage.setItem('quiz_participation_choice', restored.choice.toString());
+        localStorage.setItem('quiz_team_progress', restored.progress.toString());
+        localStorage.setItem('quiz_station_state', 'SEEKING'); 
+        localStorage.setItem('quiz_team_pin', restored.pin);
+
+        setTeamName(restored.originalName);
+        setParticipationChoice(restored.choice);
+        setCurrentStationIndex(restored.progress);
+        setTeamPin(restored.pin);
+        setStationState('SEEKING');
+
+        setIsRegistered(true);
+        setShowQuereinsteigerIntro(false);
+        setTeamToRestore(null);
+        setEnteredPin('');
+        setPinError(false);
+      } else {
+        // Status 401 oder ähnliches bedeutet: PIN falsch!
+        setPinError(true);
+      }
+    } catch (error) {
+      setErrorMessage("Netzwerkfehler beim Wiederherstellen des Teams.");
+    }
   };
 
   const handleNextStation = async () => {
