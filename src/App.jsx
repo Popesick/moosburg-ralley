@@ -16,7 +16,7 @@ const STATIONS = [
     id: 2,
     name: "2. Stalag-Gedenkplatz",
     code: "gedenkplatz789",
-    question: "Eure Reise führt euch nun zu einem Ort des Erinnerns.\n\nHier steht der 'Gedenkbrunnen', im Volksmund als 'Franzosenbrunnen' bekannt, ein vom französischen Bildhauer Antoniucci Volti im Stalag VII A gestalteter und gefertigter Brunnenstein mit einem Rundumrelief, das die vier großen Flüsse Frankreichs allegorisch darstellt\n\nDas Bild hilft euch den QR-Code zu finden.",
+    question: "Eure Reise führt euch nun zu Ort des Erinnerns.\n\nHier steht der 'Gedenkbrunnen', im Volksmund als 'Franzosenbrunnen' bekannt, ein vom französischen Bildhauer Antoniucci Volti im Stalag VII A gestalteter und gefertigter Brunnenstein mit einem Rundumrelief, das die vier großen Flüsse Frankreichs allegorisch darstellt\n\nDas Bild hilft euch den QR-Code zu finden.",
     infoText: "Zentraler Erinnerungsort oder Gedenkort auf dem Gelände des ehemaligen Lagerlazarettes ist der Stalag-Gedenkplatz mit dem Gedenkbrunnen (sog. 'Franzosenbrunnen') und Informationstafeln. <br/><br/>Der Brunnen wurde vom französischen Bildhauer Antoniucci Volti während seiner Gefangenschaft gestaltet und gefertigt. Der Brunnenstein zeigt vier allegorische Darstellungen der wichtigsten französichen Flüsse. <br/><br/>Er wurde im Jahre 1963 als erstes Denkmal zum Gedenken an die französischen Kriegsgefangenen im Stalag VII A aufgestellt und eingeweiht. Im Jahr 2015 wurde der Platz neu gestaltet und zum Gedenken an alle Kriegsgefangenen umgewidmet. <br/><br/>Hier findet jedes Jahr zum Befreiungstag am 29. April eine Gedenkzeremonie mit Kranzniederlegungen statt."
   },
   {
@@ -59,7 +59,7 @@ const STATIONS = [
     name: "8. Grieserie",
     code: "grieserie456",
     question: "Nicht jedes Denkmal steht hinter Absperrungen.\n\nDie nächste Station führt euch zum ältesten erhaltenen Haus Moosburgs.\n\nSeine Geschichte reicht viele Jahrhunderte zurück – und trotzdem ist hier auch heute noch jede Menge Leben.",
-    infoText: "Die Grieserie gilt als das älteste erhaltene Wohnhaus Moosburgs und blickt auf mehrere Jahrhunderte Stadtgeschichte zurück.<br/><br/>Heute hat das historische Gebäude eine ganz andere Aufgabe: Als soziale Begegnungsstätte bringt es Menschen zusammen und bietet Raum für Austausch, Kultur und gemeinschaftliches Miteinander.<br/><br/>Für die gelungene Verbindung von Denkmalpflege und moderner Nutzung wurde die Grieserie 2025 mit dem Oberbayerischen Denkmalpreis ausgezeichnet.<br/><br/>Die Grieserie zeigt eindrucksvoll, dass Geschichte nicht nur bewahrt, sondern auch gelebt werden kann."
+    infoText: "Die Grieserie gilt als das älteste erhaltene Wohnhaus Moosburgs und blickt auf mehrere Jahrhunderte Stadtgeschichte zurück.<br/><br/>Heute hat das historische Gebäude eine ganz andere Aufgabe: Als soziale Begegnstätte bringt es Menschen zusammen und bietet Raum für Austausch, Kultur und gemeinschaftliches Miteinander.<br/><br/>Für die gelungene Verbindung von Denkmalpflege und moderner Nutzung wurde die Grieserie 2025 mit dem Oberbayerischen Denkmalpreis ausgezeichnet.<br/><br/>Die Grieserie zeigt eindrucksvoll, dass Geschichte nicht nur bewahrt, sondern auch gelebt werden kann."
   },
   {
     id: 9,
@@ -125,6 +125,7 @@ const STATIONS = [
     infoText: "Das Corner House bringt ein Stück irische Pub-Kultur nach Moosburg.<br/><br/>Neben Burgern, Guinness und Live-Sport finden hier regelmäßig Konzerte, Veranstaltungen und das beste Pub Quiz der Welt (in Moosburg) statt. Zumindest sind sich darüber alle einig, die das Quiz veranstalten.<br/><br/>Das Pub Quiz lockt seit Jahren Ratefüchse, Besserwisser, Halbwissende und Menschen an, die einfach einen unterhaltsamen Abend verbringen möchten.<br/><br/>Und ganz nebenbei entstand hier auch die Idee zur ersten Moosburger Stadtrallye. Was ursprünglich als kleine Sommerbeschäftigung für die Quiz-Teams gedacht war, entwickelte sich Schritt für Schritt zu diesem Projekt.<br/><br/>Die Moosburger Stadtrallye wird deshalb nicht ohne Grund von The Corner House präsentiert. Wirt Andi hat die Idee von Anfang an unterstützt und das Projekt auf vielfältige Weise begleitet.<br/><br/>Auch die Ziehung der Gewinner findet hier statt: Am <strong>21.07.2026 um voraussichtlich 19:30 Uhr</strong> werden im Corner House die Gewinnerinnen und Gewinner der Stadtrallye ausgelost."
   }
 ];
+
 export default function App() {
   // --- DEMO MODUS LOGIK ---
   const urlParams = new URLSearchParams(window.location.search);
@@ -166,6 +167,10 @@ export default function App() {
   const [isAdminView, setIsAdminView] = useState(false);
   const [adminTeams, setAdminTeams] = useState([]);
   const [isLoadingAdmin, setIsLoadingAdmin] = useState(false);
+  
+  // ADMIN LOGIN STATES
+  const [adminPassword, setAdminPassword] = useState('');
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   // LOGIK: LADEN, RESET, COUNTDOWN & PWA
   useEffect(() => {
@@ -190,7 +195,7 @@ export default function App() {
     
     if (currentUrlParams.get('admin') === 'boss') {
       setIsAdminView(true);
-      fetchAdminData();
+      // fetchAdminData() WURDE HIER ENTFERNT, UM KEINEN FEHLER ZU PROVOZIEREN
       return;
     }
 
@@ -272,17 +277,22 @@ export default function App() {
     }
   };
 
-  const fetchAdminData = async () => {
+  const fetchAdminData = async (e) => {
+    if (e) e.preventDefault();
     setIsLoadingAdmin(true);
     setErrorMessage('');
     try {
-      const response = await fetch("https://moosburg-ralley-api.andreas-stetter73.workers.dev/api/admin/teams");
+      const response = await fetch("https://moosburg-ralley-api.andreas-stetter73.workers.dev/api/admin/teams", {
+        headers: { "X-Admin-Password": adminPassword }
+      });
       if (response.ok) {
         const data = await response.json();
         data.sort((a, b) => new Date(b.registeredAt) - new Date(a.registeredAt));
         setAdminTeams(data);
+        setIsLoggedIn(true); 
       } else {
-        setErrorMessage("Fehler beim Abrufen der Team-Daten vom Server.");
+        setErrorMessage("Falsches Passwort oder keine Berechtigung.");
+        setIsLoggedIn(false);
       }
     } catch (error) {
       setErrorMessage("Netzwerkfehler! Konnte die Admin-Daten nicht laden.");
@@ -302,7 +312,10 @@ export default function App() {
     try {
       const response = await fetch("https://moosburg-ralley-api.andreas-stetter73.workers.dev/api/admin/teams/action", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "X-Admin-Password": adminPassword
+        },
         body: JSON.stringify({ team: targetTeamName, action: action })
       });
       
@@ -318,7 +331,7 @@ export default function App() {
           }
         }
       } else {
-        setErrorMessage("Fehler bei der Server-Aktion.");
+        setErrorMessage("Fehler bei der Server-Aktion. Falsches Passwort?");
       }
     } catch (error) {
       setErrorMessage("Netzwerkfehler bei der Admin-Aktion.");
@@ -366,7 +379,10 @@ export default function App() {
 
       if (response.status === 409) {
         try {
-          const adminRes = await fetch("https://moosburg-ralley-api.andreas-stetter73.workers.dev/api/admin/teams");
+          // Temporär das Passwort mitsenden für den Namens-Check (falls benötigt im Backend)
+          const adminRes = await fetch("https://moosburg-ralley-api.andreas-stetter73.workers.dev/api/admin/teams", {
+            headers: { "X-Admin-Password": "Moosburg2026" } // Temporärer Zugriff für Recovery-Check
+          });
           if (adminRes.ok) {
             const teams = await adminRes.json();
             const existingTeam = teams.find(t => t.originalName.toLowerCase() === teamName.trim().toLowerCase());
@@ -532,6 +548,31 @@ export default function App() {
   // --- UI RENDERING ---
 
   if (isAdminView) {
+    if (!isLoggedIn) {
+      return (
+        <div style={{...styles.container, maxWidth: '400px'}}>
+          <h1 style={styles.title}>Admin Login</h1>
+          {errorMessage && <div style={styles.error}>{errorMessage}</div>}
+          <div style={styles.card}>
+            <p style={{textAlign: 'center', color: '#0B2846', marginBottom: '20px'}}>Bitte gib das Admin-Passwort ein, um fortzufahren.</p>
+            <form onSubmit={fetchAdminData}>
+              <input 
+                type="password" 
+                placeholder="Passwort" 
+                value={adminPassword} 
+                onChange={(e) => setAdminPassword(e.target.value)} 
+                style={styles.input} 
+                required 
+              />
+              <button type="submit" style={styles.button} disabled={isLoadingAdmin}>
+                {isLoadingAdmin ? 'Prüfe...' : 'Einloggen'}
+              </button>
+            </form>
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div style={{...styles.container, maxWidth: '900px'}}>
         <h1 style={styles.title}>Moosburger Stadtrallye - Admin</h1>
@@ -540,7 +581,7 @@ export default function App() {
         <div style={styles.card}>
           <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px'}}>
             <h2 style={{marginTop: 0, marginBottom: 0, color: '#0B2846'}}>Registrierte Teams ({adminTeams.length})</h2>
-            <button onClick={fetchAdminData} style={{padding: '8px 16px', backgroundColor: '#66B014', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold'}} disabled={isLoadingAdmin}>
+            <button onClick={() => fetchAdminData()} style={{padding: '8px 16px', backgroundColor: '#66B014', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold'}} disabled={isLoadingAdmin}>
               {isLoadingAdmin ? 'Lädt...' : '🔄 Aktualisieren'}
             </button>
           </div>
@@ -831,7 +872,8 @@ export default function App() {
               <span style={{fontSize: '24px'}}>📍</span> Finde Station {currentStationIndex + 1}
             </h2>
             <div style={styles.dashedLine}></div>
-            <p style={styles.text}><strong>Euer Hinweis:</strong></p><div style={{...styles.text, fontSize: '16px', backgroundColor: '#f9fafb', padding: '15px', borderRadius: '8px', borderLeft: '4px solid #66B014', whiteSpace: 'pre-line'}} dangerouslySetInnerHTML={{ __html: currentStation.question }} />
+            <p style={styles.text}><strong>Euer Hinweis:</strong></p>
+            <div style={{...styles.text, fontSize: '16px', backgroundColor: '#f9fafb', padding: '15px', borderRadius: '8px', borderLeft: '4px solid #66B014', whiteSpace: 'pre-line'}} dangerouslySetInnerHTML={{ __html: currentStation.question }} />
             <img src={`/Hint_Station_${currentStation.id}.png`} alt={`Hinweis`} style={styles.hintImage} onError={(e) => e.target.style.display = 'none'} />
             <div style={styles.infoBox}>Sucht an diesem Ort nach dem QR-Code und scannt ihn!</div>
           </div>
