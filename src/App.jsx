@@ -819,15 +819,31 @@ export default function App() {
           <h2 style={{textAlign: 'center', color: '#0B2846', marginTop: '0'}}>🎉 ZIEL ERREICHT! 🎉</h2>
           <div style={styles.dashedLine}></div>
           <p style={{...styles.text, textAlign: 'center', fontSize: '18px', fontWeight: 'bold'}}>Herzlichen Glückwunsch, Team {teamName}!</p>
-          <p style={{...styles.text, textAlign: 'center'}}>Ihr habt alle Rätsel gelöst und Moosburg neu entdeckt. Kommt zur Theke im Corner House und feiert euren Erfolg!</p>
+          <p style={{...styles.text, textAlign: 'center'}}>Ihr habt alle Rätsel gelöst und Moosburg erfolgreich neu entdeckt!</p>
+
+          {/* Dynamische Rückmeldung zur Verlosung */}
+          <div style={{backgroundColor: '#eef2f5', padding: '15px', borderRadius: '8px', margin: '20px 0', border: '1px solid #d1d9e0'}}>
+            {participationChoice === 3 ? (
+              <p style={{margin: 0, fontSize: '15px', color: '#0B2846', textAlign: 'center', lineHeight: '1.5'}}>
+                Da ihr euch für die "Just for fun"-Variante ohne Foto-Upload entschieden habt, nehmt ihr zwar nicht an der Preisverlosung teil – aber der Ruhm und die Ehre gehören ganz euch! 🏆
+              </p>
+            ) : (
+              <p style={{margin: 0, fontSize: '15px', color: '#0B2846', textAlign: 'center', lineHeight: '1.5'}}>
+                <strong>Ihr seid im Lostopf!</strong> 🎟️<br/><br/>
+                Eure Teilnahme an der Verlosung ist hiermit offiziell bestätigt. Die glücklichen Gewinner werden am <strong>Dienstag, den 21.07.2026 live beim Pubquiz Summer Special im Corner House</strong> ausgelost!
+              </p>
+            )}
+          </div>
+
+          <p style={{...styles.text, textAlign: 'center'}}>Kommt gerne (zu den regulären Öffnungszeiten 😉) auf ein wohlverdientes Kaltgetränk an die Theke im Corner House und feiert euren Erfolg!</p>
           
           <div style={{backgroundColor: '#ffe8f0', border: '1px solid #ffb3c6', padding: '20px', borderRadius: '8px', textAlign: 'center', margin: '25px 0'}}>
             <p style={{margin: '0 0 10px 0', color: '#E1306C', fontWeight: 'bold', fontSize: '18px'}}>📸 Teilt euren Erfolg!</p>
             <p style={{fontSize: '14px', color: '#666', margin: '0 0 15px 0'}}>Postet eure besten Bilder der Rallye, markiert uns und feiert euren Sieg mit der ganzen Stadt.</p>
             <a href="https://www.instagram.com/moosburgrallye/" target="_blank" rel="noopener noreferrer" style={{...styles.button, backgroundColor: '#E1306C', padding: '12px', fontSize: '15px', display: 'block', textDecoration: 'none', textAlign: 'center'}}>Zu Instagram ➔</a>
           </div>
-
         </div>
+        
         <div style={styles.footer}>
           <a href="https://www.instagram.com/moosburgrallye/" target="_blank" rel="noopener noreferrer" style={{...styles.footerLink, color: '#E1306C'}}>Instagram</a> | 
           <a href="/impressum.html" style={styles.footerLink}>Impressum</a> | 
