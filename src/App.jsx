@@ -1,113 +1,114 @@
 import React, { useState, useEffect } from 'react';
 
-// 1. STARTDATUM DER RALLYE
+// 1. START- UND ENDDATUM DER RALLYE
 const START_DATE = new Date('2026-07-06T00:00:00');
+const END_DATE = new Date('2026-07-13T00:00:00'); // NEU: Deadline!
 
-// 2. ALLE 17 FINALEN STATIONSDATEN (MIT BÜCHERSTUBE)
+// 2. ALLE 17 FINALEN STATIONSDATEN (ARCHIV-MODUS MIT BYPASS-LINKS)
 const STATIONS = [
   {
     id: 1,
     name: "1. Wächterbaracken",
     code: "baracke123",
-    question: "Willkommen zur (wahrscheinlich) ersten Moosburger Stadtrallye!\n\nIn den nächsten Tagen werdet ihr bekannte Orte neu entdecken und Geschichten finden, die oft direkt vor unserer Nase liegen.\n\nEure erste Station führt euch an einen Ort, an dem Vergangenheit und Gegenwart Tür an Tür wohnen.\nWo einst die Bewacher wohnten, lernen heute die Jugendlichen. Doch drei Zeugen der Vergangenheit stehen noch immer daneben.\n\nAn diesem Ort wartet der erste QR-Code auf euch.\nSucht und scant den QR-Code mit euerem Smartphone um die nächste Station freizuschalten!\n\nDas untenstehende Bild wurde in dem Gebäude aufgenommen, an dem der QR-Code zu finden ist.",
+    question: "Willkommen zur (wahrscheinlich) ersten Moosburger Stadtrallye!\n\nIn den nächsten Tagen werdet ihr bekannte Orte neu entdecken und Geschichten finden, die oft direkt vor unserer Nase liegen.\n\nEure erste Station führt euch an einen Ort, an dem Vergangenheit und Gegenwart Tür an Tür wohnen.\nWo einst die Bewacher wohnten, lernen heute die Jugendlichen. Doch drei Zeugen der Vergangenheit stehen noch immer daneben.\n\nAn diesem Ort wartet der erste QR-Code auf euch.\nSucht und scant den QR-Code mit euerem Smartphone um die nächste Station freizuschalten!\n\nDas untenstehende Bild wurde in dem Gebäude aufgenommen, an dem der QR-Code zu finden ist.<br/><br/>👉 <a href=\"?code=baracke123\" style=\"color: #66B014; font-weight: bold; text-decoration: underline;\">Station 1 jetzt abschließen</a>",
     infoText: "Die drei erhaltenen Wächterbaracken gehören zu den letzten sichtbaren Überresten des ehemaligen Kriegsgefangenenlagers Stalag VII A. Während des Zweiten Weltkriegs waren hier Angehörige der Wachmannschaften untergebracht.<br/><br/>Das Stalag VII A war zeitweise das größte Kriegsgefangenenlager auf deutschem Boden. Nach Kriegsende wurden die Baracken als Wohnraum genutzt. Heute stehen sie unter Denkmalschutz und sollen teilweise zu einem Informations- und Dokumentationszentrum weiterentwickelt werden.<br/><br/>Das abgebildete Zimmer befindet sich in einer der erhaltenen Wächterbaracken. Als der letzte Bewohner 2016 auszog, schien die Zeit stehen geblieben zu sein. Möbel, Tapeten und persönliche Gegenstände waren noch vorhanden und geben bis heute einen eindrucksvollen Einblick in die Geschichte der Gebäude und ihrer späteren Nutzung als Wohnraum. Mehr Informationen unter https://stalag-moosburg.de."
   },
   {
     id: 2,
     name: "2. Stalag-Gedenkplatz",
     code: "gedenkplatz789",
-    question: "Eure Reise führt euch nun zu Ort des Erinnerns.\n\nHier steht der 'Gedenkbrunnen', im Volksmund als 'Franzosenbrunnen' bekannt, ein vom französischen Bildhauer Antoniucci Volti im Stalag VII A gestalteter und gefertigter Brunnenstein mit einem Rundumrelief, das die vier großen Flüsse Frankreichs allegorisch darstellt\n\nDas Bild hilft euch den QR-Code zu finden.",
+    question: "Eure Reise führt euch nun zu Ort des Erinnerns.\n\nHier steht der 'Gedenkbrunnen', im Volksmund als 'Franzosenbrunnen' bekannt, ein vom französischen Bildhauer Antoniucci Volti im Stalag VII A gestalteter und gefertigter Brunnenstein mit einem Rundumrelief, das die vier großen Flüsse Frankreichs allegorisch darstellt\n\nDas Bild hilft euch den QR-Code zu finden.<br/><br/>👉 <a href=\"?code=gedenkplatz789\" style=\"color: #66B014; font-weight: bold; text-decoration: underline;\">Station 2 jetzt abschließen</a>",
     infoText: "Zentraler Erinnerungsort oder Gedenkort auf dem Gelände des ehemaligen Lagerlazarettes ist der Stalag-Gedenkplatz mit dem Gedenkbrunnen (sog. 'Franzosenbrunnen') und Informationstafeln. <br/><br/>Der Brunnen wurde vom französischen Bildhauer Antoniucci Volti während seiner Gefangenschaft gestaltet und gefertigt. Der Brunnenstein zeigt vier allegorische Darstellungen der wichtigsten französichen Flüsse. <br/><br/>Er wurde im Jahre 1963 als erstes Denkmal zum Gedenken an die französischen Kriegsgefangenen im Stalag VII A aufgestellt und eingeweiht. Im Jahr 2015 wurde der Platz neu gestaltet und zum Gedenken an alle Kriegsgefangenen umgewidmet. <br/><br/>Hier findet jedes Jahr zum Befreiungstag am 29. April eine Gedenkzeremonie mit Kranzniederlegungen statt."
   },
   {
     id: 3,
     name: "3. Haus der Heimat",
     code: "heimat456",
-    question: "Die nächste Station erinnert daran, dass Heimat manchmal mehr ist als ein Ort auf der Landkarte.\n\nManche Menschen mussten ihre Heimat verlassen. An diesem Ort werden ihre Geschichten, Erinnerungen und Traditionen bis heute bewahrt.\n\nWer wissen möchte, was hier passiert, wirft oft zuerst einen Blick auf die aktuellen Aushänge. Vielleicht findet ihr dort auch etwas, das euch weiterbringt.",
+    question: "Die nächste Station erinnert daran, dass Heimat manchmal mehr ist als ein Ort auf der Landkarte.\n\nManche Menschen mussten ihre Heimat verlassen. An diesem Ort werden ihre Geschichten, Erinnerungen und Traditionen bis heute bewahrt.\n\nWer wissen möchte, was hier passiert, wirft oft zuerst einen Blick auf die aktuellen Aushänge. Vielleicht findet ihr dort auch etwas, das euch weiterbringt.<br/><br/>👉 <a href=\"?code=heimat456\" style=\"color: #66B014; font-weight: bold; text-decoration: underline;\">Station 3 jetzt abschließen</a>",
     infoText: "Das Haus der Heimat wurde 2005 als Vereinsheim, Museum und Begegnungsstätte errichtet.<br/><br/>Hier engagieren sich verschiedene Landsmannschaften und Heimatvereine, deren Mitglieder nach dem Zweiten Weltkrieg ihre Heimat in Ost- und Südosteuropa verlassen mussten.<br/><br/>Das Haus erinnert daran, dass die Geschichte Moosburgs nicht nur von den Menschen geprägt wurde, die hier immer gelebt haben, sondern auch von denen, die nach dem Krieg hier eine neue Heimat gefunden haben."
   },
   {
     id: 4,
     name: "4. DAV Kletterhalle",
     code: "kletterhalle444",
-    question: "Die nächste Station führt euch an einen Ort, an dem manche Menschen freiwillig die Wand hochgehen.\n\nFrüher wurde hier eingekehrt, heute wird geklettert.\n\nGesucht wird ein Ort, an dem Höhenmeter mitten in Moosburg gesammelt werden.\n\nDer nächste QR-Code versteckt sich nicht auf dem Gipfel. Ein Blick rund um den Eingang genügt.",
+    question: "Die nächste Station führt euch an einen Ort, an dem manche Menschen freiwillig die Wand hochgehen.\n\nFrüher wurde hier eingekehrt, heute wird geklettert.\n\nGesucht wird ein Ort, an dem Höhenmeter mitten in Moosburg gesammelt werden.\n\nDer nächste QR-Code versteckt sich nicht auf dem Gipfel. Ein Blick rund um den Eingang genügt.<br/><br/>👉 <a href=\"?code=kletterhalle444\" style=\"color: #66B014; font-weight: bold; text-decoration: underline;\">Station 4 jetzt abschließen</a>",
     infoText: "Die DAV-Sektion Moosburg bietet Kletterbegeisterten mitten in der Stadt die Möglichkeit, ihrem Sport nachzugehen. Hier trainieren Anfänger ebenso wie erfahrene Kletterer und Bergsteiger für ihre nächsten Abenteuer am Fels oder in den Alpen.<br/><br/>Das Vereinsheim steht auf geschichtsträchtigem Boden. Bis in die 1950er Jahre befand sich hier eine Gastwirtschaft, die im Volksmund als „Staunznwirt“ bekannt war. Der Name leitet sich vom bairischen Wort „Staunzn“ für Mücken ab. Woher dieser Name kommt, habt ihr auf dem Weg hierher möglicherweise selbst am eigenen Leib erfahren.<br/><br/>Als später das Vereinsheim errichtet werden sollte, sorgten die Pläne in Moosburg für reichlich Diskussionen. Zeitzeugen berichten noch heute von Unterschriftensammlungen und hitzigen Debatten, die man rückblickend fast als kleinen Volksaufstand bezeichnen könnte.<br/><br/>Heute geht es deutlich friedlicher zu. Statt über Baupläne wird hier über Kletterrouten diskutiert, und statt Maßkrügen stehen Seile, Karabiner und Kletterschuhe im Mittelpunkt.<br/><br/>Wenn ihr diese Station am 11. Juli besucht, fragt ihr euch vielleicht, warum hier plötzlich so viele Menschen unterwegs sind. Die Antwort ist einfach: Auf dem Gelände findet an diesem Tag das Sommerfest der DAV-Sektion mit Biergartenbetrieb statt.<br/><br/>Solltet ihr also plötzlich den Duft von Grillgut wahrnehmen oder Menschen mit Getränken in der Hand entdecken, gehört das ausnahmsweise nicht zur Rallye, sondern zum Programm des DAV."
   },
   {
     id: 5,
     name: "5. Zehentstadel",
     code: "zehentstadel111", 
-    question: "Für die nächste Station müsst ihr einige Jahrhunderte zurückreisen.\n\nFrüher brachte man hier den zehnten Teil seiner Ernte vorbei. Heute kommen die Menschen freiwillig.\n\nFür euren nächsten Fund müsst ihr nichts abgeben, sondern nur aufmerksam sein. Der QR-Code wartet hinter Glas auf euch.",
+    question: "Für die nächste Station müsst ihr einige Jahrhunderte zurückreisen.\n\nFrüher brachte man hier den zehnten Teil seiner Ernte vorbei. Heute kommen die Menschen freiwillig.\n\nFür euren nächsten Fund müsst ihr nichts abgeben, sondern nur aufmerksam sein. Der QR-Code wartet hinter Glas auf euch.<br/><br/>👉 <a href=\"?code=zehentstadel111\" style=\"color: #66B014; font-weight: bold; text-decoration: underline;\">Station 5 jetzt abschließen</a>",
     infoText: "Der Zehentstadel erinnert an eine Zeit, in der Bauern einen Teil ihrer Ernte als Abgabe an Kirche oder Grundherrn leisten mussten.<br/><br/>Heute werden hier keine Naturalien mehr gesammelt, sondern Kultur, Kunst und Begegnungen. Der Zehentstadel zählt zu den bedeutenden historischen Gebäuden Moosburgs und wird regelmäßig für Veranstaltungen genutzt."
   },
   {
     id: 6,
     name: "6. Heimatmuseum",
     code: "museum222",
-    question: "Wer die Zukunft verstehen will, sollte manchmal zuerst einen Blick in die Vergangenheit werfen.\n\nWer wissen möchte, wie Moosburg geworden ist, was es heute ist, findet die Antworten zwischen Urzeit und Neuzeit.\n\nPassenderweise befindet sich der Ort in einer ehemaligen Schule. Auch heute kann man hier noch einiges lernen – und mit etwas Aufmerksamkeit entdeckt ihr auch den nächsten QR-Code.",
+    question: "Wer die Zukunft verstehen will, sollte manchmal zuerst einen Blick in die Vergangenheit werfen.\n\nWer wissen möchte, wie Moosburg geworden ist, was es heute ist, findet die Antworten zwischen Urzeit und Neuzeit.\n\nPassenderweise befindet sich der Ort in einer ehemaligen Schule. Auch heute kann man hier noch einiges lernen – und mit etwas Aufmerksamkeit entdeckt ihr auch den nächsten QR-Code.<br/><br/>👉 <a href=\"?code=museum222\" style=\"color: #66B014; font-weight: bold; text-decoration: underline;\">Station 6 jetzt abschließen</a>",
     infoText: "Das Heimatmuseum erzählt die Geschichte der Region von der Urgeschichte bis in die Gegenwart.<br/><br/>Seit 1975 befindet sich die Sammlung in der ehemaligen Klosterschule am Kastulusplatz. Die Ausstellungen reichen von archäologischen Funden über Stadtgeschichte bis hin zu Alltagsgegenständen vergangener Generationen. <br/><br/>Die Bildercollage zeigt eine kleine Auswahl der Ausstellungsstücke und Themenbereiche des Museums. Vor Ort gibt es noch deutlich mehr zu entdecken: von den frühesten Spuren menschlicher Besiedlung bis zur jüngeren Geschichte Moosburgs."
   },
   {
     id: 7,
     name: "7. Kastulusmünster & Johanneskirche",
     code: "muenster333",
-    question: "Die nächste Station verbindet zwei Glaubenszeugen, die sich nie begegnet sind.\n\nDer eine lebte im alten Rom, der andere am Jordan. Heute stehen sie in Moosburg Seite an Seite.\n\nDas Bild hilft euch bei der Suche. Haltet die Augen offen – der nächste QR-Code befindet sich genau dort, wo das Foto aufgenommen wurde.",
+    question: "Die nächste Station verbindet zwei Glaubenszeugen, die sich nie begegnet sind.\n\nDer eine lebte im alten Rom, der andere am Jordan. Heute stehen sie in Moosburg Seite an Seite.\n\nDas Bild hilft euch bei der Suche. Haltet die Augen offen – der nächste QR-Code befindet sich genau dort, wo das Foto aufgenommen wurde.<br/><br/>👉 <a href=\"?code=muenster333\" style=\"color: #66B014; font-weight: bold; text-decoration: underline;\">Station 7 jetzt abschließen</a>",
     infoText: "Das Kastulusmünster ist das Wahrzeichen Moosburgs und prägt die Silhouette der Stadt seit Jahrhunderten.<br/><br/>Benannt ist es nach dem heiligen Kastulus, einem römischen Märtyrer des 3. Jahrhunderts. Direkt daneben steht die Johanneskirche, die Johannes dem Täufer gewidmet ist.<br/><br/>Im Inneren des Münsters befindet sich mit dem Hochaltar von Hans Leinberger eines der bedeutendsten Kunstwerke der Spätgotik in Altbayern."
   },
   {
     id: 8,
     name: "8. Grieserie",
     code: "grieserie456",
-    question: "Nicht jedes Denkmal steht hinter Absperrungen.\n\nDie nächste Station führt euch zum ältesten erhaltenen Haus Moosburgs.\n\nSeine Geschichte reicht viele Jahrhunderte zurück – und trotzdem ist hier auch heute noch jede Menge Leben.",
-    infoText: "Die Grieserie gilt als das älteste erhaltene Wohnhaus Moosburgs und blickt auf mehrere Jahrhunderte Stadtgeschichte zurück.<br/><br/>Heute hat das historische Gebäude eine ganz andere Aufgabe: Als soziale Begegnstätte bringt es Menschen zusammen und bietet Raum für Austausch, Kultur und gemeinschaftliches Miteinander.<br/><br/>Für die gelungene Verbindung von Denkmalpflege und moderner Nutzung wurde die Grieserie 2025 mit dem Oberbayerischen Denkmalpreis ausgezeichnet.<br/><br/>Die Grieserie zeigt eindrucksvoll, dass Geschichte nicht nur bewahrt, sondern auch gelebt werden kann."
+    question: "Nicht jedes Denkmal steht hinter Absperrungen.\n\nDie nächste Station führt euch zum ältesten erhaltenen Haus Moosburgs.\n\nSeine Geschichte reicht viele Jahrhunderte zurück – und trotzdem ist hier auch heute noch jede Menge Leben.<br/><br/>👉 <a href=\"?code=grieserie456\" style=\"color: #66B014; font-weight: bold; text-decoration: underline;\">Station 8 jetzt abschließen</a>",
+    infoText: "Die Grieserie gilt als das älteste erhaltene Wohnhaus Moosburgs und blickt auf mehrere Jahrhunderte Stadtgeschichte zurück.<br/><br/>Heute hat das historische Gebäude eine ganz andere Aufgabe: Als soziale Begegnungsstätte bringt es Menschen zusammen und bietet Raum für Austausch, Kultur und gemeinschaftliches Miteinander.<br/><br/>Für die gelungene Verbindung von Denkmalpflege und moderner Nutzung wurde die Grieserie 2025 mit dem Oberbayerischen Denkmalpreis ausgezeichnet.<br/><br/>Die Grieserie zeigt eindrucksvoll, dass Geschichte nicht nur bewahrt, sondern auch gelebt werden kann."
   },
   {
     id: 9,
     name: "9. Stadtmarketing Moosburg",
     code: "marketing555",
-    question: "Die nächste Station führt euch zu den Menschen, die dafür sorgen, dass in Moosburg etwas los ist.\n\nOb Stadtfeste, Märkte, Aktionen oder verkaufsoffene Sonntage – vieles wird hier geplant, organisiert oder begleitet.\n\nGesucht wird das Büro, in dem all diese Fäden zusammenlaufen.",
+    question: "Die nächste Station führt euch zu den Menschen, die dafür sorgen, dass in Moosburg etwas los ist.\n\nOb Stadtfeste, Märkte, Aktionen oder verkaufsoffene Sonntage – vieles wird hier geplant, organisiert oder begleitet.\n\nGesucht wird das Büro, in dem all diese Fäden zusammenlaufen.<br/><br/>👉 <a href=\"?code=marketing555\" style=\"color: #66B014; font-weight: bold; text-decoration: underline;\">Station 9 jetzt abschließen</a>",
     infoText: "Das Stadtmarketing Moosburg setzt sich dafür ein, die Innenstadt attraktiv und lebendig zu gestalten.<br/><br/>Zu den Aufgaben gehören die Organisation und Unterstützung von Veranstaltungen, die Förderung des örtlichen Einzelhandels sowie die Vermarktung Moosburgs als Einkaufs-, Kultur- und Erlebnisstandort.<br/><br/>Viele Aktionen, die das Leben in der Innenstadt bereichern, nehmen hier ihren Anfang oder werden von hier aus begleitet."
   },
   {
     id: 10,
     name: "10. Modehaus Heilingbrunner",
     code: "heilingbrunner666",
-    question: "Die nächste Station zeigt, dass gute Qualität nie aus der Mode kommt.\n\nSeit über 200 Jahren kleidet dieses Traditionshaus die Menschen der Region ein.\n\nFür die Modewelt sind zwei Jahrhunderte eine ziemlich lange Saison.",
+    question: "Die nächste Station zeigt, dass gute Qualität nie aus der Mode kommt.\n\nSeit über 200 Jahren kleidet dieses Traditionshaus die Menschen der Region ein.\n\nFür die Modewelt sind zwei Jahrhunderte eine ziemlich lange Saison.<br/><br/>👉 <a href=\"?code=heilingbrunner666\" style=\"color: #66B014; font-weight: bold; text-decoration: underline;\">Station 10 jetzt abschließen</a>",
     infoText: "Das Modehaus Heilingbrunner gehört seit mehr als 200 Jahren zum Moosburger Stadtbild.<br/><br/>Nur wenige familiengeführte Geschäfte können auf eine so lange Geschichte zurückblicken und sind gleichzeitig bis heute fest im Stadtleben verankert.<br/><br/>Heilingbrunner unterstützt die Moosburger Stadtrallye als Supporter mit tollen Preisen. Vielen Dank für die Unterstützung!"
   },
   {
     id: 11,
     name: "11. Badehimmel",
     code: "badehimmel777",
-    question: "Für die nächste Station braucht ihr weder Schwimmflügel noch Badekappe.\n\nHier dreht sich alles um Entspannung, Wohlfühlen und den Duft handgemachter Seifen.\n\nDas Bild hilft euch dabei, den richtigen Ort zu finden.",
+    question: "Für die nächste Station braucht ihr weder Schwimmflügel noch Badekappe.\n\nHier dreht sich alles um Entspannung, Wohlfühlen und den Duft handgemachter Seifen.\n\nDas Bild hilft euch dabei, den richtigen Ort zu finden.<br/><br/>👉 <a href=\"?code=badehimmel777\" style=\"color: #66B014; font-weight: bold; text-decoration: underline;\">Station 11 jetzt abschließen</a>",
     infoText: "Der Moosburger Badehimmel ist ein Paradies für alle, die sich selbst oder anderen etwas Gutes tun möchten.<br/><br/>Im Sortiment finden sich Naturkosmetik, Badezusätze, Badekugeln, Naturcremes, handgemachte Seifen und viele weitere Wellness- und Pflegeprodukte. Ergänzt wird das Angebot durch Geschenkartikel, Dekorationen und liebevoll ausgewählte Wohnaccessoires.<br/><br/>Ob kleines Mitbringsel, Geburtstagsgeschenk oder eine Auszeit für sich selbst – hier findet sich für viele Anlässe etwas Passendes."
   },
   {
     id: 12,
     name: "12. Wasserturm",
     code: "lenigoth888", 
-    question: "Die nächste Station erinnert an eine Zeit, in der fließendes Wasser alles andere als selbstverständlich war.\n\nHeute ist er stillgelegt. Früher sorgte er dafür, dass in Moosburg die Leitungen nicht trocken blieben.",
+    question: "Die nächste Station erinnert an eine Zeit, in der fließendes Wasser alles andere als selbstverständlich war.\n\nHeute ist er stillgelegt. Früher sorgte er dafür, dass in Moosburg die Leitungen nicht trocken blieben.<br/><br/>👉 <a href=\"?code=lenigoth888\" style=\"color: #66B014; font-weight: bold; text-decoration: underline;\">Station 12 jetzt abschließen</a>",
     infoText: "Der Wasserturm wurde Anfang des 20. Jahrhunderts errichtet und war über viele Jahrzehnte ein wichtiger Bestandteil der Moosburger Wasserversorgung.<br/><br/>Seine Aufgabe bestand darin, Wasser zu speichern und durch den Höhenunterschied den notwendigen Druck im Leitungsnetz aufrechtzuerhalten. Damit gehörte der Turm zu den Bauwerken, die den Alltag der Menschen oft unbemerkt, aber entscheidend beeinflussten.<br/><br/>Heute wird der Turm nicht mehr für die Wasserversorgung genutzt, prägt aber weiterhin das Stadtbild und erinnert an die technische Entwicklung Moosburgs.<br/><br/>Der Turm befindet sich heute im Besitz des Deutschen Alpenvereins (DAV). Während der Wasserturm selbst derzeit nicht genutzt wird, betreibt der DAV in Moosburg eine moderne Kletterhalle und engagiert sich aktiv im Vereins- und Breitensport.<br/><br/>Die abgebildete historische Zeichnung zeigt den originalen Bauplan des Wasserturms aus dem Jahr 1908. Sie vermittelt einen faszinierenden Einblick in die Planung und Ingenieurskunst der damaligen Zeit.<br/><br/>Ein herzliches Dankeschön an den DAV Moosburg, der den originalen Bauplan für die Moosburger Stadtrallye freundlicherweise zur Verfügung gestellt hat."
   },
   {
     id: 13,
     name: "13. Gerlspeck",
     code: "gerlspeck999",
-    question: "Manche Namen gehören so selbstverständlich zu einer Stadt, dass man kaum noch über sie nachdenkt.\n\nSchuhe, Taschen und Lederwaren haben hier seit Generationen ihren festen Platz.\n\nViele Moosburger kennen den Namen vermutlich schon ihr ganzes Leben.",
+    question: "Manche Namen gehören so selbstverständlich zu einer Stadt, dass man kaum noch über sie nachdenkt.\n\nSchuhe, Taschen und Lederwaren haben hier seit Generationen ihren festen Platz.\n\nViele Moosburger kennen den Namen vermutlich schon ihr ganzes Leben.<br/><br/>👉 <a href=\"?code=gerlspeck999\" style=\"color: #66B014; font-weight: bold; text-decoration: underline;\">Station 13 jetzt abschließen</a>",
     infoText: "Das Schuhhaus & Lederwaren Gerlspeck gehört seit vielen Jahrzehnten zum Moosburger Stadtplatz und ist für viele Menschen eine feste Anlaufstelle rund um Schuhe, Taschen und Lederwaren.<br/><br/>Als Familienunternehmen begleitet Gerlspeck Generationen von Moosburgerinnen und Moosburgern – vom ersten Kinderschuh bis zur Reisetasche für den nächsten Urlaub.<br/><br/>Gerlspeck unterstützt die Moosburger Stadtrallye als Supporter mit tollen Sachpreisen. Vielen Dank für die Unterstützung!"
   },
   {
     id: 14,
     name: "14. Barbaras Bücherstube",
     code: "buecherstube888",
-    question: "Für die nächste Station braucht ihr keinen Reisepass, obwohl euch dort seit mehr als 45 Jahren tausende Welten erwarten.\n\nIhr müsst dafür nicht einmal Moosburg verlassen.",
+    question: "Für die nächste Station braucht ihr keinen Reisepass, obwohl euch dort seit mehr als 45 Jahren tausende Welten erwarten.\n\nIhr müsst dafür nicht einmal Moosburg verlassen.<br/><br/>👉 <a href=\"?code=buecherstube888\" style=\"color: #66B014; font-weight: bold; text-decoration: underline;\">Station 14 jetzt abschließen</a>",
     infoText: "Seit mehr als 45 Jahren gehört Barbaras Bücherstube zum Moosburger Stadtbild.<br/><br/>Die Buchhandlung ist weit mehr als ein Geschäft. Sie ist Treffpunkt für Leserinnen und Leser, Ort für Entdeckungen und Ansprechpartner für alle, die gerne in Geschichten eintauchen.<br/><br/>Zwischen den Regalen warten tausende Abenteuer, spannende Begegnungen und neue Perspektiven. Ganz ohne Kofferpacken."
   },
   {
     id: 15,
     name: "15. Zum Hirschn", 
     code: "hirschn123",
-    question: "Die nächste Station hat ihren Namen nicht von einem Musikinstrument, obwohl dort regelmäßig Musik erklingt.\n\nJazz, Sandwiches und kalte Getränke. Der Name dieses Hauses hat vier Beine.",
+    question: "Die nächste Station hat ihren Namen nicht von einem Musikinstrument, obwohl dort regelmäßig Musik erklingt.\n\nJazz, Sandwiches und kalte Getränke. Der Name dieses Hauses hat vier Beine.<br/><br/>👉 <a href=\"?code=hirschn123\" style=\"color: #66B014; font-weight: bold; text-decoration: underline;\">Station 15 jetzt abschließen</a>",
     infoText: "Zum Hirschn ist einer der bekanntesten Treffpunkte für Livemusik in Moosburg. Hier treffen sich Musikbegeisterte, Nachtschwärmer und alle, die einen entspannten Abend bei einem kühlen Getränk verbringen möchten.<br/><br/>Regelmäßig verwandelt der Jazz Club Hirsch das Lokal in eine Konzertbühne und bringt nationale wie internationale Musiker nach Moosburg. Der Name lässt zwar ein Wildtier vermuten, aber tatsächlich steht hier vor allem die Musik im Mittelpunkt.<br/><br/>Dazu gibt es frisch zubereitete Sandwiches und eine große Auswahl an Getränken. Eine Kombination, die seit vielen Jahren bestens funktioniert. Und vielleicht ist genau jetzt der richtige Zeitpunkt, um eine kurze Pause einzulegen und den nächsten Hinweis bei einem kühlen Getränk zu diskutieren."
   },
   {
@@ -121,7 +122,7 @@ const STATIONS = [
     id: 17,
     name: "17. Corner House",
     code: "cornerhouse999",
-    question: "Die nächste Station liegt geografisch in Moosburg, kulturell aber ein gutes Stück weiter westlich.\n\nIrland liegt nicht in Oberbayern. Zumindest eigentlich nicht.",
+    question: "Die nächste Station liegt geografisch in Moosburg, kulturell aber ein gutes Stück weiter westlich.\n\nIrland liegt nicht in Oberbayern. Zumindest eigentlich nicht.<br/><br/>👉 <a href=\"?code=cornerhouse999\" style=\"color: #66B014; font-weight: bold; text-decoration: underline;\">Station 17 jetzt abschließen</a>",
     infoText: "Das Corner House bringt ein Stück irische Pub-Kultur nach Moosburg.<br/><br/>Neben Burgern, Guinness und Live-Sport finden hier regelmäßig Konzerte, Veranstaltungen und das beste Pub Quiz der Welt (in Moosburg) statt. Zumindest sind sich darüber alle einig, die das Quiz veranstalten.<br/><br/>Das Pub Quiz lockt seit Jahren Ratefüchse, Besserwisser, Halbwissende und Menschen an, die einfach einen unterhaltsamen Abend verbringen möchten.<br/><br/>Und ganz nebenbei entstand hier auch die Idee zur ersten Moosburger Stadtrallye. Was ursprünglich als kleine Sommerbeschäftigung für die Quiz-Teams gedacht war, entwickelte sich Schritt für Schritt zu diesem Projekt.<br/><br/>Die Moosburger Stadtrallye wird deshalb nicht ohne Grund von The Corner House präsentiert. Wirt Andi hat die Idee von Anfang an unterstützt und das Projekt auf vielfältige Weise begleitet.<br/><br/>Auch die Ziehung der Gewinner findet hier statt: Am <strong>21.07.2026 um voraussichtlich 19:30 Uhr</strong> werden im Corner House die Gewinnerinnen und Gewinner der Stadtrallye ausgelost."
   }
 ];
@@ -195,7 +196,6 @@ export default function App() {
     
     if (currentUrlParams.get('admin') === 'boss') {
       setIsAdminView(true);
-      // fetchAdminData() WURDE HIER ENTFERNT, UM KEINEN FEHLER ZU PROVOZIEREN
       return;
     }
 
@@ -340,6 +340,27 @@ export default function App() {
     }
   };
 
+  // NEU: CSV-EXPORT FUNKTION
+  const exportCSV = () => {
+    let csvContent = "Teamname;PIN;Station;Upload-Erlaubnis;Social-Media;Registriert am\n";
+    adminTeams.forEach(team => {
+      const canUpload = team.choice === 1 || team.choice === 2 ? 'Ja' : 'Nein';
+      const canSocial = team.choice === 1 ? 'Ja' : 'Nein';
+      const date = new Date(team.registeredAt).toLocaleString('de-DE');
+      // Nutzung von Semikolon, damit deutsches Excel die Spalten direkt sauber trennt!
+      csvContent += `${team.originalName};${team.pin || team.PIN || '----'};${team.progress};${canUpload};${canSocial};${date}\n`;
+    });
+    
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", "Moosburg_Rallye_Teams.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   const handleScannedCode = (code, currentIndex, currentState) => {
     if (currentIndex >= STATIONS.length) return;
     const expectedStation = STATIONS[currentIndex];
@@ -358,37 +379,36 @@ export default function App() {
 
   const handleRegister = async (e) => {
     e.preventDefault();
-    if (!teamName.trim() || !participationChoice) return;
-
     setErrorMessage('');
     setTeamToRestore(null);
     setPinError(false);
 
+    // Automatische Vergabe für den Archiv-Modus (Just for Fun = Choice 3)
     const generatedPin = Math.floor(1000 + Math.random() * 9000).toString();
+    const autoTeamName = "Späteinsteiger-" + generatedPin;
+    const autoChoice = 3;
 
     try {
       const response = await fetch("https://moosburg-ralley-api.andreas-stetter73.workers.dev/api/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 
-          team: teamName.trim(), 
-          choice: participationChoice,
+          team: autoTeamName, 
+          choice: autoChoice,
           pin: generatedPin 
         })
       });
 
-      // Name vergeben! Der Server schickt uns jetzt die sichere Flagge zurück
       if (response.status === 409) {
         const data = await response.json();
         if (data.teamExists) {
           setTeamToRestore({
             originalName: data.originalName,
             progress: data.progress
-            // KEINE PIN HIER! Die bleibt auf dem Server.
           });
           return;
         }
-        setErrorMessage("Dieser Teamname ist bereits vergeben!");
+        setErrorMessage("Serverfehler: Gast-Teamname bereits vergeben!");
         return;
       }
 
@@ -397,12 +417,14 @@ export default function App() {
         return;
       }
 
-      localStorage.setItem('quiz_team_name', teamName.trim());
-      localStorage.setItem('quiz_participation_choice', participationChoice.toString());
+      localStorage.setItem('quiz_team_name', autoTeamName);
+      localStorage.setItem('quiz_participation_choice', autoChoice.toString());
       localStorage.setItem('quiz_team_progress', '0');
       localStorage.setItem('quiz_station_state', 'SEEKING');
       localStorage.setItem('quiz_team_pin', generatedPin);
       
+      setTeamName(autoTeamName);
+      setParticipationChoice(autoChoice);
       setTeamPin(generatedPin);
       setIsRegistered(true);
       setShowQuereinsteigerIntro(false);
@@ -414,14 +436,13 @@ export default function App() {
       setErrorMessage("Netzwerkfehler! Überprüft eure Internetverbindung.");
     }
   };
-  
-const handleRestoreTeam = async () => {
+
+  const handleRestoreTeam = async () => {
     if (!teamToRestore) return;
     setErrorMessage('');
     setPinError(false);
 
     try {
-      // Wir schicken Name + eingegebene PIN zur Verifizierung an den Server
       const response = await fetch("https://moosburg-ralley-api.andreas-stetter73.workers.dev/api/restore", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -433,7 +454,7 @@ const handleRestoreTeam = async () => {
 
       if (response.ok) {
         const data = await response.json();
-        const restored = data.teamData; // Der Server gibt uns die Daten erst nach erfolgreichem PIN-Check!
+        const restored = data.teamData; 
 
         localStorage.setItem('quiz_team_name', restored.originalName);
         localStorage.setItem('quiz_participation_choice', restored.choice.toString());
@@ -453,7 +474,6 @@ const handleRestoreTeam = async () => {
         setEnteredPin('');
         setPinError(false);
       } else {
-        // Status 401 oder ähnliches bedeutet: PIN falsch!
         setPinError(true);
       }
     } catch (error) {
@@ -463,19 +483,23 @@ const handleRestoreTeam = async () => {
 
   const handleNextStation = async () => {
     const nextIndex = currentStationIndex + 1;
+    const isOver = new Date() >= END_DATE && !isDemoMode;
     
-    try {
-      await fetch("https://moosburg-ralley-api.andreas-stetter73.workers.dev/api/upload", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ 
-          team: teamName, 
-          station: STATIONS[currentStationIndex].id, 
-          progress: nextIndex 
-        })
-      });
-    } catch (error) {
-      console.error("Fortschritt konnte nicht mit Server synchronisiert werden.", error);
+    // Server-Sperre: Nach der Deadline wird kein Fortschritt mehr an die DB geschickt!
+    if (!isOver) {
+      try {
+        await fetch("https://moosburg-ralley-api.andreas-stetter73.workers.dev/api/upload", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ 
+            team: teamName, 
+            station: STATIONS[currentStationIndex].id, 
+            progress: nextIndex 
+          })
+        });
+      } catch (error) {
+        console.error("Fortschritt konnte nicht mit Server synchronisiert werden.", error);
+      }
     }
 
     setCurrentStationIndex(nextIndex);
@@ -496,6 +520,14 @@ const handleRestoreTeam = async () => {
     const reader = new FileReader();
     reader.onloadend = async () => {
       setUploadedPhotos({ ...uploadedPhotos, [stationId]: reader.result });
+      
+      const isOver = new Date() >= END_DATE && !isDemoMode;
+      
+      // Server-Sperre: Nach der Deadline simulieren wir den Upload nur noch visuell.
+      if (isOver) {
+        return; 
+      }
+      
       setIsUploading(true);
       setErrorMessage('');
       
@@ -592,11 +624,16 @@ const handleRestoreTeam = async () => {
         {errorMessage && <div style={styles.error}>{errorMessage}</div>}
         
         <div style={styles.card}>
-          <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px'}}>
+          <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', flexWrap: 'wrap', gap: '10px'}}>
             <h2 style={{marginTop: 0, marginBottom: 0, color: '#0B2846'}}>Registrierte Teams ({adminTeams.length})</h2>
-            <button onClick={() => fetchAdminData()} style={{padding: '8px 16px', backgroundColor: '#66B014', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold'}} disabled={isLoadingAdmin}>
-              {isLoadingAdmin ? 'Lädt...' : '🔄 Aktualisieren'}
-            </button>
+            <div style={{display: 'flex', gap: '10px'}}>
+              <button onClick={exportCSV} style={{padding: '8px 16px', backgroundColor: '#0B2846', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold'}}>
+                📥 CSV Export
+              </button>
+              <button onClick={() => fetchAdminData()} style={{padding: '8px 16px', backgroundColor: '#66B014', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold'}} disabled={isLoadingAdmin}>
+                {isLoadingAdmin ? 'Lädt...' : '🔄 Aktualisieren'}
+              </button>
+            </div>
           </div>
           <div style={{overflowX: 'auto'}}>
             <table style={{width: '100%', borderCollapse: 'collapse', fontSize: '14px', textAlign: 'left'}}>
@@ -687,64 +724,21 @@ const handleRestoreTeam = async () => {
           <h2 style={{marginTop: 0, color: '#0B2846', textAlign: 'center'}}>Rätseln. Entdecken. Gewinnen.</h2>
           <div style={styles.dashedLine}></div>
           <p style={styles.text}>
-            Willkommen bei der ersten Moosburger Stadtrallye! Um mitzumachen, registriert euch mit eurem Teamnamen (keine E-Mail-Adresse und kein Login erforderlich) und legt los.
+            Willkommen bei der ersten Moosburger Stadtrallye! Die ist leider am 12. Juli 2026 zu Ende gegangen und die QR-Codes wurden mittlerweile (wahrscheinlich) schon entfernt.
           </p>
           <p style={styles.text}>
-            Entschlüsselt die Hinweise, findet die versteckten QR-Codes an den Stationen und erreicht das Ziel. Um euren Fortschritt zu dokumentieren, ladet ihr an jedem Ort ein lustiges Gruppenbild von euch hoch.
+            Ihr könnt in der App die Stationen aber noch durchspielen und euch selber herausfordern, ob ihr die richtige Station gefunden hättet. Und folgt uns auf Instagram für Neuigkeiten. Danke an alle Sponsoren und Teams, die die erste Rallye zu einem vollen Erfolg gemacht haben. Moosburg rockt.
           </p>
           
-          <div style={styles.dateBox}>
-            <p style={{margin: '5px 0', fontSize: '18px', fontWeight: 'bold', color: '#fff'}}>📅 6. - 12. JULI 2026</p>
-            <p style={{margin: '0', fontSize: '14px', color: '#fff', textTransform: 'uppercase'}}>Eine Woche. Deine Stadt. Dein Abenteuer.</p>
+          <div style={{...styles.dateBox, backgroundColor: '#666', boxShadow: 'none'}}>
+            <p style={{margin: '5px 0', fontSize: '18px', fontWeight: 'bold', color: '#fff'}}>ARCHIV-MODUS</p>
+            <p style={{margin: '0', fontSize: '14px', color: '#fff', textTransform: 'uppercase'}}>Just for Fun. Ohne Wertung.</p>
           </div>
           
           <form onSubmit={handleRegister}>
-            <input type="text" placeholder="Euer Teamname" value={teamName} onChange={(e) => setTeamName(e.target.value)} style={styles.input} required disabled={!!teamToRestore} />
-            
-            {!teamToRestore && (
-              <div style={{display: 'flex', flexDirection: 'column', gap: '15px', marginBottom: '25px', backgroundColor: '#f9fafb', padding: '15px', borderRadius: '8px', border: '1px solid #eee'}}>
-                <label style={styles.radioLabel}>
-                  <input type="radio" name="participation" value="1" onChange={() => setParticipationChoice(1)} required />
-                  <span>Wir wollen an der <strong>Verlosung der Preise</strong> teilnehmen und stimmen der Bildveröffentlichung zu. (<a href="/privacy.html" target="_blank" rel="noopener noreferrer" style={{color: '#0B2846'}}>Datenschutz</a>)</span>
-                </label>
-                <label style={styles.radioLabel}>
-                  <input type="radio" name="participation" value="2" onChange={() => setParticipationChoice(2)} />
-                  <span>Wir wollen an der Verlosung teilnehmen, stimmen der Bildveröffentlichung aber <strong>nicht</strong> zu. (Bilder dienen nur als Beweis).</span>
-                </label>
-                <label style={styles.radioLabel}>
-                  <input type="radio" name="participation" value="3" onChange={() => setParticipationChoice(3)} />
-                  <span>Wir wollen keine Bilder hochladen und <strong>nicht</strong> an der Verlosung teilnehmen. (Just for fun!)</span>
-                </label>
-              </div>
-            )}
-            
-            {teamToRestore ? (
-              <div style={{...styles.infoBox, backgroundColor: '#fff3cd', border: '2px solid #ffc107', padding: '20px', borderRadius: '8px', textAlign: 'left'}}>
-                <p style={{margin: '0 0 12px 0', color: '#856404', fontWeight: 'bold'}}>Dieser Teamname existiert bereits!</p>
-                <p style={{margin: '0 0 15px 0', fontSize: '13px', color: '#666', lineHeight: '1.4'}}>
-                  Um den bestehenden Spielstand (Station {Math.min(teamToRestore.progress + 1, STATIONS.length)}) auf diesem Gerät fortzusetzen, gebt bitte eure 4-stellige Notfall-PIN ein:
-                </p>
-                <input type="number" placeholder="4-stellige PIN" value={enteredPin} onChange={(e) => setEnteredPin(e.target.value)} style={{...styles.input, marginBottom: '10px', textAlign: 'center', letterSpacing: '5px', fontSize: '20px'}} />
-                
-                {pinError && <p style={{color: '#cc0000', fontSize: '13px', margin: '0 0 10px 0', fontWeight: 'bold'}}>Falsche PIN! Bitte versucht es erneut.</p>}
-                
-                <button type="button" onClick={handleRestoreTeam} style={{...styles.button, backgroundColor: '#0B2846', color: '#fff', fontSize: '15px', padding: '12px'}}>
-                  Spielstand laden 🔄
-                </button>
-                
-                <p style={{fontSize: '11px', color: '#777', marginTop: '15px', lineHeight: '1.3', fontStyle: 'italic'}}>
-                  Die PIN kann bei Verlust beim Veranstalter neu angefordert werden. Kontaktdaten siehe Impressum.
-                </p>
-                
-                <button type="button" onClick={() => { setTeamToRestore(null); setEnteredPin(''); setPinError(false); }} style={{background: 'none', border: 'none', color: '#666', marginTop: '15px', textDecoration: 'underline', cursor: 'pointer', fontSize: '13px', display: 'block', width: '100%', textAlign: 'center'}}>
-                  Abbrechen / Anderen Namen wählen
-                </button>
-              </div>
-            ) : (
-              <button type="submit" style={{...styles.button, opacity: participationChoice ? 1 : 0.5}} disabled={!participationChoice}>
-                {isRallyActive ? 'Rallye jetzt starten!' : 'Team vorab registrieren'}
-              </button>
-            )}
+            <button type="submit" style={styles.button}>
+              Rallye im Spaß-Modus starten!
+            </button>
           </form>
         </div>
 
@@ -755,56 +749,6 @@ const handleRestoreTeam = async () => {
           <details style={styles.faqItem}><summary style={styles.faqSummary}>Müssen wir alles an einem Tag schaffen?</summary><div style={styles.faqContent}>Nein. Ihr habt vom 6. bis zum 12. Juli Zeit. Euer Fortschritt wird auf eurem Gerät gespeichert. Ihr könnt jederzeit pausieren und an einem anderen Tag weitermachen.</div></details>
           <details style={styles.faqItem}><summary style={styles.faqSummary}>Was brauche ich zum Mitmachen?</summary><div style={styles.faqContent}>Nur ein Smartphone mit Internetverbindung, eine funktionierende Kamera für die Beweisfotos und gute Laune!</div></details>
           <details style={styles.faqItem}><summary style={styles.faqSummary}>Was gibt es zu gewinnen?</summary><div style={styles.faqContent}>Dank unserer fantastischen Sponsoren (The Corner House, Modehaus Heilingbrunner, Barbaras Bücherstube, Josef Gerlspeck, DAV Kletterhalle) warten großartige Gutscheine und Sachpreise auf die Gewinnerteams!</div></details>
-        </div>
-
-        <div style={styles.footer}>
-          <a href="https://www.instagram.com/moosburgrallye/" target="_blank" rel="noopener noreferrer" style={{...styles.footerLink, color: '#E1306C'}}>Instagram</a> | 
-          <a href="/impressum.html" style={styles.footerLink}>Impressum</a> | 
-          <a href="/privacy.html" style={styles.footerLink}>Datenschutz</a>
-        </div>
-
-        <div style={styles.partnerLogoWrapper}>
-          <span style={styles.partnerLabel}>Powered by The Corner House</span>
-          <img src="/logo_ch.png" alt="Partner" style={styles.partnerLogo} />
-        </div>
-      </div>
-    );
-  }
-
-  if (isRegistered && !isRallyActive) {
-    return (
-      <div style={styles.container}>
-        <h1 style={styles.title}>Moosburger<br/><span style={{color: '#66B014'}}>Stadtrallye</span></h1>
-        
-        <InstallBanner />
-
-        <div style={styles.card}>
-          <h2 style={{textAlign: 'center', color: '#0B2846', marginTop: 0}}>Anmeldung erfolgreich! 🎉</h2>
-          <div style={styles.dashedLine}></div>
-          <p style={styles.text}>Euer Team <strong>{teamName}</strong> ist im System registriert und startklar.</p>
-          
-          <div style={{backgroundColor: '#fff7cd', border: '1px solid #ffc107', padding: '15px', borderRadius: '8px', textAlign: 'center', margin: '20px 0'}}>
-            <span style={{fontSize: '12px', textTransform: 'uppercase', color: '#856404', fontWeight: 'bold', display: 'block', marginBottom: '5px'}}>🔒 Eure persönliche Notfall-PIN:</span>
-            <span style={{fontSize: '28px', fontWeight: '900', letterSpacing: '4px', color: '#0B2846'}}>{teamPin}</span>
-            <p style={{fontSize: '11px', color: '#666', margin: '8px 0 0 0', lineHeight: '1.4'}}>
-              Macht jetzt einen <strong>Screenshot</strong>! Diese PIN braucht ihr, falls euer Akku leer geht oder ihr das Gerät wechseln müsst.
-            </p>
-          </div>
-
-          <p style={styles.text}>Aktuell befindet sich die Rallye noch in der Vorbereitungsphase. Pünktlich am <strong>06. Juli um 00:00 Uhr</strong> wird genau auf dieser Seite euer allererster Hinweis freigeschaltet!</p>
-          
-          <div style={styles.countdownBox}>
-            <div style={{fontSize: '12px', textTransform: 'uppercase', letterSpacing: '1px', color: '#0B2846', marginBottom: '5px'}}>Startet in:</div>
-            <div style={{fontSize: '22px', fontWeight: 'bold', color: '#66B014'}}>{countdownText || 'Lädt...'}</div>
-          </div>
-          
-          <div style={{backgroundColor: '#ffe8f0', border: '1px solid #ffb3c6', padding: '15px', borderRadius: '8px', textAlign: 'center', marginTop: '20px'}}>
-            <span style={{fontSize: '15px', display: 'block', marginBottom: '5px', color: '#E1306C', fontWeight: 'bold'}}>📷 Folgt uns auf Instagram!</span>
-            <p style={{fontSize: '13px', color: '#666', margin: '0 0 12px 0', lineHeight: '1.4'}}>Verpasst keine Updates und schaut euch an, was die anderen Teams zur Vorbereitung treiben.</p>
-            <a href="https://www.instagram.com/moosburgrallye/" target="_blank" rel="noopener noreferrer" style={{...styles.button, backgroundColor: '#E1306C', padding: '10px 15px', fontSize: '14px', display: 'inline-block', textDecoration: 'none', width: 'auto'}}>@moosburgrallye besuchen</a>
-          </div>
-
-          <p style={{fontSize: '13px', color: '#666', textAlign: 'center', fontStyle: 'italic', marginTop: '20px'}}>Speichert euch diese Seite als Lesezeichen oder ladet sie als App herunter.</p>
         </div>
 
         <div style={styles.footer}>
@@ -834,7 +778,6 @@ const handleRestoreTeam = async () => {
           <p style={{...styles.text, textAlign: 'center', fontSize: '18px', fontWeight: 'bold'}}>Herzlichen Glückwunsch, Team {teamName}!</p>
           <p style={{...styles.text, textAlign: 'center'}}>Ihr habt alle Rätsel gelöst und Moosburg erfolgreich neu entdeckt!</p>
 
-          {/* Dynamische Rückmeldung zur Verlosung */}
           <div style={{backgroundColor: '#eef2f5', padding: '15px', borderRadius: '8px', margin: '20px 0', border: '1px solid #d1d9e0'}}>
             {participationChoice === 3 ? (
               <p style={{margin: 0, fontSize: '15px', color: '#0B2846', textAlign: 'center', lineHeight: '1.5'}}>
